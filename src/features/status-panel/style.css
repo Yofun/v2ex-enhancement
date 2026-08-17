@@ -1,0 +1,42 @@
+.v2ex-enhancement-status {
+  bottom: 20px;
+  display: grid;
+  gap: 8px;
+  position: fixed;
+  right: 20px;
+  z-index: 9999;
+}
+
+.v2ex-enhancement-status__trigger {
+  background: #0f6b78;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgb(15 107 120 / 30%);
+  color: #fff;
+  cursor: pointer;
+  font:
+    700 14px/1 system-ui,
+    sans-serif;
+  height: 36px;
+  padding: 0;
+  width: 36px;
+}
+
+.v2ex-enhancement-status__trigger:hover {
+  background: #0a5863;
+}
+
+.v2ex-enhancement-status__popover {
+  background: #fff;
+  border: 1px solid #c9ded9;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgb(18 52 58 / 14%);
+  color: #243f45;
+  display: grid;
+  font:
+    13px/1.5 system-ui,
+    sans-serif;
+  gap: 2px;
+  min-width: 164px;
+  padding: 10px 12px;
+}
