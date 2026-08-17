@@ -1,7 +1,7 @@
 import type { Feature } from '@/shared/feature-runtime';
 import { lockPageScroll } from '@/shared/scroll-lock';
 
-import './style.css';
+import './style.scss';
 
 const sidebarId = 'v2ex-enhancement-node-sidebar';
 

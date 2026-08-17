@@ -4,7 +4,7 @@ import type { Feature } from '@/shared/feature-runtime';
 
 import { StatusPanel } from './status-panel';
 
-import './style.css';
+import './style.scss';
 
 const panelId = 'v2ex-enhancement-panel';
 

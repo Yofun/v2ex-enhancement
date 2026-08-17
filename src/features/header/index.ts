@@ -1,6 +1,6 @@
 import type { Feature } from '@/shared/feature-runtime';
 
-import './style.css';
+import './style.scss';
 
 const scrolledAttribute = 'data-v2ex-enhancement-header-scrolled';
 

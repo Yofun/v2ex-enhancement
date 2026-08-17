@@ -1,6 +1,6 @@
 import type { Feature } from '@/shared/feature-runtime';
 
-import './style.css';
+import './style.scss';
 
 const topicPathPattern = /^\/t\/\d+/;
 const maxDepth = 3;

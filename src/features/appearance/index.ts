@@ -1,6 +1,6 @@
 import type { Feature } from '@/shared/feature-runtime';
 
-import './style.css';
+import './style.scss';
 
 const appearanceAttribute = 'data-v2ex-enhancement';
 const notificationsAttribute = 'data-v2ex-enhancement-notifications';
