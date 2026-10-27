@@ -1,0 +1,113 @@
+.author {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  position: relative;
+
+  &.expand {
+    margin-bottom: 0;
+  }
+
+  .authorLeft {
+    display: flex;
+    align-items: center;
+    max-width: 65%;
+    word-break: break-all;
+
+    .username {
+      font-size: 1.4rem;
+      margin-right: 0.6rem;
+    }
+
+    .expandIcon {
+      cursor: pointer;
+      margin-right: 0.6rem;
+      width: 2rem;
+      height: 2rem;
+      transform: rotate(90deg);
+    }
+
+    .avatar {
+      margin-right: 0.8rem;
+      display: flex;
+
+      img {
+        width: 2.8rem;
+        height: 2.8rem;
+        border-radius: 0.4rem;
+      }
+    }
+
+    .texts {
+      flex: 1;
+    }
+
+    .owner {
+      display: inline-block;
+      background-color: transparent;
+      color: #1484cd;
+      border-radius: 0.3rem;
+      padding: 0 0.3rem;
+      cursor: default;
+      border: 2px solid #1484cd;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-right: 0.6rem;
+      transform: scale(0.8);
+    }
+
+    .dup {
+      display: inline-block;
+      background-color: transparent;
+      color: red;
+      border-radius: 0.3rem;
+      padding: 0 0.3rem;
+      cursor: default;
+      border: 2px solid red;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-right: 0.6rem;
+      transform: scale(0.8);
+    }
+
+    .mod {
+      display: inline-block;
+      background-color: transparent;
+      color: #1484cd;
+      border-radius: 0.3rem;
+      padding: 0 0.3rem;
+      cursor: default;
+      border: 2px solid #1484cd;
+      font-size: 1.2rem;
+      font-weight: 700;
+      transform: scale(0.8);
+      background: #1484cd;
+      color: #fff;
+      margin-right: 0.6rem;
+    }
+  }
+
+  &:hover .addTag {
+    display: inline-block;
+  }
+
+  .authorRight {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      color: var(--color-gray);
+      opacity: 0;
+      gap: 0.2rem;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}

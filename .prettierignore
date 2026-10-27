@@ -2,3 +2,6 @@ dist/
 node_modules/
 .playwright-cli/
 output/playwright/
+e2e/fixtures/
+test-results/
+playwright-report/

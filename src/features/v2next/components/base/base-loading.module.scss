@@ -1,0 +1,29 @@
+.loading {
+  border: 2px solid;
+  border-color: var(--color-loading-2) var(--color-loading-1) var(--color-loading-1)
+    var(--color-loading-1);
+  border-radius: 100%;
+  animation: circle infinite 1s linear;
+  width: 2rem;
+  height: 2rem;
+
+  &.small {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  &.large {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

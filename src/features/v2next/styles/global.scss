@@ -1,0 +1,389 @@
+// 提取自原脚本中不属于任何组件(data-v-xxx)的全局样式
+@keyframes circle-2697baa2 {
+  0% {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.sticky {
+  position: sticky;
+  bottom: -2px;
+  z-index: 2;
+  background: var(--box-background-hover-color) !important;
+}
+.sticky[stuck] {
+  box-shadow: 0 2px 20px #00000059 !important;
+}
+.preview-modal {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: -1000vh;
+  z-index: 9999;
+}
+.preview-modal .close {
+  font-size: 2rem;
+  color: #fff;
+  position: absolute;
+  right: 2rem;
+  top: 2rem;
+  cursor: pointer;
+}
+.preview-modal .mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  transition: all 0.3s;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+.username {
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-right: 1rem;
+}
+.link-num {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #e02a2a;
+}
+.owner {
+  display: inline-block;
+  background-color: transparent;
+  color: #1484cd;
+  border-radius: 0.3rem;
+  padding: 0 0.3rem;
+  cursor: default;
+  border: 2px solid #1484cd;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-right: 1rem;
+  transform: scale(0.8);
+}
+.mod {
+  display: inline-block;
+  background-color: transparent;
+  color: #1484cd;
+  border-radius: 0.3rem;
+  padding: 0 0.3rem;
+  cursor: default;
+  border: 2px solid #1484cd;
+  font-size: 1.2rem;
+  font-weight: 700;
+  transform: scale(0.8);
+  background: #1484cd;
+  color: #fff;
+  margin-right: 1rem;
+}
+.my-tag {
+  font-size: 1.4rem;
+  color: red;
+  margin-left: 1rem;
+}
+.my-tag:hover .remove {
+  display: inline;
+}
+.my-tag .remove {
+  cursor: pointer;
+  margin-left: 0.5rem;
+  display: none;
+}
+.add-tag {
+  font-size: 2.4rem;
+  transform: translateY(0.2rem);
+  line-height: 1rem;
+  display: inline-block;
+  margin-left: 1rem;
+  cursor: pointer;
+  position: absolute;
+  display: none;
+}
+.floor {
+  margin-left: 0.5rem;
+  font-size: 1.1rem;
+  line-height: 1rem;
+  border-radius: 0.5rem;
+  display: inline-block;
+  background-color: var(--color-floor);
+  color: var(--color-floor-font);
+  padding: 3px 9px;
+  cursor: default;
+}
+:root {
+  --color-main-bg: #e2e2e2;
+  --color-second-bg: white;
+  --color-third-bg: #e2e2e2;
+  --color-item-bg: white;
+  --color-swtich-bg: #dcdfe6;
+  --color-active: #409eff;
+  --color-font: #999;
+  --color-font-8: rgba(0, 0, 0, 0.8);
+  --color-font-3: rgba(0, 0, 0, 0.3);
+  --color-font-pure: black;
+  --color-input-bg: white;
+  --color-input-border: #e2e2e2;
+  --color-input-border-hover: #a3a6ad;
+  --color-radio-border: #e2e2e2;
+  --color-tooltip-bg: white;
+  --color-tooltip-shadow: #bbbbbb;
+  --color-scrollbar: #93ade3;
+  --color-line: #e2e2e2;
+  --color-loading-1: #00000033;
+  --color-loading-2: #000;
+  --color-floor: #f0f0f0;
+  --color-floor-font: #bdbdbd;
+  --color-editor-toolbar: #f6f7f8;
+  --color-sp-btn-bg: #f1f1f1;
+  --color-call-list-bg: white;
+  --color-top-reply-wrap-bg: #f2f3f5;
+  --color-top-reply-wrap-line: #d2d2d2;
+}
+html.dark {
+  --color-main-bg: #22303f;
+  --color-second-bg: #18222d;
+  --color-third-bg: #31475e;
+  --color-item-bg: #18222d;
+  --color-swtich-bg: #4c4d4f;
+  --color-active: #409eff;
+  --color-font: rgba(255, 255, 255, 0.5);
+  --color-font-8: rgba(255, 255, 255, 0.8);
+  --color-font-3: rgba(255, 255, 255, 0.3);
+  --color-font-pure: white;
+  --color-input-bg: #333333;
+  --color-input-border: #6c6e72;
+  --color-input-border-hover: #a3a6ad;
+  --color-radio-border: #454847;
+  --color-tooltip-bg: #31475e;
+  --color-tooltip-shadow: #3b3b3b;
+  --color-scrollbar: #5c5d5e;
+  --color-line: var(--box-border-color);
+  --color-loading-1: rgba(178, 177, 177, 0.2);
+  --color-loading-2: #ffffff;
+  --color-floor: #293b4d;
+  --color-floor-font: rgba(255, 255, 255, 0.3);
+  --color-editor-toolbar: var(--box-background-hover-color);
+  --color-sp-btn-bg: #31475e;
+  --color-call-list-bg: #31475e;
+  --color-top-reply-wrap-bg: #212f3e;
+  --color-top-reply-wrap-line: #3b536d;
+}
+html,
+body {
+  font-size: 62.5%;
+}
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.flex-end {
+  justify-content: flex-end;
+}
+.flex-center {
+  justify-content: center;
+}
+.p1 {
+  padding: 1rem;
+}
+.p2 {
+  padding: 2rem;
+}
+.p0 {
+  padding: 0 !important;
+}
+body :is(.topic_content, .reply_content) a[href^='http'] {
+  text-underline-offset: 0.7ex;
+  text-decoration: underline 1px;
+}
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+a:hover {
+  text-decoration: underline;
+}
+.tool {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  height: 2.6rem;
+  padding: 0 0.5rem;
+  gap: 0.2rem;
+}
+.tool > svg {
+  width: 1.6rem !important;
+  height: 1.6rem !important;
+}
+.tool:hover {
+  background: var(--color-third-bg);
+}
+.tool.no-hover {
+  cursor: default;
+}
+.tool.no-hover:hover {
+  background: unset !important;
+}
+.tool.disabled {
+  cursor: not-allowed;
+}
+.tool.disabled:hover {
+  background: unset !important;
+}
+.my-node {
+  border-radius: 0.2rem;
+  padding: 0.4rem;
+  font-size: 1rem;
+  color: #999;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+.my-node:hover {
+  text-decoration: none;
+  background: #e2e2e2;
+}
+.msgs {
+  position: fixed;
+  margin-left: calc(50% - 25rem);
+  width: 50rem;
+  z-index: 9999;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.my-box {
+  box-shadow: 0 2px 3px #0000001a;
+  box-shadow: #00000014 0 4px 12px;
+  border-radius: var(--box-border-radius);
+  background: var(--box-background-color);
+  margin-bottom: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+}
+.my-cell {
+  color: var(--color-font);
+  padding: 0.8rem 1rem;
+  font-size: 1.4rem;
+  line-height: 150%;
+  text-align: left;
+  border-bottom: 1px solid var(--color-line);
+}
+.modal {
+  position: fixed;
+  z-index: 1001;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal .title {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.modal .option {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0;
+}
+.modal .option > span {
+  position: relative;
+}
+.modal .mask {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  background-color: #1d1c1c47;
+}
+.radio-group2 {
+  display: inline-flex;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--color-radio-border);
+  background: var(--box-background-alt-color);
+}
+.radio-group2 .radio {
+  cursor: pointer;
+  background: transparent;
+  padding: 0.5rem 1.2rem;
+  border-left: 1px solid var(--color-radio-border);
+  font-size: 1.3rem;
+  color: var(--color-gray);
+}
+.radio-group2 .radio:first-child {
+  border-left: none;
+}
+.radio-group2 .active {
+  background: var(--color-third-bg);
+  color: var(--color-font);
+}
+.pop-confirm {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+}
+input {
+  height: 3rem;
+  outline: unset;
+  border: 1px solid var(--color-input-border);
+  padding: 0 0.5rem;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: all 0.3s;
+  background: var(--color-input-bg);
+  color: var(--color-font);
+}
+input:hover {
+  border: 1px solid var(--color-input-border-hover);
+}
+input:focus {
+  border: 1px solid var(--color-active);
+}
+.danger {
+  color: red !important;
+}
+.pop-confirm-content {
+  position: fixed;
+  background: var(--color-tooltip-bg);
+  box-shadow: 0 0 6px 1px var(--color-tooltip-shadow);
+  color: var(--color-font-8);
+  padding: 1.5rem;
+  border-radius: 0.8rem;
+  transform: translate(-50%, calc(-100% - 1rem));
+  z-index: 1003;
+}
+.pop-confirm-content .text {
+  text-align: start;
+  font-size: 1.6rem;
+  width: 15rem;
+  min-width: 15rem;
+}
+.pop-confirm-content .options {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+img {
+  max-width: 100%;
+}

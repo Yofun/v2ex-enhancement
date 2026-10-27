@@ -1,0 +1,160 @@
+.wrapper {
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  color: var(--color-font);
+
+  &.replyPost {
+    .postEditor {
+      border: 1px solid var(--color-line);
+    }
+
+    &.isFocus .postEditor {
+      border: 1px solid var(--color-active);
+    }
+  }
+
+  &.replyComment {
+    border-radius: var(--box-border-radius);
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+
+    &.isFocus {
+      border: 1px solid var(--color-active);
+    }
+
+    .toolbar {
+      background: var(--color-editor-toolbar);
+    }
+  }
+
+  .postEditor {
+    border-radius: var(--box-border-radius);
+    transition: border 0.3s;
+    width: 100%;
+    max-width: 100%;
+    padding: 0.6rem 1.4rem;
+    box-sizing: border-box;
+    outline: none;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-size: 1.4rem;
+    min-height: 13rem;
+    resize: none;
+    background: var(--box-background-color);
+    color: var(--color-font-pure);
+    border: 1px solid transparent;
+  }
+
+  .toolbar {
+    box-sizing: border-box;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 2.6rem;
+
+      svg {
+        cursor: pointer;
+      }
+
+      .upload {
+        width: 2.6rem;
+        height: 2.6rem;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        input {
+          width: 2.6rem;
+          height: 2.6rem;
+          cursor: pointer;
+          position: absolute;
+          opacity: 0;
+        }
+      }
+    }
+
+    // 原版是 scoped 样式，只命中本组件模板里的 span（“上传中”），不会波及子组件 BaseButton 内部的 span
+    .left > span {
+      color: gray;
+      font-size: 1.3rem;
+    }
+  }
+
+  .getCursor {
+    border-radius: var(--box-border-radius);
+    transition: border 0.3s;
+    width: 100%;
+    max-width: 100%;
+    padding: 0.6rem 1.4rem;
+    box-sizing: border-box;
+    outline: none;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-size: 1.4rem;
+    min-height: 13rem;
+    resize: none;
+    background: var(--box-background-color);
+    color: var(--color-font-pure);
+    border: 1px solid transparent;
+    position: absolute;
+    top: 0;
+    z-index: -100;
+  }
+
+  .emoticonPack {
+    z-index: 999999999;
+    border-radius: 1rem;
+    padding: 1rem;
+    width: 31rem;
+    max-width: 31rem;
+    height: 30rem;
+    max-height: 30rem;
+    overflow: auto;
+    background: var(--color-third-bg);
+    border: 1px solid var(--color-font-3);
+    box-shadow:
+      0 9px 24px -3px #0000000f,
+      0 4px 8px -1px #0000001f;
+    position: fixed;
+    bottom: 11rem;
+    left: 14rem;
+
+    svg {
+      cursor: pointer;
+      position: absolute;
+      right: 0.8rem;
+      font-size: 2.4rem;
+    }
+
+    .list {
+      margin: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    img {
+      cursor: pointer;
+      width: calc(100% / 7);
+      padding: 0.5rem;
+      box-sizing: border-box;
+    }
+
+    span {
+      width: calc(100% / 7);
+      display: inline-block;
+      cursor: pointer;
+      font-size: 2.3rem;
+      text-align: center;
+    }
+  }
+}

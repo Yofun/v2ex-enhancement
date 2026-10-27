@@ -1,0 +1,269 @@
+// 来自原脚本 Setting 组件 (data-v-086214a4) 的样式，加上它依赖的全局共享规则
+// (.modal / .mask / .radio-group2 / .danger / 淡入淡出 / 被 NoticeModal 泄漏到全局的 .setting-modal 规则)
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.modal {
+  position: fixed;
+  z-index: 1001;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .mask {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    background-color: #1d1c1c47;
+  }
+}
+
+.radio-group2 {
+  display: inline-flex;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--color-radio-border);
+  background: var(--box-background-alt-color);
+
+  .radio {
+    cursor: pointer;
+    background: transparent;
+    padding: 0.5rem 1.2rem;
+    border-left: 1px solid var(--color-radio-border);
+    font-size: 1.3rem;
+    color: var(--color-gray);
+
+    &:first-child {
+      border-left: none;
+    }
+  }
+
+  .active {
+    background: var(--color-third-bg);
+    color: var(--color-font);
+  }
+}
+
+.danger {
+  color: red !important;
+}
+
+.new {
+  position: absolute;
+  background: red;
+  font-size: 10px;
+  border-radius: 4px;
+  padding: 0 2px;
+  color: white;
+  right: -9px;
+  top: -3px;
+}
+
+.setting-modal {
+  .modal-root {
+    z-index: 9;
+    background: white;
+    border-radius: 2rem;
+    font-size: 1.6rem;
+    overflow: hidden;
+    color: var(--color-font-pure);
+
+    .modal-header {
+      padding: 2rem;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--color-input-border);
+
+      .title {
+        font-size: 2rem;
+        text-align: left;
+        margin-bottom: 0;
+      }
+
+      svg {
+        cursor: pointer;
+        font-size: 2.6rem;
+      }
+    }
+
+    .body {
+      width: 65rem;
+      height: 45rem;
+      display: flex;
+
+      .left {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 1.4rem;
+
+        .tabs {
+          padding: 1rem 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+
+          .tab {
+            cursor: pointer;
+            padding: 0.8rem 1.5rem;
+            width: 10rem;
+            border-radius: 0.8rem;
+            text-align: start;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.6rem;
+
+            svg {
+              font-size: 1.8rem;
+            }
+
+            &.active {
+              background: #e6f4ff;
+              color: var(--color-font-pure);
+            }
+          }
+        }
+
+        .bottom {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+
+          .tip {
+            width: 12rem;
+            font-size: 1.2rem;
+            color: var(--color-font);
+          }
+
+          .icons {
+            display: flex;
+            gap: 1rem;
+            font-size: 2.4rem;
+          }
+        }
+      }
+
+      .modal-content {
+        background: var(--color-second-bg);
+        flex: 1;
+        height: 100%;
+        box-sizing: border-box;
+        padding-right: 1rem;
+        padding-left: 0;
+        border-radius: 1rem;
+        display: flex;
+
+        .scroll {
+          flex: 1;
+          padding-right: 1rem;
+          overflow: auto;
+
+          .row {
+            min-height: 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .wrapper {
+              height: 3rem;
+              flex: 1;
+              display: flex;
+              justify-content: flex-end;
+              align-items: center;
+              gap: var(--space);
+
+              .set-key {
+                align-items: center;
+
+                input {
+                  width: 15rem;
+                  box-sizing: border-box;
+                  margin-right: 1rem;
+                  height: 2.8rem;
+                  outline: none;
+                  font-size: 1.6rem;
+                  border: 1px solid gray;
+                  border-radius: 0.3rem;
+                  padding: 0 0.5rem;
+                  background: var(--color-second-bg);
+                  color: var(--color-font-1);
+                }
+              }
+            }
+
+            .main-title {
+              font-size: 1.8rem;
+              font-weight: 700;
+              color: var(--color-font-8);
+            }
+          }
+
+          .border {
+            border-bottom: 1px solid var(--color-input-border);
+          }
+
+          .desc {
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            text-align: left;
+            color: var(--color-font);
+          }
+
+          .project-desc {
+            text-align: start;
+            font-size: 1.6rem;
+            padding-bottom: 1rem;
+          }
+
+          .line {
+            border-bottom: 1px solid #c4c3c3;
+          }
+        }
+      }
+    }
+  }
+}
+
+.sub-content {
+  padding: 0 2rem 1rem;
+  border-radius: 1rem;
+  background: #f3f3f3;
+  margin-bottom: 1rem;
+}
+
+.log {
+  position: relative;
+  text-align: left;
+  margin-bottom: 20px;
+  padding-left: 20px;
+  font-size: 16px;
+  color: #6495ed;
+  text-decoration: underline;
+}
+
+.tips2 {
+  text-align: left;
+  color: var(--color-font);
+
+  svg {
+    transform: translateY(0.3rem);
+    margin-right: 0.6rem;
+  }
+}

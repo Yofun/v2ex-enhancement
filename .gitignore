@@ -7,3 +7,7 @@ dist/
 .DS_Store
 *.local
 npm-debug.log*
+e2e/fixtures/
+test-results/
+playwright-report/
+blob-report/

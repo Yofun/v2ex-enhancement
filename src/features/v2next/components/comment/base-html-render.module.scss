@@ -1,0 +1,23 @@
+.htmlWrapper {
+  position: relative;
+
+  .mask {
+    max-height: 90rem;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent);
+  }
+
+  .expand {
+    position: absolute;
+    z-index: 1;
+    bottom: 2rem;
+    padding: 0.2rem 1.5rem;
+    border-radius: 2rem;
+    border: 1px solid gray;
+    background: white;
+    color: gray;
+    left: 50%;
+    transform: translate(-50%);
+    cursor: pointer;
+  }
+}

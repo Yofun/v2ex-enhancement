@@ -1,0 +1,139 @@
+.notificationModal {
+  .modalRoot {
+    z-index: 9;
+    background: var(--color-second-bg);
+    color: var(--color-font-8);
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    width: 50vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.4rem;
+    gap: 1rem;
+
+    .modalHeader {
+      display: flex;
+      justify-content: space-between;
+
+      .title {
+        font-size: 2.6rem;
+        font-weight: 700;
+        text-align: left;
+        margin-bottom: 0;
+      }
+
+      i {
+        cursor: pointer;
+        font-size: 2.2rem;
+      }
+    }
+
+    .modalBody {
+      padding-top: 0;
+      flex: 1;
+      gap: 1rem;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      .filter {
+        display: flex;
+        gap: 1rem;
+
+        div {
+          border-radius: 0.4rem;
+          padding: 0.4rem 1rem;
+          background: gainsboro;
+          cursor: pointer;
+
+          &.active {
+            background: #445;
+            color: #fff;
+          }
+        }
+      }
+
+      .listWrap {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+
+        .loadingWrap {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: rgba(255, 255, 255, 0.7);
+        }
+
+        .notifyWrap {
+          overflow: auto;
+          height: 100%;
+        }
+
+        :global(#notifications) :global(.cell) {
+          display: none;
+          padding: 1.2rem 0;
+        }
+
+        :global(#notifications) :global(.cell) :global(a.node) {
+          padding: 0.6rem 1rem;
+          border-radius: 0.4rem;
+        }
+
+        :global(#notifications) :global(.cell) :global(.payload) {
+          margin-top: 0.4rem;
+          font-size: 1.7rem;
+        }
+      }
+
+      :global(#notifications).all :global(.cell),
+      :global(#notifications).reply :global(.reply),
+      :global(#notifications).star :global(.star),
+      :global(#notifications).collect :global(.collect) {
+        display: block;
+      }
+
+      .footer {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+
+        .pages {
+          flex: 1;
+        }
+
+        .total {
+          font-weight: 700;
+
+          span {
+            color: #d3d3d3;
+            font-weight: 400;
+            margin-right: 0.4rem;
+          }
+        }
+      }
+
+      :global(.super.button) {
+        padding: 0;
+        background: unset;
+        height: 26px;
+        width: 37px;
+
+        a {
+          display: block;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+// 对应原 App.vue scoped 样式（data-v-a73f564c）里的日历部分
+.calender {
+  padding: 10px;
+  font-size: 14px;
+  color: var(--link-color);
+
+  .month {
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .caTitle {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+    }
+
+    i {
+      height: 100%;
+      width: 30px;
+      cursor: pointer;
+      color: #a9a9a9;
+    }
+  }
+
+  .calenderHeader {
+    display: flex;
+    height: 30px;
+    align-items: center;
+
+    div {
+      flex: 1;
+    }
+  }
+
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+
+    .day {
+      height: 30px;
+
+      a {
+        display: inline-flex;
+        height: 100%;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .active {
+      background: #40a9ff;
+      border-radius: 4px;
+
+      a {
+        color: #fff !important;
+      }
+    }
+  }
+}

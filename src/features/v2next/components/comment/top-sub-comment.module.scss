@@ -1,0 +1,43 @@
+.topSubComment {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0.8rem;
+  display: flex;
+  position: relative;
+
+  .expandLine {
+    width: 1.6rem;
+    position: relative;
+
+    &:after {
+      position: absolute;
+      left: 50%;
+      top: 2%;
+      content: ' ';
+      height: 98%;
+      width: 0;
+      border-right: 1px solid var(--color-top-reply-wrap-line);
+    }
+  }
+
+  .right {
+    flex: 1;
+    width: calc(100% - 3rem);
+  }
+
+  :global(.avatar) {
+    display: none !important;
+  }
+
+  &.topSubReply:first-child {
+    margin-top: 0;
+  }
+
+  &.topSubReply > .expandLine {
+    width: 1rem;
+
+    &:after {
+      display: none;
+    }
+  }
+}

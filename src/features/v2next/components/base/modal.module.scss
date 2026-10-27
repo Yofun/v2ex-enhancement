@@ -1,0 +1,37 @@
+// 原全局样式中的 .modal 系列规则（V2Next 的各弹层共用）
+.modal {
+  position: fixed;
+  z-index: 1001;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0;
+
+  > span {
+    position: relative;
+  }
+}
+
+.mask {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  background-color: #1d1c1c47;
+}

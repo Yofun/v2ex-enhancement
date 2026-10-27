@@ -1,0 +1,102 @@
+// 对应原 App.vue 的 scoped 样式（data-v-a73f564c）以及它用到的全局通用类（.my-box/.my-tag/.pop-confirm-content 等）。
+// 日历部分见 calendar.module.scss。
+
+.myBox {
+  box-shadow: 0 2px 3px #0000001a;
+  box-shadow: #00000014 0 4px 12px;
+  border-radius: var(--box-border-radius);
+  background: var(--box-background-color);
+  margin-bottom: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+}
+
+.p1 {
+  padding: 1rem;
+}
+
+.p2 {
+  padding: 2rem;
+}
+
+.flexCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.myTag {
+  font-size: 1.4rem;
+  color: red;
+  margin-left: 1rem;
+
+  &:hover .remove {
+    display: inline;
+  }
+
+  .remove {
+    cursor: pointer;
+    margin-left: 0.5rem;
+    display: none;
+  }
+}
+
+.addTag {
+  font-size: 2.4rem;
+  transform: translateY(0.2rem);
+  line-height: 1rem;
+  margin-left: 1rem;
+  cursor: pointer;
+  position: absolute;
+  display: none;
+}
+
+.targetUserTags {
+  background: var(--color-second-bg);
+  color: var(--color-font);
+  word-break: break-all;
+  text-align: start;
+  font-size: 1.4rem;
+  box-shadow: 0 2px 3px #0000001a;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+
+  .addTag {
+    display: inline-block;
+  }
+}
+
+.loaded {
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--color-font-pure);
+}
+
+.popConfirmContent {
+  position: fixed;
+  background: var(--color-tooltip-bg);
+  box-shadow: 0 0 6px 1px var(--color-tooltip-shadow);
+  color: var(--color-font-8);
+  padding: 1.5rem;
+  border-radius: 0.8rem;
+  transform: translate(-50%, calc(-100% - 1rem));
+  z-index: 1003;
+
+  .text {
+    text-align: start;
+    font-size: 1.6rem;
+    width: 15rem;
+    min-width: 15rem;
+  }
+
+  .options {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+  }
+}

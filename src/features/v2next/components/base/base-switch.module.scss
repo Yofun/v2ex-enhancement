@@ -1,0 +1,29 @@
+.switch {
+  width: 4.5rem;
+  height: 2.2rem;
+  border-radius: 2rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--color-swtich-bg);
+  transition: all 0.3s;
+
+  &::before {
+    position: absolute;
+    content: ' ';
+    transition: all 0.3s;
+    right: calc(100% - 2rem);
+    width: 1.8rem;
+    height: 1.8rem;
+    background: white;
+    border-radius: 50%;
+  }
+
+  &.active {
+    background: var(--color-active);
+
+    &::before {
+      right: 0.2rem;
+    }
+  }
+}

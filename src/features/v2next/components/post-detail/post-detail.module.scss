@@ -1,0 +1,398 @@
+// 对应原 PostDetail.vue 的 scoped 样式（data-v-d39217d8）+ 其未加 scope 的全局片段（.sticky / .preview-modal）。
+// 原样式里夹带的通用工具类（.flex/.my-box/.tool 等）在这里作为 PostDetail 内部的局部类保留，保证自包含。
+
+@mixin side-btn {
+  cursor: pointer;
+  position: fixed;
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  bottom: 10rem;
+  z-index: 99;
+  padding: 0.8rem 0;
+  gap: 1rem;
+  width: 4.2rem;
+  transform: translate(6rem);
+  font-size: 2rem;
+  background: var(--color-sp-btn-bg);
+  color: var(--color-font-3);
+
+  svg {
+    font-size: 2.4rem;
+  }
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.p1 {
+  padding: 1rem;
+}
+
+.p2 {
+  padding: 2rem;
+}
+
+.myBox {
+  box-shadow: 0 2px 3px #0000001a;
+  box-shadow: #00000014 0 4px 12px;
+  border-radius: var(--box-border-radius);
+  background: var(--box-background-color);
+  margin-bottom: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+}
+
+.myCell {
+  color: var(--color-font);
+  padding: 0.8rem 1rem;
+  font-size: 1.4rem;
+  line-height: 150%;
+  text-align: left;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.tool {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  height: 2.6rem;
+  padding: 0 0.5rem;
+  gap: 0.2rem;
+
+  > svg {
+    width: 1.6rem !important;
+    height: 1.6rem !important;
+  }
+
+  &:hover {
+    background: var(--color-third-bg);
+  }
+}
+
+.danger {
+  color: red !important;
+}
+
+.myTag {
+  font-size: 1.4rem;
+  color: red;
+  margin-left: 1rem;
+
+  &:hover .remove {
+    display: inline;
+  }
+
+  .remove {
+    cursor: pointer;
+    margin-left: 0.5rem;
+    display: none;
+  }
+}
+
+.addTag {
+  font-size: 2.4rem;
+  transform: translateY(0.2rem);
+  line-height: 1rem;
+  margin-left: 1rem;
+  cursor: pointer;
+  position: absolute;
+  display: none;
+}
+
+.sticky {
+  position: sticky;
+  bottom: -2px;
+  z-index: 2;
+  background: var(--box-background-hover-color) !important;
+
+  &[stuck] {
+    box-shadow: 0 2px 20px #00000059 !important;
+  }
+}
+
+.postDetail {
+  text-align: start;
+  position: fixed;
+  z-index: 1002;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background: rgba(46, 47, 48, 0.8);
+  overflow: auto;
+  font-size: 1.4rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  a {
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  input {
+    height: 3rem;
+    outline: unset;
+    border: 1px solid var(--color-input-border);
+    padding: 0 0.5rem;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: all 0.3s;
+    background: var(--color-input-bg);
+    color: var(--color-font);
+
+    &:hover {
+      border: 1px solid var(--color-input-border-hover);
+    }
+
+    &:focus {
+      border: 1px solid var(--color-active);
+    }
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  :global(.subtle) {
+    background-color: #ecfdf5e6;
+    border-left: 4px solid #a7f3d0;
+  }
+
+  &.isNight :global(.subtle) {
+    background-color: #1a3332;
+    border-left: 4px solid #047857;
+  }
+
+  // 帖子页内嵌展示（pageType === Post）
+  &.isPostPage {
+    position: unset !important;
+    background: transparent !important;
+    overflow: unset !important;
+
+    .main {
+      background: transparent !important;
+      padding: unset !important;
+      width: 100% !important;
+    }
+
+    .closeBtn,
+    .openNewTab {
+      display: none;
+    }
+  }
+
+  .main {
+    display: flex;
+    justify-content: flex-end;
+    padding: 3rem 8rem 15rem;
+    background: var(--color-main-bg);
+    position: relative;
+    outline: none;
+
+    .mainWrapper {
+      width: 77rem;
+      padding-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+
+      .postWrapper :global(.header):hover .addTag {
+        display: inline-block;
+      }
+
+      .loadingWrapper {
+        height: 20rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .noComments {
+        color: #a9a9a9;
+        font-weight: 700;
+        text-align: center;
+        width: 100%;
+        margin-bottom: 2rem;
+        box-sizing: border-box;
+      }
+    }
+
+    .relationReply {
+      position: fixed;
+      width: 25vw;
+      top: 6.5rem;
+      bottom: 15rem;
+      z-index: 100;
+      transform: translate(calc(100% + 2rem));
+      font-size: 2rem;
+      overflow: hidden;
+
+      .myCell {
+        background: var(--color-second-bg);
+        border-radius: var(--box-border-radius) var(--box-border-radius) 0 0;
+      }
+
+      .comments {
+        max-height: calc(100% - 4.2rem);
+        overflow: auto;
+        background: var(--color-second-bg);
+        border-radius: 0 0 var(--box-border-radius) var(--box-border-radius);
+      }
+    }
+
+    .callList {
+      z-index: 9;
+      position: absolute;
+      top: 12rem;
+      border: 1px solid var(--color-main-bg);
+      background: var(--color-call-list-bg);
+      box-shadow: 0 5px 15px #0000001a;
+      overflow: auto;
+      max-height: 30rem;
+      border-radius: var(--box-border-radius);
+      min-width: 8rem;
+      box-sizing: content-box;
+
+      .callItem {
+        border-top: 1px solid var(--color-main-bg);
+        height: 3rem;
+        display: flex;
+        padding: 0 1rem;
+        align-items: center;
+        cursor: pointer;
+        font-size: 14px;
+        box-sizing: border-box;
+
+        &:hover,
+        &.select {
+          background: var(--color-main-bg);
+          text-decoration: none;
+        }
+
+        &:nth-child(1) {
+          border-top: 1px solid transparent;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 1280px) {
+    .mainWrapper {
+      width: 60vw !important;
+    }
+  }
+
+  .scrollTop {
+    @include side-btn;
+  }
+
+  .refresh {
+    @include side-btn;
+    bottom: 23.5rem;
+  }
+
+  .scrollTo {
+    @include side-btn;
+    bottom: 15rem;
+    flex-direction: column;
+
+    input {
+      height: 2.6rem;
+      width: 3.6rem;
+      font-size: 1.4rem;
+      text-align: center;
+      color: gray;
+    }
+  }
+
+  .closeBtn {
+    color: var(--color-font-3);
+    cursor: pointer;
+    position: fixed;
+    top: 3rem;
+    transform: translate(4rem);
+    font-size: 2.4rem;
+  }
+
+  .openNewTab {
+    color: var(--color-font-3);
+    cursor: pointer;
+    position: fixed;
+    top: 8rem;
+    transform: translate(4rem);
+    font-size: 2.4rem;
+  }
+
+  .topReply {
+    color: var(--color-font-3);
+    cursor: pointer;
+    font-size: 2rem;
+    display: flex;
+  }
+
+  // 评论被 jump() 定位后的高亮（原样式在 Comment 里，但 class 由这里加到 DOM 上）
+  :global(.ding) {
+    background: rgba(255, 255, 0, 0.3) !important;
+  }
+}
+
+// 东京区 / WoW 区的特殊配色
+.specificArea {
+  --color-line: #6a6868;
+  --color-floor: rgba(71, 71, 71, 0.48);
+  --color-top-reply-wrap-bg: rgba(71, 71, 71, 0.48);
+  --color-sp-btn-bg: rgba(71, 71, 71, 0.48);
+  --color-editor-toolbar: #303e64;
+  --color-font-pure: white;
+  --color-main-bg: #545454;
+  --box-background-color: rgba(0, 0, 0, 0.5);
+  --box-background-hover-color: rgba(0, 0, 0, 0.5);
+
+  .myBox {
+    color: #fff;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+  }
+}
+
+.previewModal {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: -1000vh;
+  z-index: 9999;
+
+  .close {
+    font-size: 2rem;
+    color: #fff;
+    position: absolute;
+    right: 2rem;
+    top: 2rem;
+    cursor: pointer;
+  }
+
+  .mask {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    transition: all 0.3s;
+  }
+}

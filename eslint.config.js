@@ -7,12 +7,18 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'e2e/fixtures/**',
+      'test-results/**',
+      'playwright-report/**',
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ['*.config.{js,cjs}'],
+    files: ['*.config.{js,cjs}', 'scripts/**/*.mjs'],
     languageOptions: {
       globals: globals.node,
     },
