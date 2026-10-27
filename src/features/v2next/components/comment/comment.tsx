@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { CSSProperties } from 'react';
 
@@ -15,47 +15,23 @@ import { PostEditor } from './post-editor';
 import { postForText } from './request';
 import { TopSubComment } from './top-sub-comment';
 
-export interface CommentHandle {
-  /** 高亮 2 秒 */
-  showDing: () => void;
-}
-
 interface CommentProps {
   modelValue: Reply;
   type?: 'list' | 'top';
 }
 
-export const Comment = forwardRef<CommentHandle, CommentProps>(function Comment(
-  { modelValue, type = 'list' },
-  ref,
-) {
+export function Comment({ modelValue, type = 'list' }: CommentProps) {
   const { post, show, isNight, config } = useApp();
   const postDetailWidth = usePostDetailWidth();
 
   const [edit, setEdit] = useState(false);
-  const [ding, setDing] = useState(false);
   const [expand, setExpand] = useState(true);
   const [expandTopReply, setExpandTopReply] = useState(true);
   const [expandWrong, setExpandWrong] = useState(false);
   const [cssStyle, setCssStyle] = useState<CSSProperties | null>(null);
 
   const commentRef = useRef<HTMLDivElement>(null);
-  const dingTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const floor = modelValue.floor;
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      showDing() {
-        setDing(true);
-        clearTimeout(dingTimerRef.current);
-        dingTimerRef.current = setTimeout(() => setDing(false), 2000);
-      },
-    }),
-    [],
-  );
-
-  useEffect(() => () => clearTimeout(dingTimerRef.current), []);
 
   const [prevShow, setPrevShow] = useState(show);
   if (show !== prevShow) {
@@ -106,7 +82,6 @@ export const Comment = forwardRef<CommentHandle, CommentProps>(function Comment(
     styles.comment,
     modelValue.isOp && 'isOp',
     config.viewType === 'simple' && styles.isSimple,
-    ding && 'ding',
     (type === 'top' ? true : modelValue.level === 0) && styles.isLevelOne,
     type !== 'top' && 'c_' + floor,
   ]
@@ -224,4 +199,4 @@ export const Comment = forwardRef<CommentHandle, CommentProps>(function Comment(
       )}
     </div>
   );
-});
+}

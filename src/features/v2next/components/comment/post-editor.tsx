@@ -1,13 +1,4 @@
-import {
-  forwardRef,
-  Fragment,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { ChangeEvent, DragEvent, KeyboardEvent, MouseEvent } from 'react';
 
@@ -21,12 +12,6 @@ import { Icon } from '../base/icon';
 import styles from './post-editor.module.scss';
 import { postForText } from './request';
 import { useLatest } from './use-latest';
-
-export interface PostEditorHandle {
-  /** 可读可写，对应原版 expose 的 content ref */
-  content: string;
-  isFocus: () => boolean;
-}
 
 interface PostEditorProps {
   replyUser?: string;
@@ -52,10 +37,14 @@ const imgurClientIdPool = [
 
 const none = '<span style="white-space:pre-wrap;"> </span>';
 
-export const PostEditor = forwardRef<PostEditorHandle, PostEditorProps>(function PostEditor(
-  { replyUser, replyFloor, useType = 'reply-comment', onClose, className, onClick },
-  ref,
-) {
+export function PostEditor({
+  replyUser,
+  replyFloor,
+  useType = 'reply-comment',
+  onClose,
+  className,
+  onClick,
+}: PostEditorProps) {
   const { post, show, allReplyUsers } = useApp();
   const replyInfo = replyUser ? `@${replyUser} #${replyFloor} ` : '';
 
@@ -70,7 +59,6 @@ export const PostEditor = forwardRef<PostEditorHandle, PostEditorProps>(function
   const txtRef = useRef<HTMLTextAreaElement>(null);
   const cursorRef = useRef<HTMLSpanElement>(null);
   const contentRef = useRef(content);
-  const isFocusRef = useRef(false);
   const loadingRef = useRef(false);
   const uploadLoadingRef = useRef(false);
   const setCallRef = useRef<((name: string) => void) | null>(null);
@@ -81,25 +69,11 @@ export const PostEditor = forwardRef<PostEditorHandle, PostEditorProps>(function
     setContent(value);
   };
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      get content() {
-        return contentRef.current;
-      },
-      set content(value: string) {
-        contentRef.current = value;
-        setContent(value);
-      },
-      isFocus: () => isFocusRef.current,
-    }),
-    [],
-  );
-
   const isDisabled = (value: string) => (value ? value === replyInfo : true);
   const disabled = isDisabled(content);
 
   // 原版是 computed，依赖 txtRef（挂载后会重算一次）和 content；selectionStart 非响应式
+  /* eslint-disable react-hooks/refs */
   const cursorHtml = useMemo(() => {
     const el = txtRef.current;
     if (!el || !content) return '';
@@ -112,6 +86,7 @@ export const PostEditor = forwardRef<PostEditorHandle, PostEditorProps>(function
       .replace(/\s/g, none);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content, mounted]);
+  /* eslint-enable react-hooks/refs */
 
   const checkHeight2 = () => {
     const el = txtRef.current;
@@ -415,12 +390,10 @@ export const PostEditor = forwardRef<PostEditorHandle, PostEditorProps>(function
 
   const onBlur = () => {
     document.removeEventListener('paste', onPaste);
-    isFocusRef.current = false;
     setIsFocus(false);
   };
 
   const onFocus = () => {
-    isFocusRef.current = true;
     setIsFocus(true);
     document.addEventListener('paste', onPaste);
   };
@@ -436,6 +409,7 @@ export const PostEditor = forwardRef<PostEditorHandle, PostEditorProps>(function
     // Vue 的 v-model 以 DOM 属性赋初值，光标落在末尾；React 以子文本渲染，光标在开头，
     // 回复楼层时会把输入写到 “@用户 #楼层 ” 前面
     if (el) el.setSelectionRange(el.value.length, el.value.length);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     if (el) {
       el.setAttribute('style', 'height:' + el.scrollHeight + 'px;overflow-y:hidden;');
@@ -570,4 +544,4 @@ export const PostEditor = forwardRef<PostEditorHandle, PostEditorProps>(function
       </div>
     </div>
   );
-});
+}

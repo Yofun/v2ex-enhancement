@@ -10,7 +10,7 @@ const repositoryUrl = 'https://github.com/Yofun/v2ex-enhancement';
 
 export default defineConfig(({ mode }) => ({
   plugins: [
-    react({ jsxRuntime: 'classic' }),
+    react(),
     // vitest 下不加载油猴插件（它会注册 dev server 钩子），GM_* 由 alias 的桩模块代替
     ...(mode === 'test'
       ? []
@@ -50,6 +50,10 @@ export default defineConfig(({ mode }) => ({
   build: mode === 'e2e' ? { outDir: 'node_modules/.e2e-dist' } : undefined,
   resolve: {
     alias: {
+      'react/jsx-runtime': fileURLToPath(new URL('./src/shared/jsx-runtime.ts', import.meta.url)),
+      'react/jsx-dev-runtime': fileURLToPath(
+        new URL('./src/shared/jsx-runtime.ts', import.meta.url),
+      ),
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       ...(mode === 'test'
         ? {
