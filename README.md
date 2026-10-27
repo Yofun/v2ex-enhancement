@@ -49,7 +49,6 @@ yarn e2e    # Playwright：以原版 V2Next 10.31 为基线做对照验证
 src/
   features/
     v2next/                 V2Next 10.31 的 React + TS 还原（列表预览、楼中楼、设置面板等）
-    appearance/ header/ node-sidebar/ ad-filter/   页面美化
   shared/feature-runtime.ts 功能生命周期与异常隔离
   main.ts                   脚本入口，仅注册并启动功能
 e2e/                        Playwright 对照测试（fixture 由 yarn fixtures 下载，不入库）
