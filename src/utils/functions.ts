@@ -7,6 +7,7 @@ import { PageType } from '@/core/types';
 
 import { genDomFromHtmlString, getInnerText } from './dom';
 import { gmOpenInTab, gmRegisterMenuCommand } from './gm';
+import { applyImageRules } from './image-rules';
 import { createNestedList, createNestedRedundantList, findChildren } from './reply-tree';
 
 export interface PageTypeResult {
@@ -106,8 +107,19 @@ export const functions = {
     const replaceImgur = session.config.replaceImgur;
     let isAdd = false;
     const prefixImg = replaceImgur ? DefaultVal.imgurProxy : '';
+    const markRewritten = (img: HTMLImageElement, originUrl: string, url: string) => {
+      img.setAttribute('originUrl', originUrl);
+      img.setAttribute('notice', '此img标签由用户图片规则改写');
+      img.setAttribute('referrerpolicy', 'no-referrer');
+      img.src = url;
+    };
     dom.querySelectorAll('img').forEach((img) => {
       let href = img.src;
+      const rewritten = applyImageRules(href);
+      if (rewritten) {
+        markRewritten(img, href, rewritten);
+        return;
+      }
       if (href.includes('imgur.com')) {
         img.setAttribute('originUrl', img.src);
         img.setAttribute('notice', '此img标签由V2Next脚本解析');
@@ -126,6 +138,13 @@ export const functions = {
       const href = a.href;
       if (a.children.length == 0 && getInnerText(a) == href && hasImgExt(href)) {
         const img = document.createElement('img');
+        const rewritten = applyImageRules(href);
+        if (rewritten) {
+          markRewritten(img, href, rewritten);
+          a.textContent = '';
+          a.append(img);
+          return;
+        }
         img.setAttribute('originUrl', a.href);
         img.setAttribute('notice', '此img标签由V2Next脚本解析');
         img.setAttribute('referrerpolicy', 'no-referrer');

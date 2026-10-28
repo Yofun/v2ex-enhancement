@@ -1,0 +1,145 @@
+.root {
+  padding: 1rem 0 2rem;
+  font-size: 1.4rem;
+  color: var(--color-font-pure);
+  text-align: left;
+}
+
+.desc {
+  color: var(--color-font);
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+}
+
+input,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--color-input-border);
+  border-radius: 0.6rem;
+  background: var(--color-input-bg);
+  color: var(--color-font-pure);
+  padding: 0.6rem 0.8rem;
+  font-size: 1.3rem;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: var(--color-input-border-hover);
+  }
+
+  &:focus {
+    border-color: var(--color-active);
+  }
+}
+
+textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  resize: vertical;
+}
+
+.tester {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+
+  label {
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+}
+
+.card {
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.2rem;
+  background: var(--color-editor-toolbar);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  .name {
+    font-weight: 600;
+  }
+
+  .index {
+    color: var(--color-font);
+    flex-shrink: 0;
+  }
+
+  .remove {
+    flex-shrink: 0;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--color-font);
+
+    &:hover {
+      color: red;
+    }
+  }
+}
+
+.field {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+
+  > label {
+    width: 9rem;
+    flex-shrink: 0;
+    padding-top: 0.6rem;
+    color: var(--color-font);
+
+    small {
+      display: block;
+      font-size: 1.1rem;
+      line-height: 1.4;
+    }
+  }
+}
+
+.modes {
+  display: inline-flex;
+  border: 1px solid var(--color-radio-border);
+  border-radius: 0.6rem;
+  overflow: hidden;
+
+  span {
+    cursor: pointer;
+    padding: 0.4rem 1.4rem;
+    color: var(--color-font);
+
+    & + span {
+      border-left: 1px solid var(--color-radio-border);
+    }
+
+    &.active {
+      background: var(--color-third-bg);
+      color: var(--color-font-pure);
+    }
+  }
+}
+
+.result {
+  word-break: break-all;
+  font-size: 1.2rem;
+
+  .hit {
+    color: #16a34a;
+  }
+
+  .miss {
+    color: var(--color-font);
+  }
+
+  .error {
+    color: red;
+  }
+}

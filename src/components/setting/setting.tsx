@@ -14,6 +14,7 @@ import { CMD, eventBus } from '@/core/event-bus';
 import type { Config, NoticeConfig, ViewType } from '@/core/types';
 import { functions } from '@/utils/functions';
 
+import { ImageRules } from './image-rules';
 import styles from './setting.module.scss';
 
 export interface SettingProps {
@@ -248,6 +249,7 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
     { icon: 'weui:setting-outlined', label: '列表' },
     { icon: 'stash:article-alt-light', label: '主题' },
     { icon: 'fluent:more-circle-20-regular', label: '其他' },
+    { icon: 'lets-icons:img-load-box-fill', label: '图片' },
     { icon: 'ix:about', label: '关于' },
   ];
 
@@ -632,7 +634,8 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                   </div>
                 </div>
               )}
-              {tabIndex === 3 && (
+              {tabIndex === 3 && <ImageRules />}
+              {tabIndex === 4 && (
                 <div>
                   <h1>V2EX Enhancement</h1>
                   <div className={styles['project-desc']}>

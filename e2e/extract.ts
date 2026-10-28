@@ -221,8 +221,11 @@ export async function snapshotDom(
           lines.push(`${' '.repeat(depth)}<${tag} class="about-branding">`);
           return;
         }
-        // 有意省略：设置里“插件”tab 只剩“v2新帖挂件”（依赖 loadAndRunScript 远程执行，未移植）和两个重复项
-        if (/tab/i.test(el.getAttribute('class') ?? '') && el.textContent?.trim() === '插件')
+        // 有意差异：还原版新增“图片”tab（用户图片规则）；省略“插件”tab 只剩“v2新帖挂件”（依赖 loadAndRunScript 远程执行，未移植）和两个重复项
+        if (
+          /tab/i.test(el.getAttribute('class') ?? '') &&
+          ['插件', '图片'].includes(el.textContent?.trim() ?? '')
+        )
           return;
         // 仅用于 display: contents 的纯包装 span（Tooltip 等）不参与布局，拍平
         if (
