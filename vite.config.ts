@@ -28,6 +28,8 @@ export default defineConfig(({ mode }) => ({
               grant: ['GM_addStyle', 'GM_openInTab', 'GM_registerMenuCommand', 'GM_xmlhttpRequest'],
               connect: ['oapi.dingtalk.com'],
               homepageURL: repositoryUrl,
+              updateURL: `${repositoryUrl}/releases/latest/download/v2ex-enhancement.user.js`,
+              downloadURL: `${repositoryUrl}/releases/latest/download/v2ex-enhancement.user.js`,
               supportURL: `${repositoryUrl}/issues`,
               'run-at': 'document-start',
             },

@@ -5,3 +5,4 @@ output/playwright/
 e2e/fixtures/
 test-results/
 playwright-report/
+CHANGELOG.md
