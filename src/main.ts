@@ -1,8 +1,8 @@
-import { features } from '@/features';
-import { startFeatures } from '@/shared/feature-runtime';
+import { bootstrap } from '@/app/bootstrap';
 
 function start(): void {
-  startFeatures(features);
+  const stop = bootstrap();
+  if (stop) window.addEventListener('pagehide', stop, { once: true });
 }
 
 if (document.readyState === 'loading') {

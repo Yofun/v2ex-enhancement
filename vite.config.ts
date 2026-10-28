@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => ({
       ? []
       : [
           monkey({
-            entry: mode === 'e2e' ? 'src/e2e-entry.ts' : 'src/main.ts',
+            entry: 'src/main.ts',
             userscript: {
               name: 'V2EX Enhancement',
               namespace: repositoryUrl,
@@ -47,19 +47,14 @@ export default defineConfig(({ mode }) => ({
           }),
         ]),
   ],
-  build: mode === 'e2e' ? { outDir: 'node_modules/.e2e-dist' } : undefined,
   resolve: {
     alias: {
-      'react/jsx-runtime': fileURLToPath(new URL('./src/shared/jsx-runtime.ts', import.meta.url)),
-      'react/jsx-dev-runtime': fileURLToPath(
-        new URL('./src/shared/jsx-runtime.ts', import.meta.url),
-      ),
+      'react/jsx-runtime': fileURLToPath(new URL('./src/core/jsx-runtime.ts', import.meta.url)),
+      'react/jsx-dev-runtime': fileURLToPath(new URL('./src/core/jsx-runtime.ts', import.meta.url)),
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       ...(mode === 'test'
         ? {
-            $: fileURLToPath(
-              new URL('./src/features/v2next/__mocks__/monkey-client.ts', import.meta.url),
-            ),
+            $: fileURLToPath(new URL('./src/test/monkey-client.ts', import.meta.url)),
           }
         : {}),
     },

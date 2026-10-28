@@ -15,8 +15,7 @@ const read = (path: string): string => readFileSync(path, 'utf8');
 export const fixture = (name: string): string => read(resolve(fixturesDir, name));
 
 const ORIGINAL_PATH = '/tmp/v2next/V2Next.orig.js';
-const RESTORED_PATH = resolve(root, 'node_modules/.e2e-dist/v2ex-enhancement.user.js');
-const FULL_PATH = resolve(root, 'dist/v2ex-enhancement.user.js');
+const BUILD_PATH = resolve(root, 'dist/v2ex-enhancement.user.js');
 
 export function hasOriginal(): boolean {
   return existsSync(ORIGINAL_PATH);
@@ -43,7 +42,7 @@ function injectedSource(kind: ScriptKind): string {
   const react = resolve(root, 'node_modules/react/umd/react.production.min.js');
   const reactDom = resolve(root, 'node_modules/react-dom/umd/react-dom.production.min.js');
   // @run-at document-start：本体自行等待 DOMContentLoaded
-  return evalAll([read(react), read(reactDom), read(kind === 'full' ? FULL_PATH : RESTORED_PATH)]);
+  return evalAll([read(react), read(reactDom), read(BUILD_PATH)]);
 }
 
 const GM_SHIM = `

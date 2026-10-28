@@ -47,12 +47,17 @@ yarn e2e    # Playwright：以原版 V2Next 10.31 为基线做对照验证
 
 ```text
 src/
-  features/
-    v2next/                 V2Next 10.31 的 React + TS 还原（列表预览、楼中楼、设置面板等）
-  shared/feature-runtime.ts 功能生命周期与异常隔离
-  main.ts                   脚本入口，仅注册并启动功能
-e2e/                        Playwright 对照测试（fixture 由 yarn fixtures 下载，不入库）
+  main.ts          脚本入口：DOM 就绪后调用 app/bootstrap
+  app/             应用外壳：bootstrap（按页面类型解析并挂载）、App、AppContext、通知/日历等
+  components/      React 组件：base（通用 UI）、comment、post-detail、setting
+  core/            类型、常量、session 状态、事件总线、host 消息总线、JSX 运行时垫片
+  hooks/           通用 hooks
+  parsers/         V2EX 页面/回复的 DOM 解析
+  services/        网络请求、记事本数据同步、自动签到
+  utils/           纯工具（回复楼层树、DOM、GM 封装、邮箱解码等）
+  styles/          全局样式与按配置生成的动态样式
+  test/            单测替身与对照基准（仅 vitest 使用）
+e2e/               Playwright 对照测试（fixture 由 yarn fixtures 下载，不入库）
 ```
 
-新增功能时，在 `src/features/<feature-name>/` 内实现，并将其导出项添加到
-`src/features/index.ts`。每个功能的初始化失败会被隔离，不影响其他功能继续运行。
+约定：同目录用相对路径，跨目录用 `@/` 别名；组件样式用同名 `*.module.scss`。
