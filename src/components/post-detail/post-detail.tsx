@@ -180,7 +180,7 @@ export function PostDetail({
     if (prevPostId.current === post.id) return;
     prevPostId.current = post.id;
     if (isLogin) {
-      requestAnimationFrame(() => detailRef.current?.scrollTo({ top: 0 }));
+      requestAnimationFrame(() => mainRef.current?.scrollTo({ top: 0 }));
     }
   }, [post.id, isLogin]);
 
@@ -266,7 +266,7 @@ export function PostDetail({
         setReplyText(val.text);
         const top = isPost
           ? `${val.top + window.scrollY - 40}px`
-          : `${val.top + (detailRef.current?.scrollTop ?? 0) + 15}px`;
+          : `${val.top + (mainRef.current?.scrollTop ?? 0) + 15}px`;
         const left = `${val.left - (mainRef.current?.getBoundingClientRect().left ?? 0) + 10}px`;
         setCallStyle({ top, left });
         if (selectCallIndex >= getFilterCallList(true, val.text, allReplyUsers).length) {
@@ -342,7 +342,7 @@ export function PostDetail({
 
   const scrollTop = () => {
     if (isPost) window.scrollTo({ top: 0, behavior: 'smooth' });
-    else detailRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    else mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const goBottom = () => {
@@ -351,7 +351,7 @@ export function PostDetail({
       if (isPost) {
         window.scrollTo({ top: document.body.scrollHeight - 850, behavior: 'smooth' });
       } else {
-        const el = detailRef.current;
+        const el = mainRef.current;
         el?.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
       }
     });
