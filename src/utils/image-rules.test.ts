@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import type { ImageRule } from './image-rules';
-import { applyImageRules, createImageRule, runImageRule } from './image-rules';
+import {
+  applyImageRules,
+  createImageRule,
+  resolveImageUrls,
+  runImageRule,
+  runImageRuleAsync,
+} from './image-rules';
 
 const base = (over: Partial<ImageRule>): ImageRule => ({
   ...createImageRule(),
@@ -50,5 +56,35 @@ describe('image rules', () => {
     expect(runImageRule(badRe, URL1).error).toBeTruthy();
     const good = base({ replacement: 'https://ok.test/$1' });
     expect(applyImageRules(URL1, [bad, badRe, good])).toBe('https://ok.test/Uk7Ztv5.jpeg');
+  });
+
+  it('含 await 的脚本：同步路径跳过，异步路径可用，并支持返回多个 URL', async () => {
+    const rule = base({
+      mode: 'script',
+      match: '^https://imgur\\.com/a/',
+      script:
+        "const x = await Promise.resolve(['a', 'b']); return x.map((i) => 'https://i.test/' + i);",
+    });
+    const album = 'https://imgur.com/a/abc';
+    expect(applyImageRules(album, [rule])).toBeNull();
+    expect(runImageRule(rule, album).error).toBeUndefined();
+    expect((await runImageRuleAsync(rule, album)).urls).toEqual([
+      'https://i.test/a',
+      'https://i.test/b',
+    ]);
+    expect(await resolveImageUrls(album, [rule])).toEqual(['https://i.test/a', 'https://i.test/b']);
+    expect(await resolveImageUrls('https://other.test/x', [rule])).toBeNull();
+  });
+
+  it('脚本可通过 ctx.fetchText 读取页面；出错时 resolveImageUrls 跳过该规则', async () => {
+    const bad = base({ mode: 'script', match: '', script: 'throw new Error("x")' });
+    const ok = base({
+      mode: 'script',
+      match: '',
+      script: "return typeof ctx.fetchText === 'function' ? 'https://ok.test/1.png' : null;",
+    });
+    expect(await resolveImageUrls('https://a.test/p', [bad, ok])).toEqual([
+      'https://ok.test/1.png',
+    ]);
   });
 });

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { openSession } from './harness';
+import { fixture, openSession, setRouteHtml } from './harness';
 
 const rule = {
   id: 'r1',
@@ -71,4 +71,46 @@ test('图片规则：设置里添加、启用、测试并持久化', async ({ br
   const [r] = await stored();
   expect(r.enabled).toBe(true);
   expect(r.replacement).toBe('https://mirror.test/$1');
+});
+
+test('图片规则：异步脚本把纯文本相册链接替换成多张图片', async ({ browser }) => {
+  const album = 'https://imgur.com/a/abc1234';
+  const s = await openSession(browser, {
+    kind: 'restored',
+    config: {},
+    storage: {
+      'v2next-image-rules': JSON.stringify([
+        {
+          ...rule,
+          id: 'album',
+          match: '^https://imgur\\.com/a/',
+          mode: 'script',
+          script:
+            "await new Promise((r) => setTimeout(r, 50)); return ['https://mirror.test/1.png', 'https://mirror.test/2.png'];",
+        },
+      ]),
+    },
+  });
+  const png = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+    'base64',
+  );
+  await s.page.route('https://mirror.test/**', (r) =>
+    r.fulfill({ status: 200, contentType: 'image/png', body: png }),
+  );
+  setRouteHtml(
+    s,
+    'topic_1252074.html',
+    fixture('topic_1252074.html').replace(
+      '<div class="topic_content">',
+      `<div class="topic_content"><a href="${album}">${album}</a><br>`,
+    ),
+  );
+  await s.goto('/t/1252074');
+  await s.page.waitForSelector('#app [data-floor]');
+  await expect(s.page.locator(`#app a[href="${album}"] img`)).toHaveCount(2);
+  const srcs = await s.page
+    .locator(`#app a[href="${album}"] img`)
+    .evaluateAll((l) => l.map((i) => (i as HTMLImageElement).src));
+  expect(srcs).toEqual(['https://mirror.test/1.png', 'https://mirror.test/2.png']);
 });

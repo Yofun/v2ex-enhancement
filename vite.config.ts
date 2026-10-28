@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => ({
               author: 'Yofun',
               match: ['https://v2ex.com/*', 'https://*.v2ex.com/*'],
               grant: ['GM_addStyle', 'GM_openInTab', 'GM_registerMenuCommand', 'GM_xmlhttpRequest'],
-              connect: ['oapi.dingtalk.com'],
+              connect: ['oapi.dingtalk.com', '*'],
               homepageURL: repositoryUrl,
               updateURL: `${repositoryUrl}/releases/latest/download/v2ex-enhancement.user.js`,
               downloadURL: `${repositoryUrl}/releases/latest/download/v2ex-enhancement.user.js`,

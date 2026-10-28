@@ -29,3 +29,25 @@ export function gmPostJson(url: string, data: unknown): void {
     data: JSON.stringify(data),
   });
 }
+
+/** 跨域 GET 文本：有 GM_xmlhttpRequest 时走它（不受 CORS 限制），否则退回 fetch */
+export function gmGetText(url: string): Promise<string> {
+  if (typeof GM_xmlhttpRequest !== 'function') {
+    return fetch(url).then((res) => {
+      if (!res.ok) throw new Error(`请求失败 ${res.status}`);
+      return res.text();
+    });
+  }
+  return new Promise((resolve, reject) => {
+    GM_xmlhttpRequest({
+      method: 'GET',
+      url,
+      onload: (res) =>
+        res.status >= 200 && res.status < 300
+          ? resolve(res.responseText)
+          : reject(new Error(`请求失败 ${res.status}`)),
+      onerror: () => reject(new Error('网络错误')),
+      ontimeout: () => reject(new Error('请求超时')),
+    });
+  });
+}

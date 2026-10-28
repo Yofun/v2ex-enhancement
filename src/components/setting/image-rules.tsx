@@ -4,15 +4,30 @@ import { BaseButton } from '@/components/base/base-button';
 import { BaseSwitch } from '@/components/base/base-switch';
 import { Icon } from '@/components/base/icon';
 import type { ImageRule } from '@/utils/image-rules';
-import { createImageRule, loadImageRules, runImageRule, saveImageRules } from '@/utils/image-rules';
+import {
+  createImageRule,
+  loadImageRules,
+  runImageRule,
+  runImageRuleAsync,
+  saveImageRules,
+} from '@/utils/image-rules';
 
 import styles from './image-rules.module.scss';
 
 const SAMPLE_URL = 'https://i.imgur.com/Uk7Ztv5.jpeg';
 
+const ALBUM_EXAMPLE = {
+  match: '^https?://imgur\\.com/a/\\w+',
+  script: `// 请求相册的 embed 页面，取出里面所有图片的 id
+const html = await ctx.fetchText(url.replace(/[?#].*$/, '').replace(/\\/?$/, '/embed'));
+const ids = [...new Set([...html.matchAll(/i\\.imgur\\.com\\/(\\w{7})s?\\.(?:jpe?g|png|gif)/g)].map((m) => m[1]))];
+return ids.map((id) => 'https://i.imgur.com/' + id + '.png');`,
+};
+
 export function ImageRules() {
   const [rules, setRules] = useState<ImageRule[]>(() => loadImageRules());
   const [testUrl, setTestUrl] = useState(SAMPLE_URL);
+  const [asyncResults, setAsyncResults] = useState<Record<string, string>>({});
 
   const commit = (next: ImageRule[]) => {
     setRules(next);
@@ -21,6 +36,17 @@ export function ImageRules() {
   const update = (id: string, patch: Partial<ImageRule>) =>
     commit(rules.map((r) => (r.id === id ? { ...r, ...patch } : r)));
   const remove = (id: string) => commit(rules.filter((r) => r.id !== id));
+
+  const runAsync = async (rule: ImageRule) => {
+    setAsyncResults((prev) => ({ ...prev, [rule.id]: '运行中…' }));
+    const res = await runImageRuleAsync(rule, testUrl);
+    const text = res.error
+      ? `出错：${res.error}`
+      : res.urls.length
+        ? `${res.urls.length} 个结果：\n${res.urls.join('\n')}`
+        : '未命中或脚本返回空值';
+    setAsyncResults((prev) => ({ ...prev, [rule.id]: text }));
+  };
 
   const results = useMemo(() => {
     const out = new Map<string, { url: string; hit: boolean; error?: string }>();
@@ -105,19 +131,32 @@ export function ImageRules() {
               <div className={styles.field}>
                 <label>
                   函数体
-                  <small>参数 url、match，返回新地址，返回空值表示不处理</small>
+                  <small>
+                    参数 url、match、ctx；可 await
+                    ctx.fetchText(url)；返回地址或地址数组，返回空值表示不处理
+                  </small>
                 </label>
-                <textarea
-                  value={rule.script}
-                  spellCheck={false}
-                  rows={4}
-                  onChange={(e) => update(rule.id, { script: e.target.value })}
-                />
+                <div className={styles.scriptBox}>
+                  <textarea
+                    value={rule.script}
+                    spellCheck={false}
+                    rows={6}
+                    onChange={(e) => update(rule.id, { script: e.target.value })}
+                  />
+                  <div className={styles.scriptActions}>
+                    <span onClick={() => update(rule.id, ALBUM_EXAMPLE)}>填入 imgur 相册示例</span>
+                    <span onClick={() => runAsync(rule)}>运行测试</span>
+                  </div>
+                </div>
               </div>
             )}
 
             <div className={styles.result}>
-              {res?.error ? (
+              {rule.mode === 'script' && asyncResults[rule.id] ? (
+                <span className={styles.hit} style={{ whiteSpace: 'pre-wrap' }}>
+                  {asyncResults[rule.id]}
+                </span>
+              ) : res?.error ? (
                 <span className={styles.error}>出错：{res.error}</span>
               ) : res?.hit ? (
                 <span className={styles.hit}>测试结果：{res.url}</span>

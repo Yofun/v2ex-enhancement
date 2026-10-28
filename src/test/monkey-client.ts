@@ -2,3 +2,4 @@
 export const GM_addStyle: undefined = undefined;
 export const GM_openInTab: undefined = undefined;
 export const GM_registerMenuCommand: undefined = undefined;
+export const GM_xmlhttpRequest: undefined = undefined;

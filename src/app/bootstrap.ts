@@ -6,6 +6,7 @@ import { getDefaultPost } from '@/core/constants';
 import { session } from '@/core/session';
 import { PageType } from '@/core/types';
 import { parse } from '@/parsers';
+import { startImageLinks } from '@/services/image-links';
 import { initNoteData } from '@/services/note-data';
 import { initSession } from '@/services/session-init';
 import { qianDao } from '@/services/signin';
@@ -283,8 +284,10 @@ export function bootstrap(): (() => void) | undefined {
   const root = createRoot($section);
   root.render(createElement(App));
   window.addEventListener('error', onImageError, true);
+  const stopImageLinks = startImageLinks();
 
   return () => {
+    stopImageLinks();
     window.removeEventListener('error', onImageError, true);
     root.unmount();
     $section.remove();

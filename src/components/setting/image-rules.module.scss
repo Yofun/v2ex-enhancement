@@ -143,3 +143,24 @@ textarea {
     color: red;
   }
 }
+
+.scriptBox {
+  flex: 1;
+  min-width: 0;
+}
+
+.scriptActions {
+  display: flex;
+  gap: 1.4rem;
+  margin-top: 0.4rem;
+  font-size: 1.2rem;
+
+  span {
+    cursor: pointer;
+    color: var(--color-active);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

@@ -126,7 +126,7 @@ export function useImagePreview() {
     (e: ReactMouseEvent<HTMLElement>) => {
       e.stopPropagation();
       e.nativeEvent.stopImmediatePropagation();
-      const target = e.target as HTMLElement;
+      const target = e.target as HTMLImageElement;
       if (target.tagName !== 'IMG') return;
       const state = initialState();
       stateRef.current = state;
@@ -144,16 +144,29 @@ export function useImagePreview() {
       css(s, 'height', domRect.height);
       setTransform(s, `translate3d(${domRect.x}px, ${domRect.y}px, 0) scale(1)`);
       state.rect = domRect;
-      const result = getImgSize(
-        s.naturalWidth,
-        s.naturalHeight,
-        window.innerWidth * 0.95,
-        window.innerHeight * 0.9,
-      );
-      state.resultWidth = result.width;
-      state.resultHeight = result.height;
-      state.x = (window.innerWidth - result.width) * 0.5;
-      state.y = (window.innerHeight - result.height) * 0.5;
+      // 克隆出来的 img 在首次点击时 naturalWidth 还是 0，要用页面上已加载的原图尺寸
+      const applySize = () => {
+        const nw = target.naturalWidth || s.naturalWidth;
+        const nh = target.naturalHeight || s.naturalHeight;
+        const result = getImgSize(nw, nh, window.innerWidth * 0.95, window.innerHeight * 0.9);
+        state.resultWidth = result.width;
+        state.resultHeight = result.height;
+        state.x = (window.innerWidth - result.width) * 0.5;
+        state.y = (window.innerHeight - result.height) * 0.5;
+      };
+      applySize();
+      if (!(target.naturalWidth || s.naturalWidth)) {
+        s.addEventListener(
+          'load',
+          () => {
+            applySize();
+            setTransform(s, `translate3d(${state.x}px, ${state.y}px, 0) scale(${state.scale})`);
+            css(s, 'width', state.resultWidth);
+            css(s, 'height', state.resultHeight);
+          },
+          { once: true },
+        );
+      }
 
       let isPointerdown = false;
       let isMove = false;
