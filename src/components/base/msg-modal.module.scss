@@ -1,9 +1,8 @@
 .msgs {
   position: fixed;
-  margin-left: calc(50% - 25rem);
-  width: 50rem;
+  top: 2rem;
+  right: 2rem;
+  width: min(36rem, calc(100vw - 4rem));
   z-index: 9999;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  pointer-events: none;
 }

@@ -1,46 +1,107 @@
+@keyframes msg-in {
+  from {
+    opacity: 0;
+    transform: translateX(3rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes msg-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 12rem;
+    margin-bottom: 1rem;
+  }
+
+  60% {
+    opacity: 0;
+    transform: translateX(3rem);
+    max-height: 12rem;
+    margin-bottom: 1rem;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(3rem);
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
 .msg {
+  --msg-color: var(--color-active);
+
+  pointer-events: auto;
   cursor: default;
-  margin-bottom: 2rem;
-  display: flex;
-  font-size: 1.4rem;
   box-sizing: border-box;
-  border-radius: var(--v2n-radius);
-  color: var(--color-font-8);
-  background: var(--color-tooltip-bg);
-  box-shadow: 0 0 6px 1px var(--color-tooltip-shadow);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 1.2rem 1.2rem 1.2rem 1.4rem;
+  overflow: hidden;
+  font-size: 1.4rem;
+  line-height: 1.5;
+  border-radius: 1rem;
+  border: 1px solid var(--color-line);
+  border-left: 4px solid var(--msg-color);
+  color: var(--color-font-pure);
+  background: var(--color-second-bg);
+  box-shadow:
+    0 8px 24px #00000026,
+    0 2px 6px #0000001a;
+  animation: msg-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  &.success .left {
-    background: var(--color-active);
+  &.success {
+    --msg-color: var(--v2n-success);
   }
 
-  &.warning .left {
-    background: var(--v2n-warn);
+  &.warning {
+    --msg-color: var(--v2n-warn);
   }
 
-  &.error .left {
-    background: var(--v2n-danger);
+  &.error {
+    --msg-color: var(--v2n-danger);
   }
 
-  .left {
-    border-radius: var(--v2n-radius) 0 0 var(--v2n-radius);
-    display: flex;
-    align-items: center;
-    background: var(--color-active);
-    color: #fff;
-    width: 3.6rem;
-    font-size: 2.4rem;
-    justify-content: center;
-
-    svg {
-      cursor: pointer;
-    }
+  &.leaving {
+    pointer-events: none;
+    animation: msg-out 0.26s ease-in forwards;
   }
 
-  .right {
+  .dot {
+    flex-shrink: 0;
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-top: 0.6rem;
+    border-radius: 50%;
+    background: var(--msg-color);
+  }
+
+  .text {
     flex: 1;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  .close {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--color-font);
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--color-font-pure);
+    }
   }
 }
