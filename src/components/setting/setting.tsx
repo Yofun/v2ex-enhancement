@@ -510,7 +510,14 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                           )}
                         </div>
                         {importLoading && (
-                          <div style={{ display: 'inline', marginLeft: '10px', fontSize: '18px' }}>
+                          <div
+                            style={{
+                              display: 'inline',
+                              marginLeft: '10px',
+                              fontSize: '13px',
+                              color: 'var(--color-font)',
+                            }}
+                          >
                             {' '}
                             导入中：{index}/{total} ，大约需要{endTime}
                             分钟，导入完成前请勿关闭和刷新本页面{' '}
