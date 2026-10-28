@@ -81,7 +81,7 @@ export function Author({
         {!modelValue && (
           <Icon
             onClick={stop(() => onUpdateModelValue?.(true))}
-            color="#177EC9"
+            color="var(--color-active)"
             className={styles.expandIcon}
             icon="gravity-ui:chevrons-expand-up-right"
           />

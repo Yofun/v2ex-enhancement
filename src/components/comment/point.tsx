@@ -76,10 +76,10 @@ export function Point({ item, apiUrl, onAddThank, onRecallThank, hidden = false 
           onClick={thankError}
         >
           {item.isThanked ? (
-            <Icon color="rgb(224,42,42)" icon="icon-park-solid:like" />
+            <Icon color="var(--v2n-danger)" icon="icon-park-solid:like" />
           ) : (
             <Icon
-              color={item.thankCount ? 'rgb(224,42,42)' : undefined}
+              color={item.thankCount ? 'var(--v2n-danger)' : undefined}
               icon="icon-park-outline:like"
             />
           )}

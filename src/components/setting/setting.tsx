@@ -421,7 +421,7 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                       {' '}
                       未设定此值时，则默认宽度为77rem。接受合法的width值：{' '}
                       <a
-                        style={{ color: '#40a9ff', textDecoration: 'underline' }}
+                        style={{ color: 'var(--color-active)', textDecoration: 'underline' }}
                         href="https://vue3js.cn/interview/css/em_px_rem_vh_vw.html#%E4%BA%8C%E3%80%81%E5%8D%95%E4%BD%8D"
                         target="_blank"
                         rel="noreferrer"

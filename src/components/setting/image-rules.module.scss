@@ -80,7 +80,7 @@ textarea {
     color: var(--color-font);
 
     &:hover {
-      color: red;
+      color: var(--v2n-danger);
     }
   }
 }
@@ -132,7 +132,7 @@ textarea {
   font-size: 1.2rem;
 
   .hit {
-    color: #16a34a;
+    color: var(--v2n-success);
   }
 
   .miss {
@@ -140,7 +140,7 @@ textarea {
   }
 
   .error {
-    color: red;
+    color: var(--v2n-danger);
   }
 }
 

@@ -13,9 +13,9 @@
     bottom: 2rem;
     padding: 0.2rem 1.5rem;
     border-radius: 2rem;
-    border: 1px solid gray;
-    background: white;
-    color: gray;
+    border: 1px solid var(--color-font);
+    background: var(--color-second-bg);
+    color: var(--color-font);
     left: 50%;
     transform: translate(-50%);
     cursor: pointer;

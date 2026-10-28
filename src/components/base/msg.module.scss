@@ -4,7 +4,7 @@
   display: flex;
   font-size: 1.4rem;
   box-sizing: border-box;
-  border-radius: var(--box-border-radius);
+  border-radius: var(--v2n-radius);
   color: var(--color-font-8);
   background: var(--color-tooltip-bg);
   box-shadow: 0 0 6px 1px var(--color-tooltip-shadow);
@@ -14,15 +14,15 @@
   }
 
   &.warning .left {
-    background: #c8c002;
+    background: var(--v2n-warn);
   }
 
   &.error .left {
-    background: red;
+    background: var(--v2n-danger);
   }
 
   .left {
-    border-radius: var(--box-border-radius) 0 0 var(--box-border-radius);
+    border-radius: var(--v2n-radius) 0 0 var(--v2n-radius);
     display: flex;
     align-items: center;
     background: var(--color-active);

@@ -62,7 +62,7 @@
     }
 
     .jump {
-      color: #929596;
+      color: var(--color-font);
       margin-top: 0.4rem;
       font-size: 1.4rem;
     }
@@ -75,6 +75,6 @@
     gap: 0.5rem;
     align-items: center;
     font-weight: 700;
-    color: #000;
+    color: var(--color-font-pure);
   }
 }

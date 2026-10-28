@@ -17,7 +17,7 @@
   }
 
   &.replyComment {
-    border-radius: var(--box-border-radius);
+    border-radius: var(--v2n-radius);
     overflow: hidden;
     border: 1px solid var(--color-line);
 
@@ -31,7 +31,7 @@
   }
 
   .postEditor {
-    border-radius: var(--box-border-radius);
+    border-radius: var(--v2n-radius);
     transition: border 0.3s;
     width: 100%;
     max-width: 100%;
@@ -42,7 +42,7 @@
     font-size: 1.4rem;
     min-height: 13rem;
     resize: none;
-    background: var(--box-background-color);
+    background: var(--v2n-card-bg);
     color: var(--color-font-pure);
     border: 1px solid transparent;
   }
@@ -86,13 +86,13 @@
 
     // 原版是 scoped 样式，只命中本组件模板里的 span（“上传中”），不会波及子组件 BaseButton 内部的 span
     .left > span {
-      color: gray;
+      color: var(--color-font);
       font-size: 1.3rem;
     }
   }
 
   .getCursor {
-    border-radius: var(--box-border-radius);
+    border-radius: var(--v2n-radius);
     transition: border 0.3s;
     width: 100%;
     max-width: 100%;
@@ -103,7 +103,7 @@
     font-size: 1.4rem;
     min-height: 13rem;
     resize: none;
-    background: var(--box-background-color);
+    background: var(--v2n-card-bg);
     color: var(--color-font-pure);
     border: 1px solid transparent;
     position: absolute;

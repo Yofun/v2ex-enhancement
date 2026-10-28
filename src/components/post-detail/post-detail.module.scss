@@ -50,8 +50,8 @@
 .myBox {
   box-shadow: 0 2px 3px #0000001a;
   box-shadow: #00000014 0 4px 12px;
-  border-radius: var(--box-border-radius);
-  background: var(--box-background-color);
+  border-radius: var(--v2n-radius);
+  background: var(--v2n-card-bg);
   margin-bottom: 2rem;
   width: 100%;
   box-sizing: border-box;
@@ -88,12 +88,12 @@
 }
 
 .danger {
-  color: red !important;
+  color: var(--v2n-danger) !important;
 }
 
 .myTag {
   font-size: 1.4rem;
-  color: red;
+  color: var(--v2n-danger);
   margin-left: 1rem;
 
   &:hover .remove {
@@ -121,7 +121,7 @@
   position: sticky;
   bottom: -2px;
   z-index: 2;
-  background: var(--box-background-hover-color) !important;
+  background: var(--v2n-card-hover) !important;
 
   &[stuck] {
     box-shadow: 0 2px 20px #00000059 !important;
@@ -239,7 +239,7 @@
       }
 
       .noComments {
-        color: #a9a9a9;
+        color: var(--color-font);
         font-weight: 700;
         text-align: center;
         width: 100%;
@@ -260,14 +260,14 @@
 
       .myCell {
         background: var(--color-second-bg);
-        border-radius: var(--box-border-radius) var(--box-border-radius) 0 0;
+        border-radius: var(--v2n-radius) var(--v2n-radius) 0 0;
       }
 
       .comments {
         max-height: calc(100% - 4.2rem);
         overflow: auto;
         background: var(--color-second-bg);
-        border-radius: 0 0 var(--box-border-radius) var(--box-border-radius);
+        border-radius: 0 0 var(--v2n-radius) var(--v2n-radius);
       }
     }
 
@@ -280,7 +280,7 @@
       box-shadow: 0 5px 15px #0000001a;
       overflow: auto;
       max-height: 30rem;
-      border-radius: var(--box-border-radius);
+      border-radius: var(--v2n-radius);
       min-width: 8rem;
       box-sizing: content-box;
 
@@ -332,7 +332,7 @@
       width: 3.6rem;
       font-size: 1.4rem;
       text-align: center;
-      color: gray;
+      color: var(--color-font);
     }
   }
 
@@ -376,8 +376,8 @@
   --color-editor-toolbar: #303e64;
   --color-font-pure: white;
   --color-main-bg: #545454;
-  --box-background-color: rgba(0, 0, 0, 0.5);
-  --box-background-hover-color: rgba(0, 0, 0, 0.5);
+  --v2n-card-bg: rgba(0, 0, 0, 0.5);
+  --v2n-card-hover: rgba(0, 0, 0, 0.5);
 
   .myBox {
     color: #fff;

@@ -23,7 +23,7 @@ interface CommentProps {
 }
 
 export function Comment({ modelValue, type = 'list' }: CommentProps) {
-  const { post, show, isNight, config } = useApp();
+  const { post, show, config } = useApp();
   const postDetailWidth = usePostDetailWidth();
 
   const [edit, setEdit] = useState(false);
@@ -55,7 +55,7 @@ export function Comment({ modelValue, type = 'list' }: CommentProps) {
         padding: '1rem 0',
         width: `calc(${postDetailWidth}px - ${padding}rem)`,
         transform: `translateX(calc(${rect.width - postDetailWidth}px + ${padding}rem))`,
-        background: isNight ? '#18222d' : 'white',
+        background: 'var(--color-second-bg)',
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

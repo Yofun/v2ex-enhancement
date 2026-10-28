@@ -38,7 +38,7 @@
   border-radius: 0.5rem;
   overflow: hidden;
   border: 1px solid var(--color-radio-border);
-  background: var(--box-background-alt-color);
+  background: var(--v2n-card-alt);
 
   .radio {
     cursor: pointer;
@@ -67,12 +67,12 @@
 }
 
 .danger {
-  color: #e5484d !important;
+  color: var(--v2n-danger) !important;
 }
 
 .new {
   position: absolute;
-  background: red;
+  background: var(--v2n-danger);
   font-size: 10px;
   border-radius: 4px;
   padding: 0 2px;
@@ -354,7 +354,7 @@
   margin-bottom: 20px;
   padding-left: 20px;
   font-size: 16px;
-  color: #6495ed;
+  color: var(--color-active);
   text-decoration: underline;
 }
 

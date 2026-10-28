@@ -4,8 +4,8 @@
 .myBox {
   box-shadow: 0 2px 3px #0000001a;
   box-shadow: #00000014 0 4px 12px;
-  border-radius: var(--box-border-radius);
-  background: var(--box-background-color);
+  border-radius: var(--v2n-radius);
+  background: var(--v2n-card-bg);
   margin-bottom: 2rem;
   width: 100%;
   box-sizing: border-box;
@@ -28,7 +28,7 @@
 
 .myTag {
   font-size: 1.4rem;
-  color: red;
+  color: var(--v2n-danger);
   margin-left: 1rem;
 
   &:hover .remove {

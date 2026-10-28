@@ -32,10 +32,10 @@ export function SingleComment({ comment, isRight = false }: SingleCommentProps) 
   const point = comment.thankCount ? (
     <div className={styles.point}>
       {comment.isThanked ? (
-        <Icon color="rgb(224,42,42)" icon="icon-park-solid:like" />
+        <Icon color="var(--v2n-danger)" icon="icon-park-solid:like" />
       ) : (
         <Icon
-          color={comment.thankCount ? 'rgb(224,42,42)' : undefined}
+          color={comment.thankCount ? 'var(--v2n-danger)' : undefined}
           icon="icon-park-outline:like"
         />
       )}

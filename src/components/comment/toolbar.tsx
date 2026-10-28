@@ -190,7 +190,7 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
         {loading ? (
           <BaseLoading size="small" />
         ) : post.isFavorite ? (
-          <Icon color="rgb(224,42,42)" icon="iconoir:star-solid" />
+          <Icon color="var(--v2n-danger)" icon="iconoir:star-solid" />
         ) : (
           <Icon icon="iconoir:star" />
         )}
