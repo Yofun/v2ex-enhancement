@@ -743,7 +743,7 @@ export function PostDetail({
           </div>
         </div>
         {createPortal(
-          <div className={styles.previewModal} ref={modalRef}>
+          <div className={styles.previewModal} ref={modalRef} onClick={(e) => e.stopPropagation()}>
             <div className={styles.mask} ref={maskRef} onClick={closePreviewModal} />
             <Icon className={styles.close} icon="fontisto:close-a" onClick={closePreviewModal} />
             <div className={styles.zoomBar} onClick={(e) => e.stopPropagation()}>
