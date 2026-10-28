@@ -324,7 +324,7 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
           <div className={styles['modal-content']}>
             <div className={styles.scroll}>
               {tabIndex === 0 && (
-                <div>
+                <div className={styles.card}>
                   <div className={styles.border}>
                     <div className={styles.row}>
                       <label className={styles['item-title']}>列表展示方式</label>
@@ -363,7 +363,7 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                 </div>
               )}
               {tabIndex === 1 && (
-                <div>
+                <div className={styles.card}>
                   <div className={cx(styles.row, styles.border)}>
                     <label className={styles['item-title']}>回复类型</label>
                     <div className={styles.wrapper}>
@@ -477,7 +477,7 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                 </div>
               )}
               {tabIndex === 2 && (
-                <div>
+                <div className={styles.card}>
                   <div className={styles.row}>
                     <label className={styles['main-title']}>收藏列表</label>
                   </div>
@@ -636,7 +636,7 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
               )}
               {tabIndex === 3 && <ImageRules />}
               {tabIndex === 4 && (
-                <div>
+                <div className={styles.card}>
                   <h1>V2EX Enhancement</h1>
                   <div className={styles['project-desc']}>
                     <div style={{ lineHeight: 2 }}>

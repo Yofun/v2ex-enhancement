@@ -160,6 +160,7 @@ export async function snapshotDom(
       const aliasClass: Record<string, string> = { posteditorwrapper: 'wrapper' };
       const ignoredClasses = new Set([
         'ispostpage',
+        'card',
         'left',
         'v2nextscrolltop',
         'scrolltop',
