@@ -17,6 +17,16 @@
   font-size: 2rem;
   background: var(--color-sp-btn-bg);
   color: var(--color-font-3);
+  box-shadow: 0 2px 8px #00000026;
+  transition:
+    color 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
+
+  &:hover {
+    color: var(--color-font-pure);
+    box-shadow: 0 4px 14px #00000040;
+  }
 
   svg {
     font-size: 2.4rem;
@@ -126,7 +136,8 @@
   right: 0;
   bottom: 0;
   top: 0;
-  background: rgba(46, 47, 48, 0.8);
+  background: rgba(30, 31, 32, 0.72);
+  backdrop-filter: blur(4px);
   overflow: auto;
   font-size: 1.4rem;
   display: flex;
