@@ -34,7 +34,7 @@ export async function fetchNotificationPage(href: string): Promise<NotificationP
   }
   const body = genDomFromHtmlString(htmlText);
   const list = body.querySelector('#notifications');
-  if (!list) throw new Error('[V2Next] 未找到提醒列表');
+  if (!list) throw new Error('[v2ex-enhancement] 未找到提醒列表');
   Array.from(list.children).forEach((child) => markReplyItemType([child]));
   const result: NotificationPage = { list: list.innerHTML, pages: '' };
   const totalEls = body.querySelectorAll('#Main > .box > .header .fr .gray');

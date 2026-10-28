@@ -31,7 +31,7 @@ export function findReplyBox(boxs: ArrayLike<Element>): Element | undefined {
       if (firstCell.querySelector('.fa-tag')) return box;
     }
   }
-  console.warn('[V2Next] 无法智能检测回复区域，使用默认位置');
+  console.warn('[v2ex-enhancement] 无法智能检测回复区域，使用默认位置');
   return boxs[1];
 }
 

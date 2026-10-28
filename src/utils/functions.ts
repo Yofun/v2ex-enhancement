@@ -57,7 +57,7 @@ export const functions = {
     }
     if (typeof once === 'number' && once) return once;
     const fetchOnce = (window as unknown as { fetchOnce?: () => Promise<number> }).fetchOnce;
-    if (typeof fetchOnce !== 'function') throw new Error('[V2Next] 页面未提供 fetchOnce');
+    if (typeof fetchOnce !== 'function') throw new Error('[v2ex-enhancement] 页面未提供 fetchOnce');
     return fetchOnce();
   },
 

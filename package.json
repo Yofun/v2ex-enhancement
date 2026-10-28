@@ -2,7 +2,7 @@
   "name": "v2ex-enhancement",
   "version": "0.1.49",
   "private": true,
-  "description": "A modular React userscript that improves the V2EX experience.",
+  "description": "V2EX 增强脚本：列表预览、楼中楼评论、标签、签到等（基于 V2Next 还原为 React + TypeScript）",
   "type": "module",
   "packageManager": "yarn@4.9.2",
   "scripts": {

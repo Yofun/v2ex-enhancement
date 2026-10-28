@@ -89,7 +89,7 @@ export function parsePagePostList(list: ArrayLike<Element>, box: ParentNode): vo
                   setF(res);
                 }
               })
-              .catch((e) => console.error('[V2Next] 获取主题预览失败', e));
+              .catch((e) => console.error('[v2ex-enhancement] 获取主题预览失败', e));
           },
           fetchIndex < 4 ? 0 : (fetchIndex - 4) * 1e3,
         );

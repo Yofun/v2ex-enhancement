@@ -4,6 +4,7 @@ import type { CSSProperties } from 'react';
 
 import { useApp } from '@/app/app-context';
 import { Icon } from '@/components/base/icon';
+import { DefaultVal } from '@/core/constants';
 import { CMD, eventBus } from '@/core/event-bus';
 import type { Reply } from '@/core/types';
 import { CommentDisplayType } from '@/core/types';
@@ -145,7 +146,7 @@ export function Comment({ modelValue, type = 'list' }: CommentProps) {
                         三、层主回复时指定错了楼层号（同一，层主屏蔽了别人，导致楼层塌陷）
                         <br />
                         四、脚本解析错误，请在{' '}
-                        <a href="https://github.com/zyronon/V2Next/issues" target="_blank">
+                        <a href={DefaultVal.issue} target="_blank">
                           这里
                         </a>
                         反馈

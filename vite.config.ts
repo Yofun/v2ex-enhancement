@@ -21,7 +21,8 @@ export default defineConfig(({ mode }) => ({
               name: 'V2EX Enhancement',
               namespace: repositoryUrl,
               version: packageJson.version,
-              description: '为 V2EX 提供模块化的页面美化和增强功能。',
+              description:
+                'V2EX 增强脚本：列表预览、楼中楼评论、标签、签到等（基于 V2Next 还原为 React + TypeScript）',
               author: 'Yofun',
               match: ['https://v2ex.com/*', 'https://*.v2ex.com/*'],
               grant: ['GM_addStyle', 'GM_openInTab', 'GM_registerMenuCommand', 'GM_xmlhttpRequest'],

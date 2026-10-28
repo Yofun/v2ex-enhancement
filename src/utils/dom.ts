@@ -8,7 +8,7 @@ export function getInnerText(el: Element): string {
 /** 从 HTML 字符串里取出 <body> 并生成 DOM（原 functions.genDomFromHtmlString） */
 export function genDomFromHtmlString(htmlText: string): HTMLElement {
   const bodyText = htmlText.match(BODY_REG);
-  if (!bodyText) throw new Error('[V2Next] 无法从 HTML 中解析 body');
+  if (!bodyText) throw new Error('[v2ex-enhancement] 无法从 HTML 中解析 body');
   const body = document.createElement('html');
   body.innerHTML = bodyText[0];
   return body;
@@ -18,7 +18,9 @@ export function genDomFromHtmlString(htmlText: string): HTMLElement {
 export async function fetchBody(url: string): Promise<HTMLElement> {
   const res = await fetch(url);
   if (!res.ok)
-    throw Object.assign(new Error(`[V2Next] 请求失败 ${res.status}`), { status: res.status });
+    throw Object.assign(new Error(`[v2ex-enhancement] 请求失败 ${res.status}`), {
+      status: res.status,
+    });
   return genDomFromHtmlString(await res.text());
 }
 

@@ -13,14 +13,14 @@ async function redeem(qiandao: HTMLAnchorElement | null, timeNow: string): Promi
   if (body.querySelector('li.fa.fa-ok-sign')) {
     const days = body.querySelector('#Main')?.textContent?.match(/已连续登录 (\d+?) 天/)?.[0] ?? '';
     localStorage.setItem(STORAGE_KEY, timeNow);
-    console.info('[V2Next] 自动签到完成！');
+    console.info('[v2ex-enhancement] 自动签到完成！');
     if (qiandao) {
       qiandao.textContent = `自动签到完成！${days}`;
       qiandao.href = 'javascript:void(0);';
     }
   } else {
     console.warn(
-      '[V2Next] 自动签到失败！请关闭其他插件或脚本。如果连续几天都签到失败，请联系作者解决！',
+      '[v2ex-enhancement] 自动签到失败！请关闭其他插件或脚本。如果连续几天都签到失败，请联系作者解决！',
     );
     if (qiandao) qiandao.textContent = '自动签到失败！请尝试手动签到！';
   }
@@ -31,7 +31,7 @@ async function checkStatus(timeNow: string): Promise<void> {
   if (body.querySelector('input[value^="领取"]')) {
     await redeem(null, timeNow);
   } else {
-    console.info('[V2Next] 已经签过到了。');
+    console.info('[v2ex-enhancement] 已经签过到了。');
     localStorage.setItem(STORAGE_KEY, timeNow);
   }
 }
@@ -45,7 +45,7 @@ export function qianDao(): void {
       '.box .inner a[href="/mission/daily"]',
     );
     if (qiandao) {
-      redeem(qiandao, timeNow).catch((e) => console.error('[V2Next] 自动签到出错', e));
+      redeem(qiandao, timeNow).catch((e) => console.error('[v2ex-enhancement] 自动签到出错', e));
     } else {
       const gift = document.getElementById('gift_v2excellent');
       if (gift) {
@@ -56,7 +56,7 @@ export function qianDao(): void {
   } else {
     const timeOld = localStorage.getItem(STORAGE_KEY);
     if (!timeOld || timeOld != timeNow) {
-      checkStatus(timeNow).catch((e) => console.error('[V2Next] 获取签到状态出错', e));
+      checkStatus(timeNow).catch((e) => console.error('[v2ex-enhancement] 获取签到状态出错', e));
     }
   }
 }

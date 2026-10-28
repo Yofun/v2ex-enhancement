@@ -2,7 +2,7 @@ import { createElement } from 'react';
 
 import { createRoot } from 'react-dom/client';
 
-import { DefaultVal, getDefaultPost } from '@/core/constants';
+import { getDefaultPost } from '@/core/constants';
 import { session } from '@/core/session';
 import { PageType } from '@/core/types';
 import { parse } from '@/parsers';
@@ -134,11 +134,11 @@ async function handlePostPage($section: HTMLElement): Promise<boolean> {
       await functions.cbChecker({ type: 'postContent', value: res });
       await parse.parseOp(res);
     })
-    .catch((e) => console.error('[V2Next] 解析主题内容失败', e));
+    .catch((e) => console.error('[v2ex-enhancement] 解析主题内容失败', e));
   parse
     .getPostAllReplies(post, body, htmlText, session.pageData.pageNo ?? 1)
     .then((res) => functions.cbChecker({ type: 'postReplies', value: res }))
-    .catch((e) => console.error('[V2Next] 解析主题回复失败', e));
+    .catch((e) => console.error('[v2ex-enhancement] 解析主题回复失败', e));
   return true;
 }
 
@@ -173,10 +173,6 @@ function handleMemberPage($section: HTMLElement): void {
 
 function addSettingText(): void {
   document.querySelectorAll('.tools').forEach((tools) => {
-    const app = htmlToElement(
-      `<a href="${DefaultVal.mobileScript}" target='_blank' class="top"><i class="fa fa-android" aria-hidden="true"></i></a>`,
-    );
-    tools.prepend(app);
     const setting = htmlToElement(
       `<a href="/" class="top v2next-setting"><span>脚本设置</span></a>`,
     );
@@ -240,7 +236,7 @@ async function init($section: HTMLElement): Promise<void> {
   }
 
   if (session.isLogin) {
-    initNoteData().catch((e) => console.error('[V2Next] 读取记事本数据失败', e));
+    initNoteData().catch((e) => console.error('[v2ex-enhancement] 读取记事本数据失败', e));
     try {
       if (session.config.autoSignin) qianDao();
     } catch {
@@ -254,7 +250,7 @@ async function init($section: HTMLElement): Promise<void> {
 function runPage($section: HTMLElement): void {
   session.canParseV2exPage = !location.search.includes('script');
   if (session.canParseV2exPage) {
-    init($section).catch((e) => console.error('[V2Next] 初始化失败', e));
+    init($section).catch((e) => console.error('[v2ex-enhancement] 初始化失败', e));
     return;
   }
   document.querySelector('#Wrapper #Main .box')?.after($section);
@@ -271,7 +267,7 @@ function runPage($section: HTMLElement): void {
   }
 }
 
-/** 启动 V2Next：仅 PC 端（存在 #Rightbar）运行。返回清理函数 */
+/** 启动：仅 PC 端（存在 #Rightbar）运行。返回清理函数 */
 export function bootstrap(): (() => void) | undefined {
   if (!document.querySelector('#Rightbar')) return undefined;
   if (!functions.checkPageType().pageType) return undefined;

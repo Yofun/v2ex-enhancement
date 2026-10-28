@@ -316,9 +316,6 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                 <a href={DefaultVal.git} target="_blank" rel="noreferrer">
                   <Icon icon="mdi:github" />
                 </a>
-                <a href={DefaultVal.homeUrl} target="_blank" rel="noreferrer">
-                  <Icon icon="iconamoon:home-light" />
-                </a>
               </div>
             </div>
           </div>
@@ -637,17 +634,15 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
               )}
               {tabIndex === 3 && (
                 <div>
-                  <h1>V2EX Next</h1>
+                  <h1>V2EX Enhancement</h1>
                   <div className={styles['project-desc']}>
                     <div style={{ lineHeight: 2 }}>
                       {(
                         [
-                          ['官网：', DefaultVal.homeUrl],
                           ['GitHub地址：', DefaultVal.git],
-                          ['PC脚本地址：', DefaultVal.pcScript],
-                          ['App地址：', DefaultVal.mobileScript],
                           ['反馈: ', DefaultVal.issue],
-                          ['更新日志：', DefaultVal.pcLog],
+                          ['更新日志：', DefaultVal.releases],
+                          ['基于：', DefaultVal.upstream],
                         ] as const
                       ).map(([label, url]) => (
                         <div key={label}>
@@ -662,7 +657,7 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                   <div className={styles.tips2}>
                     <Icon icon="icon-park-outline:tips" />
                     <span>
-                      代码完全开源，greasyfork上的脚本代码与github上的代码打包后是一样的，不放心也可自行打包~
+                      代码完全开源，基于 V2Next（GPL）还原为 React + TypeScript，不放心也可自行打包~
                     </span>
                   </div>
                 </div>

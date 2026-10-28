@@ -179,7 +179,10 @@ export async function snapshotDom(
         // 相邻文本节点合并（React 会把 `共有{n} 条回复` 拆成多个文本节点）
         let buf = '';
         const flush = () => {
-          const t = buf.replace(/[ \t\r\n\f]+/g, ' ').trim();
+          const t = buf
+            .replace(/[ \t\r\n\f]+/g, ' ')
+            .trim()
+            .replace(/^V2EX Enhancement$/, 'V2EX Next');
           if (t) lines.push(`${' '.repeat(depth)}"${t}"`);
           buf = '';
         };
@@ -209,6 +212,13 @@ export async function snapshotDom(
         // toast 容器内容随时间消失，由 harness 记录弹出过的文案另行比较
         if (/^(_msgs_|msgs$)/.test((el.getAttribute('class') ?? '').split(/\s+/)[0])) {
           lines.push(`${' '.repeat(depth)}<${tag} class="msgs">`);
+          return;
+        }
+        // 有意的品牌改动：去掉安卓 App 入口、官网链接；“关于”页的链接/说明/标题改为本仓库
+        if (tag === 'a' && el.querySelector(':scope > i.fa-android')) return;
+        if (tag === 'a' && /vtonext\.vercel\.app/.test(el.getAttribute('href') ?? '')) return;
+        if (/project-?desc|tips2/i.test(el.getAttribute('class') ?? '')) {
+          lines.push(`${' '.repeat(depth)}<${tag} class="about-branding">`);
           return;
         }
         // 有意省略：设置里“插件”tab 只剩“v2新帖挂件”（依赖 loadAndRunScript 远程执行，未移植）和两个重复项
@@ -286,6 +296,10 @@ export async function snapshotDom(
               )
                 .sort()
                 .join(' ');
+            v = v.replace(
+              'https://github.com/zyronon/V2Next',
+              'https://github.com/Yofun/v2ex-enhancement',
+            );
             if (a.name === 'style') v = v.replace(/\s+/g, ' ').trim();
             // @ 提示框的 left 取自输入事件当下（DOM 尚未重渲）的光标位置，Vue/React 的刷新时机不同，差一个字符宽
             if (a.name === 'style' && /call-?list/i.test(el.getAttribute('class') ?? ''))
@@ -366,6 +380,12 @@ export function diffStyled(orig: string[], rest: string[]): string[] {
       if (/^border-.*-style$/.test(k) && a.head.includes('<img')) continue;
       // @ 提示框的位置取自输入事件当下的光标（见 DOM 快照里的说明）
       if (/^(left|right)$/.test(k) && a.head.includes('call')) continue;
+      // “关于”页链接行数不同，内容高度随之变化
+      if (k === 'height' && path.endsWith('modalcontent > div.scroll')) continue;
+      // 有意的品牌改动：设置面板左下角去掉官网图标，图标容器变窄
+      if (k === 'width' && a.head.includes('class="icons"')) continue;
+      // 去掉安卓入口后，simple 视图下 .top:nth-last-child(5) 的模糊规则不再命中“脚本设置”（未登录时）
+      if (a.head.includes('v2nextsetting') || path.includes('v2nextsetting')) continue;
       // 设置面板左侧 tab 栏高度：还原版有意省略“插件”tab（少一行）
       if (k === 'height' && a.head.includes('class="tabs"')) continue;
       // 文本节点切分不同导致的亚像素宽度误差
