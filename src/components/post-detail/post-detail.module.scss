@@ -403,6 +403,46 @@
     cursor: pointer;
   }
 
+  .zoomBar {
+    position: absolute;
+    left: 50%;
+    bottom: 3rem;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem;
+    border-radius: 2rem;
+    background: rgba(30, 31, 32, 0.8);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    user-select: none;
+
+    span {
+      cursor: pointer;
+      height: 3.2rem;
+      line-height: 3.2rem;
+      text-align: center;
+      border-radius: 1.6rem;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.18);
+      }
+    }
+
+    .zoomBtn {
+      width: 3.2rem;
+      font-size: 2.2rem;
+    }
+
+    .zoomPct {
+      min-width: 6rem;
+      font-size: 1.4rem;
+    }
+  }
+
   .mask {
     position: absolute;
     left: 0;

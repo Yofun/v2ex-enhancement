@@ -117,7 +117,16 @@ export function PostDetail({
   const replyBoxRef = useRef<HTMLDivElement>(null);
   const topReplyRef = useRef<HTMLDivElement>(null);
 
-  const { modalRef, maskRef, handleMainClick, closePreviewModal } = useImagePreview();
+  const {
+    modalRef,
+    maskRef,
+    handleMainClick,
+    closePreviewModal,
+    zoomIn,
+    zoomOut,
+    zoomReset,
+    scalePct,
+  } = useImagePreview();
 
   const isPost = pageType === PageType.Post;
   const isMy = post.member.username === session.user.username;
@@ -737,6 +746,17 @@ export function PostDetail({
           <div className={styles.previewModal} ref={modalRef}>
             <div className={styles.mask} ref={maskRef} onClick={closePreviewModal} />
             <Icon className={styles.close} icon="fontisto:close-a" onClick={closePreviewModal} />
+            <div className={styles.zoomBar} onClick={(e) => e.stopPropagation()}>
+              <span className={styles.zoomBtn} title="缩小" onClick={zoomOut}>
+                −
+              </span>
+              <span className={styles.zoomPct} title="还原" onClick={zoomReset}>
+                {scalePct}%
+              </span>
+              <span className={styles.zoomBtn} title="放大" onClick={zoomIn}>
+                +
+              </span>
+            </div>
           </div>,
           document.body,
         )}

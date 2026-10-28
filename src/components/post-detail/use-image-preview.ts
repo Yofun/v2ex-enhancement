@@ -1,4 +1,10 @@
-import { type MouseEvent as ReactMouseEvent, useCallback, useEffect, useRef } from 'react';
+import {
+  type MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 interface PreviewState {
   rect: DOMRect | null;
@@ -21,6 +27,8 @@ const initialState = (): PreviewState => ({
   minScale: 0.2,
   maxScale: 16,
 });
+
+const ZOOM_STEP = 1.25;
 
 const PX_KEYS = [
   'top',
@@ -90,6 +98,7 @@ export function useImagePreview() {
   const shadowRef = useRef<HTMLImageElement | null>(null);
   const stateRef = useRef<PreviewState>(initialState());
   const timers = useRef<number[]>([]);
+  const [scalePct, setScalePct] = useState(100);
 
   useEffect(() => {
     const pending = timers.current;
@@ -151,6 +160,7 @@ export function useImagePreview() {
       css(s, 'height', domRect.height);
       setTransform(s, `translate3d(${domRect.x}px, ${domRect.y}px, 0) scale(1)`);
       state.rect = domRect;
+      setScalePct(100);
       // 克隆出来的 img 在首次点击时 naturalWidth 还是 0，要用页面上已加载的原图尺寸
       const applySize = () => {
         const nw = target.naturalWidth || s.naturalWidth;
@@ -224,38 +234,42 @@ export function useImagePreview() {
     [closePreviewModal, later],
   );
 
-  const handleWheel = useCallback((e: WheelEvent) => {
+  const applyScale = useCallback((next: number) => {
     const state = stateRef.current;
-    const d = e.deltaY < 0 ? 0.1 : -0.1;
-    const ratio = 1 + d;
-    const next = state.scale * ratio;
-    if (next > state.maxScale) {
-      state.scale = state.maxScale;
-    } else if (next < state.minScale) {
-      state.scale = state.minScale;
-    } else {
-      state.scale = next;
-    }
-    if ((e.target as HTMLElement).tagName === 'IMG') {
-      const origin = { x: (d * state.resultWidth) / 2, y: (d * state.resultHeight) / 2 };
-      state.x -= d * (e.clientX - state.x) - origin.x;
-      state.y -= d * (e.clientY - state.y) - origin.y;
-    }
     const s = shadowRef.current;
-    if (s) {
-      css(s, 'transition', 'all 0.2s');
-      setTransform(s, `translate3d(${state.x}px, ${state.y}px, 0) scale(${state.scale})`);
-    }
-    e.preventDefault();
+    if (!s) return;
+    state.scale = Math.min(state.maxScale, Math.max(state.minScale, next));
+    css(s, 'transition', 'all 0.2s');
+    setTransform(s, `translate3d(${state.x}px, ${state.y}px, 0) scale(${state.scale})`);
+    setScalePct(Math.round(state.scale * 100));
   }, []);
 
-  // React 的 onWheel 是被动监听，无法 preventDefault，这里手动绑定非被动监听
+  const zoomIn = useCallback(() => applyScale(stateRef.current.scale * ZOOM_STEP), [applyScale]);
+  const zoomOut = useCallback(() => applyScale(stateRef.current.scale / ZOOM_STEP), [applyScale]);
+  const zoomReset = useCallback(() => {
+    const state = stateRef.current;
+    state.x = (window.innerWidth - state.resultWidth) * 0.5;
+    state.y = (window.innerHeight - state.resultHeight) * 0.5;
+    applyScale(1);
+  }, [applyScale]);
+
+  // 不再用滚轮缩放（太敏感），只拦截滚动，避免预览时带动背后的页面
   useEffect(() => {
     const el = modalRef.current;
     if (!el) return;
-    el.addEventListener('wheel', handleWheel, { passive: false });
-    return () => el.removeEventListener('wheel', handleWheel);
-  }, [handleWheel]);
+    const block = (e: WheelEvent) => e.preventDefault();
+    el.addEventListener('wheel', block, { passive: false });
+    return () => el.removeEventListener('wheel', block);
+  }, []);
 
-  return { modalRef, maskRef, handleMainClick, closePreviewModal };
+  return {
+    modalRef,
+    maskRef,
+    handleMainClick,
+    closePreviewModal,
+    zoomIn,
+    zoomOut,
+    zoomReset,
+    scalePct,
+  };
 }
