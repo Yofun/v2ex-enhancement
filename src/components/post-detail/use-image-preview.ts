@@ -136,7 +136,14 @@ export function useImagePreview() {
       if (!previewModal) return;
       css(previewModal, 'top', '0');
       const s = target.cloneNode() as HTMLImageElement;
+      // 预览图挂在 body 下，宿主页面的 img / .embedded_image 等样式会作用到它（max-width、max-height、
+      // aspect-ratio 等），导致与计算出的宽高不一致而变形；这里清掉原有 class/属性并强制重置
+      ['class', 'style', 'width', 'height', 'srcset', 'sizes', 'loading'].forEach((attr) =>
+        s.removeAttribute(attr),
+      );
       s.classList.add('shadow');
+      s.style.cssText =
+        'position:static!important;max-width:none!important;max-height:none!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;aspect-ratio:auto!important;object-fit:fill!important;display:block!important;';
       previewModal.append(s);
       shadowRef.current = s;
       css(s, 'transition', 'all 0s');
