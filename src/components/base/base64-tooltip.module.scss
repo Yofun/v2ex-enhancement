@@ -1,30 +1,71 @@
 .base64Tooltip {
-  box-shadow:
-    0 3px 6px -4px #0000001f,
-    0 6px 16px #00000014,
-    0 9px 28px 8px #0000000d;
-  background: var(--color-third-bg);
-  min-height: 2.2rem;
-  max-width: 20rem;
-  padding: 1rem;
   position: fixed;
   z-index: 9998;
-  display: flex;
-  align-items: center;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  line-break: anywhere;
-  font-size: 1.4rem;
+  box-sizing: border-box;
+  width: 30rem;
+  max-width: calc(100vw - 2rem);
+  padding: 1rem 1.2rem;
+  border-radius: 1rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-second-bg);
+  box-shadow:
+    0 8px 24px #00000026,
+    0 2px 6px #0000001a;
+  font-size: 1.3rem;
+  line-height: 1.6;
   color: var(--color-font-8);
 
-  svg {
-    margin-left: 1rem;
-    font-size: 3rem;
-    color: var(--color-gray);
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-active);
+
+    svg {
+      font-size: 1.6rem;
+    }
+  }
+
+  .source {
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.6rem;
+    background: var(--color-editor-toolbar);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 1.2rem;
+    word-break: break-all;
+    max-height: 6rem;
+    overflow: hidden;
+    color: var(--color-font);
+  }
+
+  .hint {
+    margin-top: 0.6rem;
+    font-size: 1.2rem;
+    color: var(--color-font);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-active);
+    }
+  }
+
+  .result {
+    max-height: 20rem;
+    overflow: auto;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.6rem;
+    background: var(--color-active-soft);
+    color: var(--color-font-pure);
+    white-space: pre-wrap;
+    word-break: break-all;
+    user-select: text;
+    cursor: text;
   }
 
   .btn {
-    margin-left: 1rem;
-    margin-top: 1rem;
+    margin-top: 0.8rem;
   }
 }

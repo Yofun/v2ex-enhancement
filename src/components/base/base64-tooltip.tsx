@@ -83,21 +83,32 @@ export function Base64Tooltip() {
     <div
       ref={tooltipRef}
       className={styles.base64Tooltip}
-      style={{ ...style, display: show ? undefined : 'none' }}
-      onClick={decode}
+      style={{
+        left: `min(${style.left}, calc(100vw - 32rem))`,
+        top: style.top,
+        display: show ? undefined : 'none',
+      }}
     >
+      <div className={styles.head}>
+        <Icon icon="system-uicons:translate" />
+        Base64 解码
+      </div>
       {!decodeText ? (
         <>
-          {' '}
-          Base64解码：{originalText} <Icon icon="system-uicons:translate" />
+          <div className={styles.source} onClick={decode}>
+            {originalText}
+          </div>
+          <div className={styles.hint} onClick={decode}>
+            点击解码
+          </div>
         </>
       ) : (
-        <div>
-          <span>{decodeText}</span>
+        <>
+          <div className={styles.result}>{decodeText}</div>
           <BaseButton className={styles.btn} size="small" onClick={copy}>
             点击复制
           </BaseButton>
-        </div>
+        </>
       )}
     </div>
   );
