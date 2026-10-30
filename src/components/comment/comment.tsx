@@ -18,6 +18,9 @@ import { usePostDetailWidth } from './post-detail-width-context';
 import { PostEditor } from './post-editor';
 import { TopSubComment } from './top-sub-comment';
 
+/** 超过这个层级就不再加缩进，只保留层级线 */
+const MAX_INDENT_LEVEL = 5;
+
 interface CommentProps {
   modelValue: Reply;
   type?: 'list' | 'top';
@@ -83,6 +86,7 @@ export function Comment({ modelValue, type = 'list' }: CommentProps) {
 
   const className = [
     styles.comment,
+    modelValue.level >= MAX_INDENT_LEVEL && styles.deep,
     modelValue.isOp && 'isOp',
     config.viewType === 'simple' && styles.isSimple,
     (type === 'top' ? true : modelValue.level === 0) && styles.isLevelOne,
@@ -182,7 +186,8 @@ export function Comment({ modelValue, type = 'list' }: CommentProps) {
                   </div>
                 )}
               </div>
-              <div className={styles.simpleWrapper}>
+              {/* 子回复容器；缩进由 .expandLine 那一列提供，这里不需要样式 */}
+              <div>
                 {type === 'top'
                   ? expandTopReply &&
                     modelValue.replyCount > 0 && (

@@ -19,20 +19,32 @@
     background: rgba(255, 255, 0, 0.3) !important;
   }
 
+  // 简洁模式与普通模式共用同一套结构，差别只有：不显示头像、层级列更窄。
+  // 以前这里把 .expandLine 整个隐藏，层级只剩缩进看不出从属关系，
+  // 而它又是唯一的折叠点击目标，于是简洁模式连折叠都做不了。
   &.isSimple {
-    :global(.avatar),
-    .expandLine {
+    :global(.avatar) {
       display: none;
     }
 
-    .simpleWrapper {
-      padding-left: 2.8rem;
+    // 必须带上 .commentContent：基础规则是 .comment .commentContent .expandLine，
+    // 权重相同的话排在后面的它会赢，这条覆盖就形同虚设
+    .commentContent .expandLine {
+      width: 1rem;
+      min-width: 1rem;
     }
 
     .w {
-      padding-left: 0 !important;
+      padding-left: 0.6rem !important;
       padding-top: 0.5rem;
     }
+  }
+
+  // 嵌套太深时不再继续加缩进，只留层级线本身，否则正文会被一路挤窄。
+  // 放在 .isSimple 之后，靠后置覆盖它的层级列宽度；.w 的内边距交回各模式自己决定。
+  &.deep .commentContent .expandLine {
+    width: 0.2rem;
+    min-width: 0.2rem;
   }
 
   .commentContentW .more {
@@ -71,7 +83,6 @@
       flex: 1;
       // 同 single-comment：没有这行，正文里一条长链接会把整条评论撑出容器
       min-width: 0;
-      width: calc(100% - 3rem);
 
       .w {
         padding-left: 1rem;
