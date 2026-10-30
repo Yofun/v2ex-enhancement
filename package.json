@@ -17,7 +17,8 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "release": "release-it",
-    "release:dry": "release-it --dry-run"
+    "release:dry": "release-it --dry-run",
+    "postinstall": "husky"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
@@ -28,6 +29,8 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.64.1",
     "@release-it/conventional-changelog": "^8.0.2",
@@ -41,6 +44,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-simple-import-sort": "^14.0.0",
     "globals": "^17.11.0",
+    "husky": "^9.1.7",
     "jsdom": "^30.1.3",
     "prettier": "^3.9.6",
     "release-it": "^17.11.0",
