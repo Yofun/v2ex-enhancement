@@ -148,17 +148,22 @@ html.v2n-home body {
         color: var(--color-font-8) !important;
       }
 
+      // 节点标签每行都有，是静态元素不是当前状态，占用主色会让整页都在抢注意力。
+      // 用中性底色，主色留给 hover。
       a.node {
-        background: var(--color-active-soft) !important;
-        color: var(--color-active) !important;
+        background: var(--color-third-bg) !important;
+        color: var(--color-font) !important;
         border-radius: 6px;
         padding: 1px 8px;
         font-size: 12px;
         margin-right: 4px;
+        transition:
+          background-color 0.15s,
+          color 0.15s;
 
         &:hover {
-          background: var(--color-active) !important;
-          color: #fff !important;
+          background: var(--color-active-soft) !important;
+          color: var(--color-active) !important;
         }
       }
 
@@ -182,9 +187,10 @@ html.v2n-home body {
         color 0.15s;
     }
 
+    // 宿主原生这里就是橙色。用暖色既保留“热门”的语义，又不和主色抢眼。
     a.count_orange {
-      background: var(--color-active) !important;
-      color: #fff !important;
+      background: color-mix(in srgb, var(--v2n-warn) 18%, transparent) !important;
+      color: var(--v2n-warn) !important;
     }
 
     &:hover a[class^='count_']:not(.count_orange) {
@@ -199,8 +205,15 @@ html.v2n-home body {
       background: transparent !important;
     }
 
+    // 右侧栏几乎每行文字都是链接（用户名、统计数、最近查看、收藏节点……），
+    // 全部上主色会让整块蓝得刺眼。默认走正文色，主色只留给 hover。
     .box a {
-      color: var(--v2n-link);
+      color: var(--color-font-8);
+      transition: color 0.15s;
+
+      &:hover {
+        color: var(--color-active);
+      }
     }
 
     .fade,
