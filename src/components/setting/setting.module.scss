@@ -262,7 +262,7 @@
               display: flex;
               justify-content: flex-end;
               align-items: center;
-              gap: var(--space);
+              gap: 1rem;
 
               .set-key {
                 align-items: center;
@@ -291,7 +291,11 @@
                 }
               }
 
-              input[type='text'] {
+              input[type='text'],
+              input[type='number'] {
+                // 定死宽度，否则宽度取决于同行标签有多长，各行会长短不一
+                width: 22rem;
+                max-width: 100%;
                 box-sizing: border-box;
                 height: 3rem;
                 padding: 0 0.8rem;
@@ -310,6 +314,10 @@
                 &:focus {
                   border-color: var(--color-active);
                 }
+              }
+
+              input[type='number'] {
+                width: 9rem;
               }
             }
 

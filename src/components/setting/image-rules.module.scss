@@ -3,39 +3,41 @@
   font-size: 1.4rem;
   color: var(--color-font-pure);
   text-align: left;
+
+  // 必须嵌在 .root 里：CSS Modules 不给裸元素选择器加作用域，
+  // 写在顶层会变成全局规则，命中整个 V2EX 页面的 input
+  input,
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--color-input-border);
+    border-radius: 0.6rem;
+    background: var(--color-input-bg);
+    color: var(--color-font-pure);
+    padding: 0.6rem 0.8rem;
+    font-size: 1.3rem;
+    outline: none;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: var(--color-input-border-hover);
+    }
+
+    &:focus {
+      border-color: var(--color-active);
+    }
+  }
+
+  textarea {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    resize: vertical;
+  }
 }
 
 .desc {
   color: var(--color-font);
   line-height: 1.6;
   margin-bottom: 1.2rem;
-}
-
-input,
-textarea {
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid var(--color-input-border);
-  border-radius: 0.6rem;
-  background: var(--color-input-bg);
-  color: var(--color-font-pure);
-  padding: 0.6rem 0.8rem;
-  font-size: 1.3rem;
-  outline: none;
-  transition: border-color 0.2s;
-
-  &:hover {
-    border-color: var(--color-input-border-hover);
-  }
-
-  &:focus {
-    border-color: var(--color-active);
-  }
-}
-
-textarea {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  resize: vertical;
 }
 
 .tester {
