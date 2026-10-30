@@ -14,7 +14,6 @@ export function createSession(): Session {
     isLogin: false,
     stopMe: false,
     canParseV2exPage: true,
-    postList: [],
   };
 }
 

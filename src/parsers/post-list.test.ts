@@ -13,10 +13,10 @@ describe('parsePagePostList', () => {
     session.stopMe = true;
   });
 
-  const check = (list: Element[], box: ParentNode) => {
+  const check = (list: Element[]) => {
     const items = list.filter((el) => el.querySelector('.item_title'));
     expect(items.length).toBeGreaterThan(10);
-    parsePagePostList(list, box);
+    parsePagePostList(list);
     items.forEach((el) => {
       const link = el.querySelector<HTMLAnchorElement>('.item_title a')!;
       const id = /\/t\/(\d+)/.exec(link.href)![1];
@@ -35,8 +35,7 @@ describe('parsePagePostList', () => {
     session.pageType = PageType.Home;
     const { body } = loadFixtureDom('home.html');
     const box = body.querySelector('#Wrapper #Main .box')!;
-    check(Array.from(box.querySelectorAll('.item')), box);
-    expect(session.postList).toHaveLength(0);
+    check(Array.from(box.querySelectorAll('.item')));
   });
 
   it('节点页列表', () => {
@@ -44,17 +43,6 @@ describe('parsePagePostList', () => {
     const { body } = loadFixtureDom('node.html');
     const boxs = body.querySelectorAll('#Wrapper #Main .box');
     const list = Array.from(boxs[1].querySelector('#TopicsNode')!.querySelectorAll('.cell'));
-    check(list, boxs[1]);
-  });
-
-  it('卡片视图下把主题登记到 session.postList', () => {
-    session.config.viewType = 'card';
-    session.pageType = PageType.Home;
-    const { body } = loadFixtureDom('home.html');
-    const box = body.querySelector('#Wrapper #Main .box')!;
-    const count = check(Array.from(box.querySelectorAll('.item')), box);
-    expect(session.postList).toHaveLength(count);
-    expect(session.postList[0].id).toMatch(/^\d+$/);
-    expect(session.postList[0].url).toContain('/api/topics/show.json?id=');
+    check(list);
   });
 });

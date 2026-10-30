@@ -371,7 +371,6 @@ export function PostDetail({
     'post-detail',
     isPost ? styles.isPostPage : '',
     isNight ? styles.isNight : '',
-    !isPost && config.detailTheme === 'mecha' ? styles.mecha : '',
     pageType ?? '',
   ]
     .filter(Boolean)
@@ -619,12 +618,14 @@ export function PostDetail({
                     useType="reply-post"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setIsSticky(true);
+                      // 聚焦时不再自动悬浮（会遮住评论），只把回复框滚到可见位置；需要停靠请点工具栏的“回复”
+                      replyBoxRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
                     }}
                   />
                 </div>
               </div>
             ) : null}
+            <div className={styles.bottomSpacer} />
           </div>
 
           {showRelationReply ? (

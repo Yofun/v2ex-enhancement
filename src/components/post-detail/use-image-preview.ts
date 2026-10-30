@@ -98,6 +98,7 @@ export function useImagePreview() {
   const shadowRef = useRef<HTMLImageElement | null>(null);
   const stateRef = useRef<PreviewState>(initialState());
   const timers = useRef<number[]>([]);
+  const openRef = useRef(false);
   const [scalePct, setScalePct] = useState(100);
 
   useEffect(() => {
@@ -115,7 +116,8 @@ export function useImagePreview() {
     const s = shadowRef.current;
     const previewModal = modalRef.current;
     const domRect = stateRef.current.rect;
-    if (!s || !domRect) return;
+    if (!s || !domRect || !openRef.current) return;
+    openRef.current = false;
     css(s, 'transition', 'all 0.3s');
     css(s, 'width', domRect.width);
     css(s, 'height', domRect.height);
@@ -155,6 +157,7 @@ export function useImagePreview() {
         'position:static!important;max-width:none!important;max-height:none!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;aspect-ratio:auto!important;object-fit:fill!important;display:block!important;';
       previewModal.append(s);
       shadowRef.current = s;
+      openRef.current = true;
       css(s, 'transition', 'all 0s');
       css(s, 'width', domRect.width);
       css(s, 'height', domRect.height);
@@ -252,6 +255,18 @@ export function useImagePreview() {
     state.y = (window.innerHeight - state.resultHeight) * 0.5;
     applyScale(1);
   }, [applyScale]);
+
+  // Esc 只关闭预览：在捕获阶段拦截，避免事件继续冒泡到详情浮层的 Esc 关闭
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.key !== 'Escape' && e.key !== 'Esc') || !openRef.current) return;
+      e.stopPropagation();
+      e.preventDefault();
+      closePreviewModal();
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => document.removeEventListener('keydown', onKeyDown, true);
+  }, [closePreviewModal]);
 
   // 不再用滚轮缩放（太敏感），只拦截滚动，避免预览时带动背后的页面
   useEffect(() => {

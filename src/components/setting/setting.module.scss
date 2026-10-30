@@ -61,8 +61,18 @@
   }
 
   .active {
-    background: var(--color-third-bg);
-    color: var(--color-font);
+    background: var(--color-active);
+    color: #fff;
+    font-weight: 600;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  :global(html.dark) & .active,
+  :global(html.dark) & .active:hover {
+    color: #0b0d12;
   }
 }
 
@@ -168,9 +178,15 @@
             }
 
             &.active {
-              background: color-mix(in srgb, var(--color-active) 14%, transparent);
+              background: color-mix(in srgb, var(--color-active) 22%, transparent);
+              box-shadow: inset 3px 0 0 var(--color-active);
               color: var(--color-active);
-              font-weight: 600;
+              font-weight: 700;
+
+              &:hover {
+                background: color-mix(in srgb, var(--color-active) 22%, transparent);
+                color: var(--color-active);
+              }
             }
           }
         }

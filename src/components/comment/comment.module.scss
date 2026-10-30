@@ -5,8 +5,13 @@
 
   &.isLevelOne {
     border-bottom: 1px solid var(--color-line);
-    padding: 0.8rem 1rem;
+    padding: 1.2rem 1.2rem;
     margin-top: 0;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background: var(--v2n-card-hover);
+    }
   }
 
   // PostDetail 跳转楼层时会直接给 .c_N 元素加/删全局类 ding
@@ -52,7 +57,9 @@
         content: ' ';
         height: 100%;
         width: 0;
-        border-right: 1px solid var(--color-line);
+        border-right: 2px solid var(--color-line);
+        border-radius: 1px;
+        transition: border-color 0.15s;
       }
 
       &:hover:after {

@@ -215,6 +215,20 @@ export async function snapshotDom(
           lines.push(`${' '.repeat(depth)}<${tag} class="msgs">`);
           return;
         }
+        // 有意新增：图片预览的缩放条；Base64 弹层重新设计（隐藏态，内容另有单测/手测）
+        if (/zoombar/i.test(el.getAttribute('class') ?? '')) return;
+        if (/base64[-_]?tooltip/i.test(el.getAttribute('class') ?? '')) {
+          lines.push(`${' '.repeat(depth)}<${tag} class="base64tooltip">`);
+          return;
+        }
+        // 有意重设计：“使用需知”弹窗正文换了排版（内容文字不变）
+        if (
+          /modal-?content/i.test(el.getAttribute('class') ?? '') &&
+          el.textContent?.includes('开启此功能会带来以下影响')
+        ) {
+          lines.push(`${' '.repeat(depth)}<${tag} class="notice-body">`);
+          return;
+        }
         // 有意的品牌改动：去掉安卓 App 入口、官网链接；“关于”页的链接/说明/标题改为本仓库
         if (tag === 'a' && el.querySelector(':scope > i.fa-android')) return;
         if (tag === 'a' && /vtonext\.vercel\.app/.test(el.getAttribute('href') ?? '')) return;
@@ -304,6 +318,7 @@ export async function snapshotDom(
               'https://github.com/zyronon/V2Next',
               'https://github.com/Yofun/v2ex-enhancement',
             );
+            v = v.replace('rgb(64, 169, 255)', 'var(--color-active)');
             if (a.name === 'style') v = v.replace(/\s+/g, ' ').trim();
             // @ 提示框的 left 取自输入事件当下（DOM 尚未重渲）的光标位置，Vue/React 的刷新时机不同，差一个字符宽
             if (a.name === 'style' && /call-?list/i.test(el.getAttribute('class') ?? ''))

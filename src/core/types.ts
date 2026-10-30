@@ -17,7 +17,7 @@ export enum CommentDisplayType {
   New = 6,
 }
 
-export type ViewType = 'table' | 'card' | 'simple';
+export type ViewType = 'table' | 'simple';
 export type FontSizeType = 'small' | 'normal' | 'large' | string;
 
 export interface Member {
@@ -131,7 +131,7 @@ export interface Config {
   version: number;
   collectBrowserNotice: boolean;
   fontSizeType: FontSizeType;
-  detailTheme: 'default' | 'mecha';
+  homeTheme: boolean;
   notice: NoticeConfig;
   replaceImgur: boolean;
   maxReplyCountLimit: number;

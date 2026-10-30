@@ -6,6 +6,7 @@ import { getDefaultPost } from '@/core/constants';
 import { session } from '@/core/session';
 import { PageType } from '@/core/types';
 import { parse } from '@/parsers';
+import { startAdFilter } from '@/services/ad-filter';
 import { startImageLinks } from '@/services/image-links';
 import { initNoteData } from '@/services/note-data';
 import { initSession } from '@/services/session-init';
@@ -17,6 +18,7 @@ import { functions } from '@/utils/functions';
 import { injectStyle } from '@/utils/style';
 
 import { App } from './app';
+import { NIGHT_KEY } from './early';
 
 const send = (...args: Parameters<typeof functions.cbChecker>): void => {
   void functions.cbChecker(...args);
@@ -25,7 +27,6 @@ const send = (...args: Parameters<typeof functions.cbChecker>): void => {
 function createHeaderWrap(): HTMLElement {
   const wrap = document.createElement('div');
   wrap.classList.add('post-item');
-  if (session.config.viewType === 'card') wrap.classList.add('preview');
   return wrap;
 }
 
@@ -40,7 +41,6 @@ function markLastAsPostItem(box: HTMLElement): void {
   const last = box.lastElementChild;
   if (!last) return;
   last.classList.add('cell', 'post-item');
-  if (session.config.viewType === 'card') last.classList.add('preview');
 }
 
 function handleNodePage($section: HTMLElement): void {
@@ -66,7 +66,7 @@ function handleNodePage($section: HTMLElement): void {
   }
   const list = box[1].querySelector('#TopicsNode')!.querySelectorAll('.cell');
   list[0].before($section);
-  parse.parsePagePostList(list, box[1]);
+  parse.parsePagePostList(list);
 }
 
 function handleHomePage($section: HTMLElement): void {
@@ -97,7 +97,7 @@ function handleHomePage($section: HTMLElement): void {
   }
   const list = box.querySelectorAll('.item');
   list[0].before($section);
-  parse.parsePagePostList(list, box);
+  parse.parsePagePostList(list);
 }
 
 async function handlePostPage($section: HTMLElement): Promise<boolean> {
@@ -169,7 +169,7 @@ function handleMemberPage($section: HTMLElement): void {
   }
   const list = box[1].querySelectorAll('.cell');
   box[0].after($section);
-  parse.parsePagePostList(list, box[1]);
+  parse.parsePagePostList(list);
 }
 
 function addSettingText(): void {
@@ -276,7 +276,8 @@ export function bootstrap(): (() => void) | undefined {
 
   const globalStyle = injectStyle(globalCss);
   initSession();
-  if (session.isNight) document.documentElement.classList.add('dark');
+  document.documentElement.classList.toggle('dark', session.isNight);
+  localStorage.setItem(NIGHT_KEY, session.isNight ? '1' : '0');
 
   const $section = document.createElement('section');
   $section.id = 'app';
@@ -285,13 +286,16 @@ export function bootstrap(): (() => void) | undefined {
   root.render(createElement(App));
   window.addEventListener('error', onImageError, true);
   const stopImageLinks = startImageLinks();
+  const stopAdFilter = startAdFilter();
 
   return () => {
     stopImageLinks();
+    stopAdFilter();
     window.removeEventListener('error', onImageError, true);
     root.unmount();
     $section.remove();
     removeDynamicStyle();
     globalStyle.remove();
+    document.documentElement.classList.remove('v2n-home');
   };
 }

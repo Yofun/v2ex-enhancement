@@ -121,8 +121,13 @@ textarea {
     }
 
     &.active {
-      background: var(--color-third-bg);
-      color: var(--color-font-pure);
+      background: var(--color-active);
+      color: #fff;
+      font-weight: 600;
+
+      :global(html.dark) & {
+        color: #0b0d12;
+      }
     }
   }
 }

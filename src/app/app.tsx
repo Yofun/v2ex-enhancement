@@ -29,6 +29,7 @@ import { gmPostJson } from '@/utils/gm';
 import styles from './app.module.scss';
 import { AppContext, type AppContextValue } from './app-context';
 import { Calendar, type CalendarState } from './calendar';
+import { HOME_THEME_KEY } from './early';
 import { type HotItem, renderHotList } from './hot-list';
 import { deleteNotification, fetchNotificationPage, replaceNoticeEntry } from './notifications';
 
@@ -483,7 +484,7 @@ export function App() {
     if (itemDom.classList.contains('preview')) {
       toggle.innerText = '预览';
       itemDom.classList.remove('preview');
-    } else if (configRef.current.viewType !== 'card') {
+    } else {
       const index = listRef.current.findIndex((v) => v.id == id);
       if (index > -1) {
         toggle.innerText = '收起';
@@ -503,9 +504,6 @@ export function App() {
           }
         });
       }
-    } else {
-      toggle.innerText = '收起';
-      itemDom.classList.add('preview');
     }
   };
 
@@ -534,11 +532,6 @@ export function App() {
       }
       setConfig(functions.clone(session.config));
       setTags(session.user.tags);
-    }
-    if (type === 'syncList') {
-      session.postList.forEach((item, i) => {
-        listRef.current[i] = item;
-      });
     }
     if (type === 'warningNotice') {
       eventBus.emit(CMD.SHOW_MSG, { type: 'warning', text: message.value });
@@ -759,12 +752,11 @@ export function App() {
     session.user.tags = tags;
   }, [tags]);
 
-  useUpdateEffect(() => {
-    if (!config.viewType) return;
-    document.querySelectorAll('.post-item').forEach((el) => {
-      el.classList.toggle('preview', config.viewType === 'card');
-    });
-  }, [config.viewType]);
+  useEffect(() => {
+    const on = pageType === PageType.Home && config.homeTheme !== false;
+    document.documentElement.classList.toggle('v2n-home', on);
+    localStorage.setItem(HOME_THEME_KEY, config.homeTheme === false ? '0' : '1');
+  }, [pageType, config.homeTheme]);
 
   // watch pageInfo.number：标题带上未读数，按配置闪烁
   useUpdateEffect(() => {

@@ -8,7 +8,6 @@ import { BaseButton } from '@/components/base/base-button';
 import { BaseSelect } from '@/components/base/base-select';
 import { BaseSwitch } from '@/components/base/base-switch';
 import { Icon } from '@/components/base/icon';
-import { NoticeModal } from '@/components/base/notice-modal';
 import { DefaultVal } from '@/core/constants';
 import { CMD, eventBus } from '@/core/event-bus';
 import type { Config, NoticeConfig, ViewType } from '@/core/types';
@@ -66,7 +65,6 @@ function BlurInput({
 export function Setting({ show, onUpdateShow }: SettingProps) {
   const { config, setConfig, isLogin } = useApp();
   const [tabIndex, setTabIndex] = useState(0);
-  const [showNotice, setShowNotice] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
   const [importLoading, setImportLoading] = useState(false);
   const [importOk, setImportOk] = useState(false);
@@ -332,13 +330,19 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                         <div className={styles['radio-group2']}>
                           {viewTypeOption('simple', '简洁 ', () => update({ viewType: 'simple' }))}
                           {viewTypeOption('table', '表格 ', () => update({ viewType: 'table' }))}
-                          {viewTypeOption('card', '卡片 ', () => setShowNotice(true))}
                         </div>
                       </div>
                     </div>
                     <div className={cx(styles.desc, styles.danger)}>
                       {' '}
                       提示：此项需要刷新页面才能生效{' '}
+                    </div>
+                  </div>
+                  <div className={styles.border}>
+                    {switchRow('优化首页样式', config.homeTheme, (v) => update({ homeTheme: v }))}
+                    <div className={styles.desc}>
+                      {' '}
+                      调整首页的顶栏、标签、主题列表和右侧栏的配色与卡片样式，仅对首页生效{' '}
                     </div>
                   </div>
                   <div className={styles.border}>
@@ -392,31 +396,6 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                     <div className={styles.desc}>
                       {' '}
                       单独打开这种地址 https://v2ex.com/t/xxxx 时，是否默认显示楼中楼{' '}
-                    </div>
-                  </div>
-                  <div className={cx(styles.row, styles.border)}>
-                    <label className={styles['item-title']}>详情弹框风格</label>
-                    <div className={styles.wrapper}>
-                      <div className={styles['radio-group2']}>
-                        <div
-                          className={cx(
-                            styles.radio,
-                            config.detailTheme !== 'mecha' && styles.active,
-                          )}
-                          onClick={() => update({ detailTheme: 'default' })}
-                        >
-                          默认
-                        </div>
-                        <div
-                          className={cx(
-                            styles.radio,
-                            config.detailTheme === 'mecha' && styles.active,
-                          )}
-                          onClick={() => update({ detailTheme: 'mecha' })}
-                        >
-                          机甲
-                        </div>
-                      </div>
                     </div>
                   </div>
                   {switchRow(
@@ -701,11 +680,6 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
           </div>
         </div>
       </div>
-      <NoticeModal
-        show={showNotice}
-        onUpdateShow={setShowNotice}
-        onConfirm={() => update({ viewType: 'card' })}
-      />
     </div>
   );
 }

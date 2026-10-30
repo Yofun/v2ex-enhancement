@@ -4,7 +4,6 @@ import type { Post } from './types';
 export type HostMessage =
   | { type: 'openSetting' }
   | { type: 'syncData' }
-  | { type: 'syncList' }
   | { type: 'getConfigSuccess' }
   | { type: 'restorePost'; value?: null }
   | { type: 'warningNotice'; value: string }

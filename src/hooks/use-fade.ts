@@ -7,7 +7,7 @@ const FADE_DURATION = 300;
 /**
  * 等效 Vue <Transition>（name 为默认 v / fade）：进入时先以隐藏态挂载再淡入，离开时先淡出再卸载。
  *
- * 不在渲染期 setState：与 Setting 里嵌套使用时（NoticeModal）渲染期更新会丢失 mounted，弹窗不出现。
+ * 不在渲染期 setState：嵌套使用时渲染期更新会丢失 mounted，弹窗不出现。
  */
 export function useFade(visible: boolean) {
   const [mounted, setMounted] = useState(visible);

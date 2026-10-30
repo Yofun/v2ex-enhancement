@@ -313,6 +313,8 @@ export const functions = {
       if (configObj) {
         session.config = functions.deepAssign(session.config, configObj);
       }
+      // 卡片视图已移除，旧配置回退到表格
+      if ((session.config.viewType as string) === 'card') session.config.viewType = 'table';
     }
     configMap[userName] = session.config;
     localStorage.setItem('v2ex-config', JSON.stringify(configMap));

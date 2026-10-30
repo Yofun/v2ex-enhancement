@@ -45,46 +45,45 @@
 
     .owner {
       display: inline-block;
-      background-color: transparent;
-      color: var(--color-active);
-      border-radius: 0.3rem;
-      padding: 0 0.3rem;
+      border-radius: 999px;
+      padding: 0.1rem 0.7rem;
       cursor: default;
-      border: 2px solid var(--color-active);
-      font-size: 1.2rem;
+      border: none;
+      font-size: 1.1rem;
       font-weight: 700;
       margin-right: 0.6rem;
-      transform: scale(0.8);
+      background-color: var(--color-active-soft);
+      color: var(--color-active);
     }
 
     .dup {
       display: inline-block;
-      background-color: transparent;
-      color: var(--v2n-danger);
-      border-radius: 0.3rem;
-      padding: 0 0.3rem;
+      border-radius: 999px;
+      padding: 0.1rem 0.7rem;
       cursor: default;
-      border: 2px solid var(--v2n-danger);
-      font-size: 1.2rem;
+      border: none;
+      font-size: 1.1rem;
       font-weight: 700;
       margin-right: 0.6rem;
-      transform: scale(0.8);
+      background-color: color-mix(in srgb, var(--v2n-danger) 14%, transparent);
+      color: var(--v2n-danger);
     }
 
     .mod {
       display: inline-block;
-      background-color: transparent;
-      color: var(--color-active);
-      border-radius: 0.3rem;
-      padding: 0 0.3rem;
+      border-radius: 999px;
+      padding: 0.1rem 0.7rem;
       cursor: default;
-      border: 2px solid var(--color-active);
-      font-size: 1.2rem;
+      border: none;
+      font-size: 1.1rem;
       font-weight: 700;
-      transform: scale(0.8);
+      margin-right: 0.6rem;
       background: var(--color-active);
       color: #fff;
-      margin-right: 0.6rem;
+
+      :global(html.dark) & {
+        color: #0b0d12;
+      }
     }
   }
 

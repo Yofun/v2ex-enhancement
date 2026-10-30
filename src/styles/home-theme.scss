@@ -1,0 +1,256 @@
+@use './variables';
+
+// 首页宿主样式优化：只在 html.v2n-home 下生效（设置里可关闭）。宿主用 px，这里也用 px，避免受 html 62.5% 影响。
+html.v2n-home body {
+  background: var(--color-main-bg) !important;
+  color: var(--color-font-8);
+
+  a {
+    transition: color 0.15s;
+  }
+
+  // 顶栏
+  #Top {
+    background: var(--v2n-card-bg) !important;
+    border-bottom: 1px solid var(--v2n-border) !important;
+    box-shadow: 0 1px 8px #0000000f;
+
+    .tools a.top {
+      border-radius: 8px;
+      padding: 6px 10px;
+      color: var(--color-font) !important;
+      transition:
+        background-color 0.15s,
+        color 0.15s;
+
+      &:hover {
+        background: var(--color-active-soft);
+        color: var(--color-active) !important;
+      }
+    }
+
+    #search {
+      border-radius: 10px !important;
+      border: 1px solid var(--color-input-border) !important;
+      background: var(--color-input-bg) !important;
+      color: var(--color-font-pure) !important;
+      transition: border-color 0.15s;
+
+      &:focus {
+        border-color: var(--color-active) !important;
+        outline: none;
+      }
+    }
+  }
+
+  #Wrapper {
+    background: transparent !important;
+  }
+
+  // 卡片
+  .box {
+    background: var(--v2n-card-bg) !important;
+    border: 1px solid var(--v2n-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px #0000000d;
+    overflow: hidden;
+  }
+
+  .cell,
+  .inner,
+  .header {
+    border-color: var(--v2n-border) !important;
+    background-color: transparent !important;
+  }
+
+  // 主标签栏与二级节点栏
+  #Tabs {
+    padding: 8px 10px !important;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    background: transparent !important;
+
+    a.tab,
+    a.tab_current {
+      margin: 0 !important;
+      border-radius: 8px !important;
+      padding: 6px 8px !important;
+      white-space: nowrap;
+      border: none !important;
+      color: var(--color-font) !important;
+      background: transparent !important;
+      transition:
+        background-color 0.15s,
+        color 0.15s;
+    }
+
+    a.tab:hover {
+      background: var(--color-third-bg) !important;
+      color: var(--color-font-pure) !important;
+    }
+
+    a.tab_current {
+      background: var(--color-active) !important;
+      color: #fff !important;
+      font-weight: 600;
+    }
+  }
+
+  #SecondaryTabs {
+    padding: 8px 14px !important;
+    background: var(--v2n-card-alt) !important;
+
+    a {
+      color: var(--color-font) !important;
+
+      &:hover {
+        color: var(--color-active) !important;
+      }
+    }
+  }
+
+  // 主题列表
+  .cell.item {
+    padding: 14px 16px !important;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background: var(--v2n-card-hover) !important;
+    }
+
+    &.item-pinned {
+      background: transparent !important;
+
+      &:hover {
+        background: var(--v2n-card-hover) !important;
+      }
+    }
+
+    .avatar {
+      border-radius: 10px !important;
+    }
+
+    a.topic-link,
+    .item_title a {
+      color: var(--color-font-pure) !important;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.5;
+
+      &:hover {
+        color: var(--color-active) !important;
+        text-decoration: none;
+      }
+
+      &:visited {
+        color: var(--color-font) !important;
+      }
+    }
+
+    .topic_info {
+      color: var(--color-font) !important;
+      font-size: 12px;
+
+      strong a {
+        color: var(--color-font-8) !important;
+      }
+
+      a.node {
+        background: var(--color-active-soft) !important;
+        color: var(--color-active) !important;
+        border-radius: 6px;
+        padding: 1px 8px;
+        font-size: 12px;
+        margin-right: 4px;
+
+        &:hover {
+          background: var(--color-active) !important;
+          color: #fff !important;
+        }
+      }
+
+      .votes {
+        color: var(--color-font);
+      }
+    }
+
+    a[class^='count_'] {
+      min-width: 28px;
+      box-sizing: border-box;
+      border-radius: 999px !important;
+      padding: 2px 10px !important;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--color-third-bg) !important;
+      color: var(--color-font) !important;
+      transition:
+        background-color 0.15s,
+        color 0.15s;
+    }
+
+    a.count_orange {
+      background: var(--color-active) !important;
+      color: #fff !important;
+    }
+
+    &:hover a[class^='count_']:not(.count_orange) {
+      background: var(--color-active-soft) !important;
+      color: var(--color-active) !important;
+    }
+  }
+
+  // 右侧栏
+  #Rightbar {
+    .cell {
+      background: transparent !important;
+    }
+
+    .box a {
+      color: var(--v2n-link);
+    }
+
+    .fade,
+    .gray {
+      color: var(--color-font) !important;
+    }
+
+    a.super.button,
+    a.normal.button,
+    input[type='submit'].super {
+      border: none !important;
+      border-radius: 8px !important;
+      background: var(--color-active) !important;
+      color: #fff !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+      transition: opacity 0.15s;
+
+      &:hover {
+        opacity: 0.85;
+      }
+    }
+
+    #TopicsHot .cell {
+      transition: background-color 0.15s;
+
+      &:hover {
+        background: var(--v2n-card-hover) !important;
+      }
+    }
+  }
+
+  // 分页
+  .page_current,
+  .page_normal {
+    border-radius: 8px !important;
+  }
+
+  .page_current {
+    background: var(--color-active) !important;
+    border-color: var(--color-active) !important;
+    color: #fff !important;
+  }
+}
