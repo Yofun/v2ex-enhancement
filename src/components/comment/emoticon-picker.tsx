@@ -16,28 +16,39 @@ interface EmoticonPickerProps {
 }
 
 const GAP = 8;
+const MAX_HEIGHT = 360;
+const MIN_HEIGHT = 160;
 const TABS = ['经典', ...emojiEmoticons.map((g) => g.title)];
 
 const emojiSrc = (url: string) => (session.config.replaceImgur ? DefaultVal.imgurProxy + url : url);
 
 export function EmoticonPicker({ anchor, onPick, onClose }: EmoticonPickerProps) {
   const [tab, setTab] = useState(0);
-  const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
+  const [pos, setPos] = useState<{
+    left: number;
+    top?: number;
+    bottom?: number;
+    maxHeight: number;
+  } | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // 面板高度固定，所以切换分类不会改变尺寸，位置也就不会跳。
-  // 优先朝上展开（编辑器通常贴着底部），上方放不下再朝下，两个方向都钳制在视口内。
+  // 高度随分类内容自适应，所以不能按高度算 top——那样切 tab 会跳。
+  // 改成把贴近触发按钮的那条边钉死（朝上开钉 bottom，朝下开钉 top），
+  // 另一条边随内容伸缩，位置就始终稳定。
   const place = useCallback(() => {
     const el = panelRef.current;
     if (!el || !anchor) return;
     const a = anchor.getBoundingClientRect();
-    const { width, height } = el.getBoundingClientRect();
-    const left = Math.max(GAP, Math.min(a.left, window.innerWidth - width - GAP));
-    const fitsAbove = a.top - height - GAP >= GAP;
-    const top = fitsAbove
-      ? a.top - height - GAP
-      : Math.max(GAP, Math.min(a.bottom + GAP, window.innerHeight - height - GAP));
-    setPos({ left, top });
+    const left = Math.max(GAP, Math.min(a.left, window.innerWidth - el.offsetWidth - GAP));
+    const above = a.top - GAP * 2;
+    const below = window.innerHeight - a.bottom - GAP * 2;
+    // 下限兜底：视口极矮时宁可溢出一点，也好过算出 0 高度把面板整个弄没
+    const cap = (space: number) => Math.max(MIN_HEIGHT, Math.min(space, MAX_HEIGHT));
+    setPos(
+      above >= below
+        ? { left, bottom: window.innerHeight - a.top + GAP, maxHeight: cap(above) }
+        : { left, top: a.bottom + GAP, maxHeight: cap(below) },
+    );
   }, [anchor]);
 
   useLayoutEffect(place, [place]);
@@ -87,7 +98,13 @@ export function EmoticonPicker({ anchor, onPick, onClose }: EmoticonPickerProps)
     <div
       ref={panelRef}
       className={styles.picker}
-      style={{ left: pos?.left ?? 0, top: pos?.top ?? 0, visibility: pos ? undefined : 'hidden' }}
+      style={{
+        left: pos?.left ?? 0,
+        top: pos?.top,
+        bottom: pos?.bottom,
+        maxHeight: pos?.maxHeight,
+        visibility: pos ? undefined : 'hidden',
+      }}
       onClick={(e) => e.stopPropagation()}
     >
       <div className={styles.tabs} role="tablist">

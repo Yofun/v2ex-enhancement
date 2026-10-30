@@ -73,9 +73,10 @@
     }
   }
 
-  // 高度固定，切换分类时面板尺寸不变，位置就不会跳
+  // 高度随内容走；装不下时才滚动（上限由 JS 按可用空间给到 max-height）
   .grid {
-    height: 22rem;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: 0.8rem;
