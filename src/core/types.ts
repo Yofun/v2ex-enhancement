@@ -131,6 +131,7 @@ export interface Config {
   version: number;
   collectBrowserNotice: boolean;
   fontSizeType: FontSizeType;
+  detailTheme: 'default' | 'mecha';
   notice: NoticeConfig;
   replaceImgur: boolean;
   maxReplyCountLimit: number;

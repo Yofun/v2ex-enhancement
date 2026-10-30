@@ -119,6 +119,7 @@ export function getDefaultConfig(val: Partial<Config> = {}): Config {
       version: DefaultVal.currentVersion,
       collectBrowserNotice: false,
       fontSizeType: 'normal',
+      detailTheme: 'default',
       notice: {
         uid: '',
         text: '',

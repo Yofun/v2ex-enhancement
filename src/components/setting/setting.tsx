@@ -394,6 +394,31 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                       单独打开这种地址 https://v2ex.com/t/xxxx 时，是否默认显示楼中楼{' '}
                     </div>
                   </div>
+                  <div className={cx(styles.row, styles.border)}>
+                    <label className={styles['item-title']}>详情弹框风格</label>
+                    <div className={styles.wrapper}>
+                      <div className={styles['radio-group2']}>
+                        <div
+                          className={cx(
+                            styles.radio,
+                            config.detailTheme !== 'mecha' && styles.active,
+                          )}
+                          onClick={() => update({ detailTheme: 'default' })}
+                        >
+                          默认
+                        </div>
+                        <div
+                          className={cx(
+                            styles.radio,
+                            config.detailTheme === 'mecha' && styles.active,
+                          )}
+                          onClick={() => update({ detailTheme: 'mecha' })}
+                        >
+                          机甲
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   {switchRow(
                     '点击左右两侧透明处关闭主题详情弹框',
                     config.closePostDetailBySpace,

@@ -454,3 +454,167 @@
     transition: all 0.3s;
   }
 }
+
+// 机甲主题：仅详情弹框（非帖子页内嵌）使用，通过覆盖变量让评论等子组件一起换色
+@keyframes mecha-boot {
+  from {
+    opacity: 0;
+    clip-path: inset(48% 0 48% 0);
+  }
+
+  to {
+    opacity: 1;
+    clip-path: inset(0);
+  }
+}
+
+@keyframes mecha-scan {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 0 40px;
+  }
+}
+
+.postDetail.mecha {
+  --mecha-cyan: #22d3ee;
+  --mecha-cyan-dim: rgba(34, 211, 238, 0.35);
+  --mecha-cut: 1.4rem;
+  --color-main-bg: #070b10;
+  --color-second-bg: #0d141c;
+  --color-third-bg: #16212c;
+  --color-item-bg: #0d141c;
+  --color-active: #22d3ee;
+  --color-active-soft: rgba(34, 211, 238, 0.14);
+  --color-font: rgba(190, 220, 235, 0.6);
+  --color-gray: rgba(190, 220, 235, 0.6);
+  --color-font-8: rgba(215, 238, 248, 0.88);
+  --color-font-3: rgba(190, 220, 235, 0.35);
+  --color-font-pure: #e6f7ff;
+  --color-input-bg: #0a1118;
+  --color-input-border: #25384a;
+  --color-input-border-hover: #3a5a75;
+  --color-line: #1c2b39;
+  --color-floor: #121c26;
+  --color-floor-font: rgba(190, 220, 235, 0.4);
+  --color-editor-toolbar: #101a24;
+  --color-sp-btn-bg: #0d141c;
+  --color-call-list-bg: #101a24;
+  --color-top-reply-wrap-bg: #101a24;
+  --color-top-reply-wrap-line: #25384a;
+  --color-tooltip-bg: #101a24;
+  --v2n-card-bg: #0d141c;
+  --v2n-card-hover: #121c26;
+  --v2n-card-alt: #101a24;
+  --v2n-border: #1c2b39;
+  --v2n-link: #22d3ee;
+  --v2n-radius: 0;
+  --v2n-danger: #fb7185;
+
+  background: rgba(2, 6, 10, 0.82);
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  color: var(--color-font-8);
+
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.025) 0,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    animation: mecha-scan 2s linear infinite;
+    z-index: 0;
+  }
+
+  .main {
+    background: transparent;
+  }
+
+  .myBox {
+    position: relative;
+    border: 1px solid var(--mecha-cyan-dim);
+    border-radius: 0;
+    box-shadow: 0 0 0 1px #00000080;
+    clip-path: polygon(
+      var(--mecha-cut) 0,
+      100% 0,
+      100% calc(100% - var(--mecha-cut)),
+      calc(100% - var(--mecha-cut)) 100%,
+      0 100%,
+      0 var(--mecha-cut)
+    );
+    animation: mecha-boot 0.45s ease-out;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      width: 1.2rem;
+      height: 1.2rem;
+      pointer-events: none;
+      border: 2px solid var(--mecha-cyan);
+    }
+
+    &::before {
+      top: 0;
+      right: 0;
+      border-left: none;
+      border-bottom: none;
+    }
+
+    &::after {
+      left: 0;
+      bottom: 0;
+      border-right: none;
+      border-top: none;
+    }
+  }
+
+  h1 {
+    letter-spacing: 0.04em;
+    color: var(--color-font-pure);
+    text-shadow: 0 0 12px rgba(34, 211, 238, 0.35);
+  }
+
+  .scrollTop,
+  .refresh,
+  .scrollTo {
+    border-radius: 0;
+    border: 1px solid var(--mecha-cyan-dim);
+    background: rgba(13, 20, 28, 0.9);
+    color: var(--mecha-cyan);
+    clip-path: polygon(
+      0.8rem 0,
+      100% 0,
+      100% calc(100% - 0.8rem),
+      calc(100% - 0.8rem) 100%,
+      0 100%,
+      0 0.8rem
+    );
+
+    &:hover {
+      box-shadow: 0 0 14px rgba(34, 211, 238, 0.45);
+    }
+  }
+
+  .closeBtn,
+  .openNewTab {
+    color: var(--mecha-cyan);
+  }
+
+  :global(.floor),
+  :global(.no) {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--mecha-cyan);
+  }
+}

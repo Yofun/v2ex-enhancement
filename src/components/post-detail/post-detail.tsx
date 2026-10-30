@@ -371,6 +371,7 @@ export function PostDetail({
     'post-detail',
     isPost ? styles.isPostPage : '',
     isNight ? styles.isNight : '',
+    !isPost && config.detailTheme === 'mecha' ? styles.mecha : '',
     pageType ?? '',
   ]
     .filter(Boolean)
