@@ -161,18 +161,19 @@ ${
 ${
   session.pageType !== PageType.Member
     ? `
+/* 只留标题和回复数：隐藏头像、节点、作者、时间 */
 .item table tr td:first-child{display:none;}
-#Rightbar .cell table:first-child tr td:first-child{display:none;}
 .item table tr td .sep5{display:none;}
 .item table tr td .topic_info{display:none;}
-.item {border-bottom:none;}
 .avatar,#avatar{display:none;}
+
+/* 一行只剩标题了，内边距跟着收紧。分隔线保留宿主自带的那条（主题会重新着色），
+   去掉它整列就没有任何分隔，很难扫视。 */
+.cell.item{padding-top:10px!important;padding-bottom:10px!important;}
 `
     : ''
 }
 
-#Logo {background-image:url('https://i.imgur.com/i9VgUtM.png');}
-.bigger a, .top:nth-last-child(5){color: transparent!important;text-shadow: #b0b0b0 0 0 6px;user-select: none;}
 #Rightbar .cell table:first-child tr td:first-child{display:none;}
 `
     : ''

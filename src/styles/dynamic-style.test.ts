@@ -14,11 +14,12 @@ describe('dynamic style', () => {
   });
 
   it('simple 视图与自定义背景色体现在样式里', () => {
-    expect(buildDynamicStyle(getDefaultConfig())).not.toContain('#Logo');
+    // 简洁模式的标志：隐藏节点/作者/时间，只留标题
+    expect(buildDynamicStyle(getDefaultConfig())).not.toContain('.topic_info{display:none;}');
     const css = buildDynamicStyle(
       getDefaultConfig({ viewType: 'simple', customBgColor: '#abcdef' }),
     );
-    expect(css).toContain('#Logo');
+    expect(css).toContain('.topic_info{display:none;}');
     expect(css).toContain('background: #abcdef !important');
   });
 
