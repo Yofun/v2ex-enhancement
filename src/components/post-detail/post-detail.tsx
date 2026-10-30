@@ -84,8 +84,8 @@ function VoteLink({
   );
   return (
     <a ref={setup} className="vote">
-      <li className={`fa ${icon}`} />
-      {icon === 'fa-chevron-up' ? NBSP3 : null}
+      <Icon icon={icon} />
+      {icon === 'ph:caret-up' ? NBSP3 : null}
     </a>
   );
 }
@@ -421,9 +421,9 @@ export function PostDetail({
                 <div className="sep10" />
                 <h1>{post.title}</h1>
                 <div id={`topic_${post.id}_votes`} className="votes">
-                  <VoteLink fn="upVoteTopic" postId={post.id} icon="fa-chevron-up" />
+                  <VoteLink fn="upVoteTopic" postId={post.id} icon="ph:caret-up" />
                   {NBSP3}
-                  <VoteLink fn="downVoteTopic" postId={post.id} icon="fa-chevron-down" />
+                  <VoteLink fn="downVoteTopic" postId={post.id} icon="ph:caret-down" />
                 </div>
                 {NBSP3}
                 <small className="gray">
@@ -448,7 +448,7 @@ export function PostDetail({
                     <>
                       {'\u00a0\u00a0 '}
                       <a href={`/t/${post.id}/info`}>
-                        <li className="fa fa-info-circle" />
+                        <Icon icon="ph:info" />
                       </a>
                       {'\u00a0\u00a0 '}
                       {canAppend ? (
@@ -474,10 +474,11 @@ export function PostDetail({
                   <>
                     {myTags.map((tag) => (
                       <span className={styles.myTag} key={tag}>
-                        <i className="fa fa-tag" />
+                        <Icon icon="ph:tag" />
                         <span>{tag}</span>
-                        <i
-                          className={`fa fa-trash-o ${styles.remove}`}
+                        <Icon
+                          icon="ph:trash"
+                          className={styles.remove}
                           onClick={(e) => {
                             e.stopPropagation();
                             eventBus.emit(CMD.REMOVE_TAG, { username: post.member.username, tag });
@@ -530,7 +531,7 @@ export function PostDetail({
                   <div className={styles.topReply}>
                     <Tooltip title="收起高赞回复">
                       <div className={styles.tool}>
-                        <Icon icon="gravity-ui:chevrons-collapse-vertical" />
+                        <Icon icon="ph:arrows-in-line-vertical" />
                       </div>
                     </Tooltip>
                   </div>
@@ -646,7 +647,7 @@ export function PostDetail({
                 <span className="gray">上下文</span>
                 <div className={styles.topReply}>
                   <Icon
-                    icon="ic:round-close"
+                    icon="ph:x"
                     onClick={(e) => {
                       e.stopPropagation();
                       setShowRelationReply(false);
@@ -696,7 +697,7 @@ export function PostDetail({
               close('btn');
             }}
           >
-            <Icon icon="icon-park-outline:close" />
+            <Icon icon="ph:x" />
           </div>
           <div
             className={styles.openNewTab}
@@ -705,7 +706,7 @@ export function PostDetail({
               functions.openNewTab(`https://www.v2ex.com/t/${post.id}`, config.newTabOpenActive);
             }}
           >
-            <Icon icon="majesticons:open" />
+            <Icon icon="ph:arrow-square-out" />
           </div>
           <div
             className={`${styles.refresh} gray`}
@@ -714,7 +715,7 @@ export function PostDetail({
               onRefresh?.();
             }}
           >
-            {refreshLoading ? <BaseLoading /> : <Icon icon="material-symbols:refresh" />}
+            {refreshLoading ? <BaseLoading /> : <Icon icon="ph:arrow-clockwise" />}
           </div>
           <div
             className={`${styles.scrollTo} gray`}
@@ -723,7 +724,7 @@ export function PostDetail({
               jump(currentFloor);
             }}
           >
-            <Icon icon="lucide:move-down" />
+            <Icon icon="ph:arrow-down" />
             <input
               type="text"
               value={currentFloor}
@@ -741,13 +742,13 @@ export function PostDetail({
               scrollTop();
             }}
           >
-            <Icon icon="lucide:move-up" />
+            <Icon icon="ph:arrow-up" />
           </div>
         </div>
         {createPortal(
           <div className={styles.previewModal} ref={modalRef} onClick={(e) => e.stopPropagation()}>
             <div className={styles.mask} ref={maskRef} onClick={closePreviewModal} />
-            <Icon className={styles.close} icon="fontisto:close-a" onClick={closePreviewModal} />
+            <Icon className={styles.close} icon="ph:x" onClick={closePreviewModal} />
             <div className={styles.zoomBar} onClick={(e) => e.stopPropagation()}>
               <span className={styles.zoomBtn} title="缩小" onClick={zoomOut}>
                 −

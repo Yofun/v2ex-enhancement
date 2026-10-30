@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useFade } from '@/hooks/use-fade';
 
 import { BaseLoading } from './base-loading';
+import { Icon } from './icon';
 import baseModal from './modal.module.scss';
 import styles from './notification-modal.module.scss';
 
@@ -78,7 +79,7 @@ export function NotificationModal({
       <div className={styles.modalRoot}>
         <div className={styles.modalHeader}>
           <div className={`${baseModal.title} ${styles.title}`}> 提醒系统 </div>
-          <i className="fa fa-times" onClick={close} />
+          <Icon icon="ph:x" onClick={close} />
         </div>
         <div className={styles.modalBody}>
           <div className={styles.filter}>

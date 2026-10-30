@@ -85,7 +85,7 @@ export function Author({
             {...clickable('展开这条回复')}
             color="var(--color-active)"
             className={styles.expandIcon}
-            icon="gravity-ui:chevrons-expand-up-right"
+            icon="ph:arrows-out-simple"
           />
         )}
         {config.viewType !== 'simple' && (
@@ -112,10 +112,11 @@ export function Author({
             <>
               {myTags.map((i) => (
                 <span key={i} className={common.myTag}>
-                  <i className="fa fa-tag" />
+                  <Icon icon="ph:tag" />
                   <span>{i}</span>
-                  <i
-                    className={`fa fa-trash-o ${common.remove}`}
+                  <Icon
+                    icon="ph:trash"
+                    className={common.remove}
                     onClick={stop(() => removeTag(i))}
                     {...clickable(`删除标签 ${i}`)}
                   />
@@ -138,19 +139,19 @@ export function Author({
           <div className={styles.toolbar}>
             <PopConfirm title="确认隐藏这条回复?" onConfirm={() => onHide?.()}>
               <div className={common.tool}>
-                <Icon icon="fluent:eye-hide-24-regular" />
+                <Icon icon="ph:eye-slash" />
                 <span>隐藏</span>
               </div>
             </PopConfirm>
             {context > 0 && (
               <div className={common.tool} onClick={stop(showRelationReply)} {...clickable()}>
-                <Icon icon="iconoir:page-search" />
+                <Icon icon="ph:file-magnifying-glass" />
                 <span>上下文</span>
               </div>
             )}
             {type === 'top' && (
               <div className={common.tool} onClick={stop(jump)} {...clickable()}>
-                <Icon icon="icon-park-outline:to-bottom" />
+                <Icon icon="ph:arrow-line-down" />
                 <span>跳转</span>
               </div>
             )}
@@ -159,7 +160,7 @@ export function Author({
               onClick={stop(() => checkIsLogin(onReply))}
               {...clickable()}
             >
-              <Icon icon="mynaui:message" />
+              <Icon icon="ph:chat-circle" />
               <span>回复</span>
             </div>
             <Point

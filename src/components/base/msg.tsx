@@ -55,7 +55,7 @@ export function Msg({ type, text, onClose }: MsgProps) {
     >
       <span className={styles.dot} />
       <div className={styles.text}>{text}</div>
-      <Icon className={styles.close} icon="ic:round-close" onClick={leave} />
+      <Icon className={styles.close} icon="ph:x" onClick={leave} />
     </div>
   );
 }

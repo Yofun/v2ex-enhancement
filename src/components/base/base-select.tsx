@@ -63,7 +63,7 @@ export function BaseSelect({ displayType, onUpdateDisplayType }: BaseSelectProps
           onClick={clickDisplayType}
         >
           <span>{currentDisplayType}</span>
-          <Icon icon="mingcute:down-line" />
+          <Icon icon="ph:caret-down" />
         </div>
         {showChangeDisplayType && (
           <div className={styles.typeList}>

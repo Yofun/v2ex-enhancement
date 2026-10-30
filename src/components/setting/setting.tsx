@@ -244,11 +244,11 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
   };
 
   const tabs = [
-    { icon: 'weui:setting-outlined', label: '列表' },
-    { icon: 'stash:article-alt-light', label: '主题' },
-    { icon: 'fluent:more-circle-20-regular', label: '其他' },
-    { icon: 'lets-icons:img-load-box-fill', label: '图片' },
-    { icon: 'ix:about', label: '关于' },
+    { icon: 'ph:gear', label: '列表' },
+    { icon: 'ph:article', label: '主题' },
+    { icon: 'ph:dots-three-circle', label: '其他' },
+    { icon: 'ph:image', label: '图片' },
+    { icon: 'ph:info', label: '关于' },
   ];
 
   const viewTypeOption = (type: ViewType, label: string, onClick: () => void) => (
@@ -286,7 +286,7 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
       <div className={styles['modal-root']}>
         <div className={styles['modal-header']}>
           <div className={styles.title}>脚本设置</div>
-          <Icon icon="ic:round-close" onClick={close} />
+          <Icon icon="ph:x" onClick={close} />
         </div>
         {isNew && (
           <div className={styles.log}>
@@ -314,7 +314,7 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
               <div className={styles.tip}> 如果可以的话欢迎点个star支持一下~ </div>
               <div className={styles.icons}>
                 <a href={DefaultVal.git} target="_blank" rel="noreferrer">
-                  <Icon icon="mdi:github" />
+                  <Icon icon="ph:github-logo" />
                 </a>
               </div>
             </div>
@@ -669,7 +669,7 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                     </div>
                   </div>
                   <div className={styles.tips2}>
-                    <Icon icon="icon-park-outline:tips" />
+                    <Icon icon="ph:lightbulb" />
                     <span>
                       代码完全开源，基于 V2Next（GPL）还原为 React + TypeScript，不放心也可自行打包~
                     </span>

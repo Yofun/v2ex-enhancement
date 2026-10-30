@@ -18,7 +18,8 @@
     "format:check": "prettier . --check",
     "release": "release-it",
     "release:dry": "release-it --dry-run",
-    "postinstall": "husky"
+    "postinstall": "husky",
+    "icons": "node scripts/fetch-icons.mjs"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

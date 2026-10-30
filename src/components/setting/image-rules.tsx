@@ -87,11 +87,7 @@ export function ImageRules() {
                 modelValue={rule.enabled}
                 onUpdateModelValue={(v) => update(rule.id, { enabled: v })}
               />
-              <Icon
-                icon="ic:round-close"
-                className={styles.remove}
-                onClick={() => remove(rule.id)}
-              />
+              <Icon icon="ph:x" className={styles.remove} onClick={() => remove(rule.id)} />
             </div>
 
             <div className={styles.field}>

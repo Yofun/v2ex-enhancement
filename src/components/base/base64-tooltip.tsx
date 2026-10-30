@@ -90,7 +90,7 @@ export function Base64Tooltip() {
       }}
     >
       <div className={styles.head}>
-        <Icon icon="system-uicons:translate" />
+        <Icon icon="ph:translate" />
         Base64 解码
       </div>
       {!decodeText ? (

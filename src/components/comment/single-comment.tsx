@@ -25,7 +25,7 @@ export function SingleComment({ comment, isRight = false }: SingleCommentProps) 
 
   const tagList: ReactNode = myTags.map((i) => (
     <span key={i} className={common.myTag}>
-      <i className="fa fa-tag" />
+      <Icon icon="ph:tag" />
       <span>{i}</span>
     </span>
   ));
@@ -33,12 +33,9 @@ export function SingleComment({ comment, isRight = false }: SingleCommentProps) 
   const point = comment.thankCount ? (
     <div className={styles.point}>
       {comment.isThanked ? (
-        <Icon color="var(--v2n-danger)" icon="icon-park-solid:like" />
+        <Icon color="var(--v2n-danger)" icon="ph:heart-fill" />
       ) : (
-        <Icon
-          color={comment.thankCount ? 'var(--v2n-danger)' : undefined}
-          icon="icon-park-outline:like"
-        />
+        <Icon color={comment.thankCount ? 'var(--v2n-danger)' : undefined} icon="ph:heart" />
       )}
       <div className={common.linkNum}>{comment.thankCount}</div>
     </div>

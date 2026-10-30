@@ -1,3 +1,5 @@
+import { Icon } from '@/components/base/icon';
+
 import styles from './calendar.module.scss';
 
 export interface CalendarState {
@@ -29,11 +31,11 @@ export function Calendar({ calendar, onMonthChange, onSelect }: CalendarProps) {
         <div className={styles.month}>
           <div className="fade">历史最热</div>
           <div className={styles.caTitle}>
-            <i className="fa fa-arrow-left" aria-hidden="true" onClick={() => onMonthChange(-1)} />
+            <Icon icon="ph:caret-left" onClick={() => onMonthChange(-1)} />
             <span>
               {year}年{monthNumber}月
             </span>
-            <i className="fa fa-arrow-right" aria-hidden="true" onClick={() => onMonthChange(1)} />
+            <Icon icon="ph:caret-right" onClick={() => onMonthChange(1)} />
           </div>
         </div>
         <div className={styles.calenderHeader}>

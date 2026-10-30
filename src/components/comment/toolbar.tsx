@@ -179,7 +179,7 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
         }}
         {...clickable()}
       >
-        <Icon icon="mynaui:message" />
+        <Icon icon="ph:chat-circle" />
         <span>回复</span>
       </div>
       <div
@@ -193,9 +193,9 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
         {loading ? (
           <BaseLoading size="small" />
         ) : post.isFavorite ? (
-          <Icon color="var(--v2n-danger)" icon="iconoir:star-solid" />
+          <Icon color="var(--v2n-danger)" icon="ph:star-fill" />
         ) : (
-          <Icon icon="iconoir:star" />
+          <Icon icon="ph:star" />
         )}
         <span>{(post.isFavorite ? '取消' : '') + '收藏'}</span>
       </div>
@@ -212,7 +212,7 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
         }}
         {...clickable()}
       >
-        <Icon icon="uil:share" />
+        <Icon icon="ph:share-network" />
         <span>Tweet</span>
       </div>
       <div
@@ -223,7 +223,7 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
         }}
         {...clickable()}
       >
-        {loading2 ? <BaseLoading size="small" /> : <Icon icon="fluent:eye-hide-24-regular" />}
+        {loading2 ? <BaseLoading size="small" /> : <Icon icon="ph:eye-slash" />}
         <span>{post.isIgnore ? '取消忽略' : '忽略'}</span>
       </div>
       <div
@@ -235,7 +235,7 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
         title={post.isReport ? '你已对本主题进行了报告' : undefined}
         {...clickable()}
       >
-        {loading3 ? <BaseLoading size="small" /> : <Icon icon="solar:danger-triangle-outline" />}
+        {loading3 ? <BaseLoading size="small" /> : <Icon icon="ph:warning" />}
         <span>{post.isReport ? '已报告' : '报告'}</span>
       </div>
     </div>

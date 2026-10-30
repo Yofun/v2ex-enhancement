@@ -464,14 +464,14 @@ export function PostEditor({
       </div>
       <div className={styles.toolbar}>
         <div className={styles.left}>
-          <Icon onClick={showEmoticons} {...clickable('插入表情')} icon="streamline:smiley-happy" />
+          <Icon onClick={showEmoticons} {...clickable('插入表情')} icon="ph:smiley" />
           <div className={styles.upload}>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => upload(e.currentTarget.files?.[0])}
             />
-            <Icon icon="lets-icons:img-load-box-fill" />
+            <Icon icon="ph:image" />
           </div>
           {uploadLoading && <span>上传中.....</span>}
         </div>
@@ -506,7 +506,7 @@ export function PostEditor({
         className={styles.emoticonPack}
         style={{ display: isShowEmoticons ? undefined : 'none', ...emoticonPos }}
       >
-        <Icon icon="ic:round-close" onClick={closeEmoticons} {...clickable('关闭表情面板')} />
+        <Icon icon="ph:x" onClick={closeEmoticons} {...clickable('关闭表情面板')} />
         <div className="title">经典</div>
         <div className={styles.list}>
           {classicsEmoticons.map((item) => (

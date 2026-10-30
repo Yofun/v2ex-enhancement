@@ -6,6 +6,7 @@ import { createPortal } from 'react-dom';
 import { BaseButton } from '@/components/base/base-button';
 import { BaseLoading } from '@/components/base/base-loading';
 import { Base64Tooltip } from '@/components/base/base64-tooltip';
+import { Icon } from '@/components/base/icon';
 import { MsgModal } from '@/components/base/msg-modal';
 import { NotificationModal } from '@/components/base/notification-modal';
 import { TagModal } from '@/components/base/tag-modal';
@@ -845,10 +846,11 @@ export function App() {
               <span>标签：</span>
               {targetUserTags.map((tag) => (
                 <span className={styles.myTag} key={tag}>
-                  <i className="fa fa-tag" />
+                  <Icon icon="ph:tag" />
                   <span>{tag}</span>
-                  <i
-                    className={`fa fa-trash-o ${styles.remove}`}
+                  <Icon
+                    icon="ph:trash"
+                    className={styles.remove}
                     onClick={() =>
                       eventBus.emit(CMD.REMOVE_TAG, { username: session.targetUserName, tag })
                     }

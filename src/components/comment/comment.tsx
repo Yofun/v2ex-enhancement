@@ -133,10 +133,7 @@ export function Comment({ modelValue, type = 'list' }: CommentProps) {
                         {'@' + modelValue.replyUsers[0] + '\u00a0\u00a0'}
                       </a>
                       <span className={styles.delLine}>{'#' + modelValue.replyFloor}</span>
-                      <i
-                        className={`fa fa-question-circle-o ${styles.wrongIcon}`}
-                        aria-hidden="true"
-                      />
+                      <Icon icon="ph:question" className={styles.wrongIcon} />
                     </span>
                     {expandWrong && (
                       <div className={styles.warning}>
@@ -181,7 +178,7 @@ export function Comment({ modelValue, type = 'list' }: CommentProps) {
                   >
                     <div className={styles.gang} />
                     <span> 共有{modelValue.replyCount} 条回复 </span>
-                    <Icon icon={expandTopReply ? 'ep:arrow-up-bold' : 'ep:arrow-down-bold'} />
+                    <Icon icon={expandTopReply ? 'ph:caret-up-bold' : 'ph:caret-down-bold'} />
                   </div>
                 )}
               </div>
