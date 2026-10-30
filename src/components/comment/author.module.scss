@@ -93,8 +93,10 @@
 
   // 工具栏由整行 hover 触发；focus-within 让键盘 Tab 进来时也能看见，
   // 没有 hover 的设备（触屏）则常驻显示。
-  &:hover .toolbar,
-  &:focus-within .toolbar {
+  // 选择器必须带上 .authorRight：隐藏规则是 .author .authorRight .toolbar，
+  // 少写一层就是同权重且排在它前面，opacity: 0 会一直赢，按钮永远不显形。
+  &:hover .authorRight .toolbar,
+  &:focus-within .authorRight .toolbar {
     opacity: 1;
   }
 
@@ -115,7 +117,7 @@
   }
 
   @media (hover: none) {
-    .toolbar {
+    .authorRight .toolbar {
       opacity: 1;
     }
   }
