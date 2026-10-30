@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/release-it@17/schema/release-it.json",
+  "$schema": "https://unpkg.com/release-it@21/schema/release-it.json",
   "git": {
     "commit": true,
     "commitMessage": "chore: release v${version}",
@@ -28,47 +28,52 @@
         "types": [
           {
             "type": "feat",
-            "section": "Features"
+            "section": "Features",
+            "effect": "bump"
           },
           {
             "type": "fix",
-            "section": "Bug Fixes"
+            "section": "Bug Fixes",
+            "effect": "bump"
           },
           {
             "type": "perf",
-            "section": "Performance"
+            "section": "Performance",
+            "effect": "bump"
           },
           {
             "type": "refactor",
-            "section": "Refactor"
+            "section": "Refactor",
+            "effect": "changelog"
           },
           {
             "type": "docs",
-            "section": "Documentation"
+            "section": "Documentation",
+            "effect": "changelog"
           },
           {
             "type": "chore",
-            "hidden": true
+            "effect": "hidden"
           },
           {
             "type": "style",
-            "hidden": true
+            "effect": "hidden"
           },
           {
             "type": "ci",
-            "hidden": true
+            "effect": "hidden"
           },
           {
             "type": "test",
-            "hidden": true
+            "effect": "hidden"
           },
           {
             "type": "build",
-            "hidden": true
+            "effect": "hidden"
           },
           {
             "type": "revert",
-            "hidden": true
+            "effect": "hidden"
           }
         ]
       },
