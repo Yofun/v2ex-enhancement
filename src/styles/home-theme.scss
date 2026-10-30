@@ -29,18 +29,7 @@ html.v2n-home body {
       }
     }
 
-    #search {
-      border-radius: 10px !important;
-      border: 1px solid var(--color-input-border) !important;
-      background: var(--color-input-bg) !important;
-      color: var(--color-font-pure) !important;
-      transition: border-color 0.15s;
-
-      &:focus {
-        border-color: var(--color-active) !important;
-        outline: none;
-      }
-    }
+    // 搜索框保持 V2EX 原样，不做改动
   }
 
   #Wrapper {
@@ -69,14 +58,16 @@ html.v2n-home body {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0;
+    // 宿主原本靠标签之间的空白文本分隔，而 flex 容器会丢弃纯空白节点，
+    // 所以这里必须显式给 gap，否则各分类会贴在一起
+    gap: 2px 6px;
     background: transparent !important;
 
     a.tab,
     a.tab_current {
       margin: 0 !important;
       border-radius: 8px !important;
-      padding: 6px 8px !important;
+      padding: 6px 10px !important;
       white-space: nowrap;
       border: none !important;
       color: var(--color-font) !important;
