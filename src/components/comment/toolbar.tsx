@@ -9,6 +9,7 @@ import { CMD, eventBus } from '@/core/event-bus';
 import { session } from '@/core/session';
 import { PageType } from '@/core/types';
 import { useLatest } from '@/hooks/use-latest';
+import { clickable } from '@/utils/a11y';
 
 import common from './common.module.scss';
 import styles from './toolbar.module.scss';
@@ -176,6 +177,7 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
           e.stopPropagation();
           checkIsLogin(onReply);
         }}
+        {...clickable()}
       >
         <Icon icon="mynaui:message" />
         <span>回复</span>
@@ -186,6 +188,7 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
           e.stopPropagation();
           toggleFavorite();
         }}
+        {...clickable()}
       >
         {loading ? (
           <BaseLoading size="small" />
@@ -207,6 +210,7 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
           e.stopPropagation();
           tweet();
         }}
+        {...clickable()}
       >
         <Icon icon="uil:share" />
         <span>Tweet</span>
@@ -217,6 +221,7 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
           e.stopPropagation();
           toggleIgnore();
         }}
+        {...clickable()}
       >
         {loading2 ? <BaseLoading size="small" /> : <Icon icon="fluent:eye-hide-24-regular" />}
         <span>{post.isIgnore ? '取消忽略' : '忽略'}</span>
@@ -227,13 +232,11 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
           e.stopPropagation();
           report();
         }}
+        title={post.isReport ? '你已对本主题进行了报告' : undefined}
+        {...clickable()}
       >
-        {loading3 ? (
-          <BaseLoading size="small" />
-        ) : (
-          <Icon className="black" icon="solar:danger-triangle-outline" />
-        )}
-        <span>{post.isReport ? '你已对本主题进行了报告' : '报告'}</span>
+        {loading3 ? <BaseLoading size="small" /> : <Icon icon="solar:danger-triangle-outline" />}
+        <span>{post.isReport ? '已报告' : '报告'}</span>
       </div>
     </div>
   );

@@ -62,10 +62,13 @@
 
     .right {
       flex: 1;
+      // 同 single-comment：没有这行，正文里一条长链接会把整条评论撑出容器
+      min-width: 0;
       width: calc(100% - 3rem);
 
       .w {
         padding-left: 1rem;
+        overflow-wrap: anywhere;
 
         .editor {
           margin-top: 1rem;

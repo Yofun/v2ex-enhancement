@@ -5,6 +5,7 @@ import type { MouseEvent } from 'react';
 import { useApp } from '@/app/app-context';
 import { CMD, eventBus } from '@/core/event-bus';
 import { useLatest } from '@/hooks/use-latest';
+import { clickable } from '@/utils/a11y';
 
 import styles from './base-html-render.module.scss';
 
@@ -61,6 +62,11 @@ export function BaseHtmlRender({ html, className }: BaseHtmlRenderProps) {
     return () => imgs.forEach((img) => img.removeEventListener('load', checkContentHeight));
   }, [html, checkContentHeight, autoCollapseRef]);
 
+  const expandAll = () => {
+    handOpenRef.current = true;
+    setMask(false);
+  };
+
   if (!html) return null;
 
   return (
@@ -69,13 +75,7 @@ export function BaseHtmlRender({ html, className }: BaseHtmlRenderProps) {
         <div ref={contentRef} dangerouslySetInnerHTML={{ __html: html }} onMouseUp={mouseup} />
       </div>
       {mask && (
-        <div
-          className={styles.expand}
-          onClick={() => {
-            handOpenRef.current = true;
-            setMask(false);
-          }}
-        >
+        <div className={styles.expand} onClick={expandAll} {...clickable()}>
           展开
         </div>
       )}

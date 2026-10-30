@@ -52,7 +52,7 @@ ${
     ? ''
     : `
 .post-item {
-  background: white;
+  background: var(--v2n-card-bg);
 }
 `
 }
@@ -77,7 +77,7 @@ ${
   align-items: flex-end;
   cursor: pointer;
   font-size: 1.2rem;
-  color: var(--link-color);
+  color: var(--v2n-link);
   display: none;
   padding-right: 1rem;
 }
@@ -87,10 +87,11 @@ ${
   border: 1px solid transparent;
   border-radius: var(--box-border-radius);
   cursor: pointer;
+  transition: border-color .2s;
 }
 
 .preview:hover {
-  border: 1px solid #c8c8c8;
+  border-color: var(--color-input-border-hover);
 }
 
 .preview > .post-content {
@@ -104,7 +105,7 @@ ${
 }
 
 .preview  .topic-link:link {
-  color: black !important;
+  color: var(--color-font-pure) !important;
 }
 
 .post-content {
@@ -133,37 +134,25 @@ ${
 }
 
 .post-content:visited {
-  color: #afb9c1 !important;
+  color: var(--color-font-3) !important;
 }
 
 .post-content:link {
-  color: #494949;
+  color: var(--color-font-8);
 }
 
 ${
   href.includes('wow')
     ? ''
     : `
-.Night .post-item {
-  background: #18222d !important;
+html.dark .post-item {
+  background: var(--v2n-card-bg) !important;
 }
 `
 }
 
-.Night .preview {
-  border: 1px solid #3b536e;
-}
-
-.Night .preview > .post-content:link {
-  color: #d1d5d9;
-}
-
-.Night .preview > .post-content:visited {
-  color: #393f4e !important;
-}
-
-.Night .preview  .topic-link:link {
-  color: #c0dbff !important;
+html.dark .preview {
+  border-color: var(--color-line);
 }
 
 ${
@@ -204,7 +193,7 @@ ${
 
 .new{
   position: absolute;
-  background: red;
+  background: var(--v2n-danger);
   font-size: 10px;
   border-radius: 4px;
   padding: 0px 2px;
@@ -213,8 +202,8 @@ ${
   top: -3px;
 }
 
-/*解决hdr头像太亮的问题*/
-img{filter: brightness(0.95) contrast(0.95) saturate(0.95);}
+/*解决hdr头像太亮的问题——只作用于头像，不要波及帖子正文配图*/
+.avatar, #avatar{filter: brightness(0.95) contrast(0.95) saturate(0.95);}
 `;
 }
 

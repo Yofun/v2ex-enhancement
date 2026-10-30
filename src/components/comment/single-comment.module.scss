@@ -28,17 +28,23 @@
 
   .commentBody {
     flex: 1;
+    // flex 子项默认 min-width:auto，不加这行一条长链接就会把整行撑出容器
+    min-width: 0;
     display: flex;
     flex-direction: column;
 
     .texts {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
+      row-gap: 0.4rem;
+      min-width: 0;
     }
 
     .replyContent {
       margin-top: 1rem;
       max-width: calc(100% - 5rem);
+      overflow-wrap: anywhere;
     }
   }
 

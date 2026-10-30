@@ -4,6 +4,7 @@ import { useApp } from '@/app/app-context';
 import { Icon } from '@/components/base/icon';
 import { CMD, eventBus } from '@/core/event-bus';
 import type { Reply } from '@/core/types';
+import { clickable } from '@/utils/a11y';
 
 import { BaseHtmlRender } from './base-html-render';
 import common from './common.module.scss';
@@ -47,7 +48,7 @@ export function SingleComment({ comment, isRight = false }: SingleCommentProps) 
   const modBadge = comment.isMod && <div className={cls(common.mod, styles.mod)}>MOD</div>;
   const avatar = (
     <a className={cls('avatar', styles.avatar)} href={`/member/${comment.username}`}>
-      <img src={comment.avatar} alt="" />
+      <img src={comment.avatar} alt={comment.username} />
     </a>
   );
 
@@ -84,6 +85,7 @@ export function SingleComment({ comment, isRight = false }: SingleCommentProps) 
             e.stopPropagation();
             jump();
           }}
+          {...clickable(`跳转到 #${comment.floor}`)}
         >
           <span>跳转</span>
         </div>

@@ -92,6 +92,13 @@
     display: inline-block;
   }
 
+  // 工具栏由整行 hover 触发；focus-within 让键盘 Tab 进来时也能看见，
+  // 没有 hover 的设备（触屏）则常驻显示。
+  &:hover .toolbar,
+  &:focus-within .toolbar {
+    opacity: 1;
+  }
+
   .authorRight {
     position: absolute;
     right: 0;
@@ -104,10 +111,13 @@
       color: var(--color-gray);
       opacity: 0;
       gap: 0.2rem;
+      transition: opacity 0.2s;
+    }
+  }
 
-      &:hover {
-        opacity: 1;
-      }
+  @media (hover: none) {
+    .toolbar {
+      opacity: 1;
     }
   }
 }

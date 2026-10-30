@@ -11,6 +11,7 @@ import { session } from '@/core/session';
 import type { Reply } from '@/core/types';
 import { useLatest } from '@/hooks/use-latest';
 import { postForText } from '@/services/request';
+import { clickable } from '@/utils/a11y';
 
 import styles from './post-editor.module.scss';
 
@@ -463,7 +464,7 @@ export function PostEditor({
       </div>
       <div className={styles.toolbar}>
         <div className={styles.left}>
-          <Icon onClick={showEmoticons} icon="streamline:smiley-happy" />
+          <Icon onClick={showEmoticons} {...clickable('插入表情')} icon="streamline:smiley-happy" />
           <div className={styles.upload}>
             <input
               type="file"
@@ -472,7 +473,7 @@ export function PostEditor({
             />
             <Icon icon="lets-icons:img-load-box-fill" />
           </div>
-          {uploadLoading && <span style={{ color: 'black', fontSize: '1.4rem' }}>上传中.....</span>}
+          {uploadLoading && <span>上传中.....</span>}
         </div>
         <div>
           {useType === 'reply-comment' && (
@@ -505,7 +506,7 @@ export function PostEditor({
         className={styles.emoticonPack}
         style={{ display: isShowEmoticons ? undefined : 'none', ...emoticonPos }}
       >
-        <Icon icon="ic:round-close" onClick={closeEmoticons} />
+        <Icon icon="ic:round-close" onClick={closeEmoticons} {...clickable('关闭表情面板')} />
         <div className="title">经典</div>
         <div className={styles.list}>
           {classicsEmoticons.map((item) => (

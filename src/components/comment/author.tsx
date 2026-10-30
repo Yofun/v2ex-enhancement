@@ -5,6 +5,7 @@ import { Icon } from '@/components/base/icon';
 import { PopConfirm } from '@/components/base/pop-confirm';
 import { CMD, eventBus } from '@/core/event-bus';
 import type { Reply } from '@/core/types';
+import { clickable } from '@/utils/a11y';
 
 import styles from './author.module.scss';
 import common from './common.module.scss';
@@ -81,6 +82,7 @@ export function Author({
         {!modelValue && (
           <Icon
             onClick={stop(() => onUpdateModelValue?.(true))}
+            {...clickable('展开这条回复')}
             color="var(--color-active)"
             className={styles.expandIcon}
             icon="gravity-ui:chevrons-expand-up-right"
@@ -88,7 +90,7 @@ export function Author({
         )}
         {config.viewType !== 'simple' && (
           <a className={`avatar ${styles.avatar}`} href={`/member/${comment.username}`}>
-            <img src={comment.avatar} alt="" />
+            <img src={comment.avatar} alt={comment.username} />
           </a>
         )}
         <span className={styles.texts}>
@@ -115,6 +117,7 @@ export function Author({
                   <i
                     className={`fa fa-trash-o ${common.remove}`}
                     onClick={stop(() => removeTag(i))}
+                    {...clickable(`删除标签 ${i}`)}
                   />
                 </span>
               ))}
@@ -122,6 +125,7 @@ export function Author({
                 className={`ago ${common.addTag} ${styles.addTag}`}
                 onClick={stop(addTag)}
                 title="添加标签"
+                {...clickable('添加标签')}
               >
                 +
               </span>
@@ -139,18 +143,22 @@ export function Author({
               </div>
             </PopConfirm>
             {context > 0 && (
-              <div className={common.tool} onClick={stop(showRelationReply)}>
+              <div className={common.tool} onClick={stop(showRelationReply)} {...clickable()}>
                 <Icon icon="iconoir:page-search" />
                 <span>上下文</span>
               </div>
             )}
             {type === 'top' && (
-              <div className={common.tool} onClick={stop(jump)}>
+              <div className={common.tool} onClick={stop(jump)} {...clickable()}>
                 <Icon icon="icon-park-outline:to-bottom" />
                 <span>跳转</span>
               </div>
             )}
-            <div className={common.tool} onClick={stop(() => checkIsLogin(onReply))}>
+            <div
+              className={common.tool}
+              onClick={stop(() => checkIsLogin(onReply))}
+              {...clickable()}
+            >
               <Icon icon="mynaui:message" />
               <span>回复</span>
             </div>

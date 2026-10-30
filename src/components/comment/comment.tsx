@@ -9,6 +9,7 @@ import { CMD, eventBus } from '@/core/event-bus';
 import type { Reply } from '@/core/types';
 import { CommentDisplayType } from '@/core/types';
 import { postForText } from '@/services/request';
+import { clickable } from '@/utils/a11y';
 
 import { Author } from './author';
 import { BaseHtmlRender } from './base-html-render';
@@ -106,19 +107,23 @@ export function Comment({ modelValue, type = 'list' }: CommentProps) {
         onHide={hide}
       />
       {cssStyle && !expand && (
-        <div className="more ago" onClick={toggleExpand}>
+        <div className={`more ago ${styles.more}`} onClick={toggleExpand} {...clickable()}>
           由于嵌套回复层级太深，自动将后续回复隐藏
         </div>
       )}
       {expand && (
         <div className={styles.commentContentW} style={cssStyle ?? undefined}>
           {cssStyle && (
-            <div className={`more ago ${styles.more}`} onClick={toggleExpand}>
+            <div className={`more ago ${styles.more}`} onClick={toggleExpand} {...clickable()}>
               由于嵌套回复层级太深，自动将以下回复移至可见范围
             </div>
           )}
           <div className={styles.commentContent}>
-            <div className={styles.expandLine} onClick={toggleExpand} />
+            <div
+              className={styles.expandLine}
+              onClick={toggleExpand}
+              {...clickable('折叠这条回复的子回复')}
+            />
             <div className={styles.right}>
               <div className={styles.w}>
                 {modelValue.isWrong && (
@@ -169,7 +174,11 @@ export function Comment({ modelValue, type = 'list' }: CommentProps) {
                   />
                 )}
                 {type === 'top' && modelValue.replyCount > 0 && (
-                  <div className={styles.replyCount} onClick={() => setExpandTopReply((v) => !v)}>
+                  <div
+                    className={styles.replyCount}
+                    onClick={() => setExpandTopReply((v) => !v)}
+                    {...clickable()}
+                  >
                     <div className={styles.gang} />
                     <span> 共有{modelValue.replyCount} 条回复 </span>
                     <Icon icon={expandTopReply ? 'ep:arrow-up-bold' : 'ep:arrow-down-bold'} />
@@ -193,7 +202,7 @@ export function Comment({ modelValue, type = 'list' }: CommentProps) {
             </div>
           </div>
           {cssStyle && (
-            <div className={`more ago ${styles.more}`} onClick={toggleExpand}>
+            <div className={`more ago ${styles.more}`} onClick={toggleExpand} {...clickable()}>
               由于嵌套回复层级太深，自动将以上回复移至可见范围
             </div>
           )}

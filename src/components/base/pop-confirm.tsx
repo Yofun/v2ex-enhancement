@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
 
-import type { MouseEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import { CMD, eventBus } from '@/core/event-bus';
+import { clickable } from '@/utils/a11y';
 
 interface PopConfirmProps {
   title?: string;
@@ -30,9 +31,9 @@ export function PopConfirm({ title = '', disabled = false, onConfirm, children }
     return () => eventBus.offOne(CMD.SHOW_CONFIRM_MODAL_CONFIRM, cb);
   }, []);
 
-  const showPop = (e: MouseEvent<HTMLSpanElement>) => {
+  const showPop = (anchor: Element) => {
     if (disabled) return;
-    const rect = (e.target as HTMLElement).getBoundingClientRect();
+    const rect = anchor.getBoundingClientRect();
     idRef.current = Date.now();
     eventBus.emit(CMD.SHOW_CONFIRM_MODAL, { title, rect, id: idRef.current });
     eventBus.offOne(CMD.SHOW_CONFIRM_MODAL_CONFIRM, cbRef.current);
@@ -41,9 +42,10 @@ export function PopConfirm({ title = '', disabled = false, onConfirm, children }
 
   return (
     <span
+      {...clickable()}
       onClick={(e) => {
         e.stopPropagation();
-        showPop(e);
+        showPop(e.target as Element);
       }}
     >
       {children}
