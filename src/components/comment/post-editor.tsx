@@ -1,11 +1,11 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { ChangeEvent, DragEvent, KeyboardEvent, MouseEvent } from 'react';
 
 import { useApp } from '@/app/app-context';
 import { BaseButton } from '@/components/base/base-button';
 import { Icon } from '@/components/base/icon';
-import { classicsEmoticons, DefaultVal, emojiEmoticons } from '@/core/constants';
+import { classicsEmoticons } from '@/core/constants';
 import { CMD, eventBus } from '@/core/event-bus';
 import { session } from '@/core/session';
 import type { Reply } from '@/core/types';
@@ -13,6 +13,7 @@ import { useLatest } from '@/hooks/use-latest';
 import { postForText } from '@/services/request';
 import { clickable } from '@/utils/a11y';
 
+import { EmoticonPicker } from './emoticon-picker';
 import styles from './post-editor.module.scss';
 
 interface PostEditorProps {
@@ -55,7 +56,7 @@ export function PostEditor({
   const [loading, setLoading] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [isShowEmoticons, setIsShowEmoticons] = useState(false);
-  const [emoticonPos, setEmoticonPos] = useState<{ left: number; bottom: number }>();
+  const [emojiAnchor, setEmojiAnchor] = useState<HTMLElement | null>(null);
   const [mounted, setMounted] = useState(false);
 
   const txtRef = useRef<HTMLTextAreaElement>(null);
@@ -255,18 +256,10 @@ export function PostEditor({
     }
   };
 
-  const getEmojiSrc = (url: string) =>
-    session.config.replaceImgur ? DefaultVal.imgurProxy + url : url;
-
-  const showEmoticons = (e: MouseEvent<SVGSVGElement>) => {
-    e.stopPropagation();
-    if (isShowEmoticons) {
-      setIsShowEmoticons(false);
-      return;
-    }
-    const rect = e.currentTarget.getBoundingClientRect();
-    setEmoticonPos({ left: rect.left + 30, bottom: window.innerHeight - rect.top - 20 });
-    setIsShowEmoticons(true);
+  // 锚点存进 state 而不是读 ref：渲染期间读 ref 不可靠，也过不了 react-hooks/refs
+  const toggleEmoticons = (e: MouseEvent<HTMLSpanElement>) => {
+    setEmojiAnchor(e.currentTarget);
+    setIsShowEmoticons((v) => !v);
   };
 
   const off = () => {
@@ -438,11 +431,6 @@ export function PostEditor({
     .filter(Boolean)
     .join(' ');
 
-  const closeEmoticons = (e: MouseEvent) => {
-    e.stopPropagation();
-    setIsShowEmoticons(false);
-  };
-
   return (
     <div className={wrapperClass} onClick={onClick}>
       <textarea
@@ -464,7 +452,9 @@ export function PostEditor({
       </div>
       <div className={styles.toolbar}>
         <div className={styles.left}>
-          <Icon onClick={showEmoticons} {...clickable('插入表情')} icon="ph:smiley" />
+          <span className={styles.iconBtn} onClick={toggleEmoticons} {...clickable('插入表情')}>
+            <Icon icon="ph:smiley" />
+          </span>
           <div className={styles.upload}>
             <input
               type="file"
@@ -502,48 +492,13 @@ export function PostEditor({
           </BaseButton>
         </div>
       </div>
-      <div
-        className={styles.emoticonPack}
-        style={{ display: isShowEmoticons ? undefined : 'none', ...emoticonPos }}
-      >
-        <Icon icon="ph:x" onClick={closeEmoticons} {...clickable('关闭表情面板')} />
-        <div className="title">经典</div>
-        <div className={styles.list}>
-          {classicsEmoticons.map((item) => (
-            <img
-              key={item.name}
-              src={getEmojiSrc(item.high)}
-              referrerPolicy="no-referrer"
-              onClick={(e) => {
-                e.stopPropagation();
-                insert(item.name);
-                setIsShowEmoticons(false);
-              }}
-            />
-          ))}
-        </div>
-        <div className="emoji">
-          {emojiEmoticons.map((item) => (
-            <Fragment key={item.title}>
-              <div className="title">{item.title}</div>
-              <div className={styles.list}>
-                {item.list.map((emoji, i) => (
-                  <span
-                    key={i}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      insert(emoji);
-                      setIsShowEmoticons(false);
-                    }}
-                  >
-                    {emoji}
-                  </span>
-                ))}
-              </div>
-            </Fragment>
-          ))}
-        </div>
-      </div>
+      {isShowEmoticons && (
+        <EmoticonPicker
+          anchor={emojiAnchor}
+          onPick={insert}
+          onClose={() => setIsShowEmoticons(false)}
+        />
+      )}
     </div>
   );
 }
