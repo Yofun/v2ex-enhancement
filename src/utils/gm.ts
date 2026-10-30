@@ -3,7 +3,14 @@
 import { GM_addStyle, GM_openInTab, GM_registerMenuCommand, GM_xmlhttpRequest } from '$';
 
 export function gmAddStyle(css: string): HTMLStyleElement | undefined {
-  return typeof GM_addStyle === 'function' ? GM_addStyle(css) : undefined;
+  if (typeof GM_addStyle !== 'function') return undefined;
+  try {
+    return GM_addStyle(css);
+  } catch {
+    // 脚本以 document-start 运行，部分管理器此时 document.head 还不存在会直接抛。
+    // 不能让它掀翻整个脚本，交给 injectStyle 的 <style> 兜底。
+    return undefined;
+  }
 }
 
 /** 返回是否真的通过 GM_openInTab 打开 */

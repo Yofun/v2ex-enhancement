@@ -6,6 +6,19 @@ export function injectStyle(css: string): HTMLStyleElement {
   if (el && typeof el === 'object' && 'textContent' in el) return el;
   const style = document.createElement('style');
   style.textContent = css;
-  (document.head ?? document.documentElement).append(style);
+  if (!mount(style)) {
+    // document-start 时 documentElement 都可能还没建好，等它出现再挂
+    const observer = new MutationObserver(() => {
+      if (mount(style)) observer.disconnect();
+    });
+    observer.observe(document, { childList: true, subtree: true });
+  }
   return style;
+}
+
+function mount(style: HTMLStyleElement): boolean {
+  const parent = document.head ?? document.documentElement;
+  if (!parent) return false;
+  parent.append(style);
+  return true;
 }
