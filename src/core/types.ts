@@ -18,7 +18,6 @@ export enum CommentDisplayType {
 }
 
 export type ViewType = 'table' | 'simple';
-export type FontSizeType = 'small' | 'normal' | 'large' | string;
 
 export interface Member {
   id?: number;
@@ -119,18 +118,14 @@ export interface Config {
   newTabOpen: boolean;
   newTabOpenActive: boolean;
   base64: boolean;
-  sov2ex: boolean;
   postWidth: string;
   showTopReply: boolean;
   topReplyLoveMinCount: number;
   topReplyCount: number;
-  autoJumpLastReadFloor: boolean;
-  rememberLastReadFloor: boolean;
   autoSignin: boolean;
   customBgColor: string;
   version: number;
   collectBrowserNotice: boolean;
-  fontSizeType: FontSizeType;
   homeTheme: boolean;
   notice: NoticeConfig;
   replaceImgur: boolean;

@@ -118,7 +118,8 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
   const updateNotice = (patch: Partial<NoticeConfig>) =>
     setConfig((prev) => normalize({ ...prev, notice: { ...prev.notice, ...patch } }));
   const numberInput =
-    (key: 'topReplyCount' | 'topReplyLoveMinCount') => (e: ChangeEvent<HTMLInputElement>) =>
+    (key: 'topReplyCount' | 'topReplyLoveMinCount' | 'maxReplyCountLimit') =>
+    (e: ChangeEvent<HTMLInputElement>) =>
       update({ [key]: looseToNumber(e.target.value) });
 
   const isNew = config.version < DefaultVal.currentVersion && isDeadline();
@@ -244,9 +245,11 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
   };
 
   const tabs = [
-    { icon: 'ph:gear', label: '列表' },
-    { icon: 'ph:article', label: '主题' },
-    { icon: 'ph:dots-three-circle', label: '其他' },
+    { icon: 'ph:palette', label: '外观' },
+    { icon: 'ph:compass', label: '浏览' },
+    { icon: 'ph:chat-circle', label: '回复' },
+    { icon: 'ph:bell', label: '通知' },
+    { icon: 'ph:wrench', label: '工具' },
     { icon: 'ph:image', label: '图片' },
     { icon: 'ph:info', label: '关于' },
   ];
@@ -346,70 +349,34 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                     </div>
                   </div>
                   <div className={styles.border}>
-                    {switchRow('主题弹框显示', config.clickPostItemOpenDetail, (v) =>
-                      update({ clickPostItemOpenDetail: v }),
-                    )}
+                    <div className={styles.row}>
+                      <label className={styles['item-title']}>自定义背景</label>
+                      <div className={styles.wrapper}>
+                        <input
+                          type="text"
+                          value={config.customBgColor}
+                          onChange={(e) => update({ customBgColor: e.target.value })}
+                        />
+                      </div>
+                    </div>
                     <div className={styles.desc}>
                       {' '}
-                      开启此选项后，主题会<span className={styles.danger}>始终</span>
-                      以弹框的方式显示。优先级大于“新标签页打开链接”{' '}
+                      未设定此值时，则脚本就什么都不做，V站大部分页面背景颜色默认为
+                      #e2e2e2，少部分页面有特定背景。接受一个合法的css color值：例如
+                      <a
+                        href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/color_value"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        red、#ffffff、rgb(222,222,22)(点此查看)
+                      </a>
+                      等等。{' '}
                     </div>
-                  </div>
-                  <div className={styles.border}>
-                    {switchRow('新标签页打开链接', config.newTabOpen, (v) =>
-                      update({ newTabOpen: v }),
-                    )}
-                    <div className={styles.desc}> 网页上所有链接通过新标签页打开 </div>
-                  </div>
-                  {switchRow('打开新标签页时立即切换过去', config.newTabOpenActive, (v) =>
-                    update({ newTabOpenActive: v }),
-                  )}
-                </div>
-              )}
-              {tabIndex === 1 && (
-                <div className={styles.card}>
-                  <div className={cx(styles.row, styles.border)}>
-                    <label className={styles['item-title']}>回复类型</label>
-                    <div className={styles.wrapper}>
-                      <BaseSelect
-                        displayType={config.commentDisplayType}
-                        onUpdateDisplayType={(v) => update({ commentDisplayType: v })}
-                      />
-                    </div>
-                  </div>
-                  {switchRow(
-                    '详情页中显示“回复类型”',
-                    config.showToolbar,
-                    (v) => update({ showToolbar: v }),
-                    true,
-                  )}
-                  {switchRow(
-                    '替换Imgur源',
-                    config.replaceImgur,
-                    (v) => update({ replaceImgur: v }),
-                    true,
-                  )}
-                  <div className={styles.border}>
-                    {switchRow('单独打开主题时默认显示楼中楼', config.autoOpenDetail, (v) =>
-                      update({ autoOpenDetail: v }),
-                    )}
-                    <div className={styles.desc}>
+                    <div className={cx(styles.desc, styles.danger)}>
                       {' '}
-                      单独打开这种地址 https://v2ex.com/t/xxxx 时，是否默认显示楼中楼{' '}
+                      提示：此项需要刷新页面才能生效{' '}
                     </div>
                   </div>
-                  {switchRow(
-                    '点击左右两侧透明处关闭主题详情弹框',
-                    config.closePostDetailBySpace,
-                    (v) => update({ closePostDetailBySpace: v }),
-                    true,
-                  )}
-                  {switchRow(
-                    '正文超长自动折叠',
-                    config.contentAutoCollapse,
-                    (v) => update({ contentAutoCollapse: v }),
-                    true,
-                  )}
                   <div className={styles.border}>
                     <div className={styles.row}>
                       <label className={styles['item-title']}>主题宽度</label>
@@ -442,6 +409,86 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                       {' '}
                       提示：此项需要刷新页面才能生效{' '}
                     </div>
+                  </div>
+                </div>
+              )}
+              {tabIndex === 1 && (
+                <div className={styles.card}>
+                  <div className={styles.border}>
+                    {switchRow('主题弹框显示', config.clickPostItemOpenDetail, (v) =>
+                      update({ clickPostItemOpenDetail: v }),
+                    )}
+                    <div className={styles.desc}>
+                      {' '}
+                      开启此选项后，主题会<span className={styles.danger}>始终</span>
+                      以弹框的方式显示。优先级大于“新标签页打开链接”{' '}
+                    </div>
+                  </div>
+                  <div className={styles.border}>
+                    {switchRow('新标签页打开链接', config.newTabOpen, (v) =>
+                      update({ newTabOpen: v }),
+                    )}
+                    <div className={styles.desc}> 网页上所有链接通过新标签页打开 </div>
+                  </div>
+                  {switchRow('打开新标签页时立即切换过去', config.newTabOpenActive, (v) =>
+                    update({ newTabOpenActive: v }),
+                  )}
+                  <div className={styles.border}>
+                    {switchRow('单独打开主题时默认显示楼中楼', config.autoOpenDetail, (v) =>
+                      update({ autoOpenDetail: v }),
+                    )}
+                    <div className={styles.desc}>
+                      {' '}
+                      单独打开这种地址 https://v2ex.com/t/xxxx 时，是否默认显示楼中楼{' '}
+                    </div>
+                  </div>
+                  {switchRow(
+                    '点击左右两侧透明处关闭主题详情弹框',
+                    config.closePostDetailBySpace,
+                    (v) => update({ closePostDetailBySpace: v }),
+                    true,
+                  )}
+                </div>
+              )}
+              {tabIndex === 2 && (
+                <div className={styles.card}>
+                  <div className={cx(styles.row, styles.border)}>
+                    <label className={styles['item-title']}>回复类型</label>
+                    <div className={styles.wrapper}>
+                      <BaseSelect
+                        displayType={config.commentDisplayType}
+                        onUpdateDisplayType={(v) => update({ commentDisplayType: v })}
+                      />
+                    </div>
+                  </div>
+                  {switchRow(
+                    '详情页中显示“回复类型”',
+                    config.showToolbar,
+                    (v) => update({ showToolbar: v }),
+                    true,
+                  )}
+                  {switchRow(
+                    '正文超长自动折叠',
+                    config.contentAutoCollapse,
+                    (v) => update({ contentAutoCollapse: v }),
+                    true,
+                  )}
+                  <div className={cx(styles.row, styles.border)}>
+                    <label className={styles['item-title']}>
+                      超过{config.maxReplyCountLimit}条回复时不解析楼中楼
+                    </label>
+                    <div className={styles.wrapper}>
+                      <input
+                        type="number"
+                        min="1"
+                        value={config.maxReplyCountLimit}
+                        onChange={numberInput('maxReplyCountLimit')}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.desc}>
+                    {' '}
+                    回复过多时解析楼中楼会明显卡顿，超过此值改为直接打开原主题页{' '}
                   </div>
                   <div className={styles.row}>
                     <label className={styles['main-title']}>高赞回复</label>
@@ -480,8 +527,76 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                   </div>
                 </div>
               )}
-              {tabIndex === 2 && (
+              {tabIndex === 3 && (
                 <div className={styles.card}>
+                  {switchRow(
+                    '接管未读提醒页面',
+                    config.notice.takeOverNoticePage,
+                    (v) => updateNotice({ takeOverNoticePage: v }),
+                    true,
+                  )}
+                  {switchRow('定时查询未读提醒', config.notice.loopCheckNotice, (v) =>
+                    updateNotice({ loopCheckNotice: v }),
+                  )}
+                  <div className={styles.desc}>
+                    {' '}
+                    开启此功能会带来以下影响： 1、你的IP可能会被封禁
+                    2、消耗更多流量，给服务器带来更大的负担 3、你的V站浏览进度条会变快{' '}
+                  </div>
+                  {config.notice.loopCheckNotice && (
+                    <div className={styles['sub-content']}>
+                      <div className={styles.row}>
+                        <label className={styles['item-title']}>查询间隔</label>
+                        <div className={styles.wrapper}>
+                          <BlurInput
+                            key={String(config.notice.loopCheckNoticeInterval)}
+                            type="number"
+                            value={config.notice.loopCheckNoticeInterval}
+                            onCommit={(v) => updateNotice({ loopCheckNoticeInterval: Number(v) })}
+                            style={{ marginRight: '1rem' }}
+                          />
+                          分钟{' '}
+                        </div>
+                      </div>
+                      <div className={styles.desc}>
+                        {' '}
+                        设置值太小，会导致频繁请求，你的IP可能会被封禁，建议设置为5，即每次5分钟查询一次{' '}
+                      </div>
+                      {switchRow(
+                        '当有新未读提醒时，网页标题闪烁',
+                        config.notice.whenNewNoticeGlimmer,
+                        (v) => updateNotice({ whenNewNoticeGlimmer: v }),
+                      )}
+                      <div className={styles.row}>
+                        <label className={styles['item-title']}>钉钉Webhook地址</label>
+                      </div>
+                      <div className={styles.desc}>
+                        <BlurInput
+                          key={config.notice.ddWebhook}
+                          type="text"
+                          value={config.notice.ddWebhook}
+                          onCommit={(v) => updateNotice({ ddWebhook: v })}
+                          style={{ width: '100%' }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <div className={cx(styles.desc, styles.danger)}>
+                    {' '}
+                    提示：此项需要刷新页面才能生效{' '}
+                  </div>
+                </div>
+              )}
+              {tabIndex === 4 && (
+                <div className={styles.card}>
+                  {switchRow('自动签到', config.autoSignin, (v) => update({ autoSignin: v }), true)}
+                  {switchRow(
+                    '用户打标签(跨平台，数据保存在自己的记事本)：',
+                    config.openTag,
+                    (v) => update({ openTag: v }),
+                    true,
+                  )}
+                  {switchRow('划词显示Base64解码框', config.base64, (v) => update({ base64: v }))}
                   <div className={styles.row}>
                     <label className={styles['main-title']}>收藏列表</label>
                   </div>
@@ -544,109 +659,22 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                     {' '}
                     解释：V站帐号一旦被封禁，则无法登录，无法查看账号收藏了{' '}
                   </div>
-                  <div className={cx(styles.row, styles.border)}>
-                    <label className={styles['main-title']}>其他</label>
-                  </div>
-                  {switchRow(
-                    '用户打标签(跨平台，数据保存在自己的记事本)：',
-                    config.openTag,
-                    (v) => update({ openTag: v }),
-                    true,
-                  )}
-                  {switchRow('划词显示Base64解码框', config.base64, (v) => update({ base64: v }))}
-                  {switchRow('自动签到', config.autoSignin, (v) => update({ autoSignin: v }), true)}
-                  <div className={styles.border}>
-                    <div className={styles.row}>
-                      <label className={styles['item-title']}>自定义背景</label>
-                      <div className={styles.wrapper}>
-                        <input
-                          type="text"
-                          value={config.customBgColor}
-                          onChange={(e) => update({ customBgColor: e.target.value })}
-                        />
-                      </div>
-                    </div>
-                    <div className={styles.desc}>
-                      {' '}
-                      未设定此值时，则脚本就什么都不做，V站大部分页面背景颜色默认为
-                      #e2e2e2，少部分页面有特定背景。接受一个合法的css color值：例如
-                      <a
-                        href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/color_value"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        red、#ffffff、rgb(222,222,22)(点此查看)
-                      </a>
-                      等等。{' '}
-                    </div>
-                    <div className={cx(styles.desc, styles.danger)}>
-                      {' '}
-                      提示：此项需要刷新页面才能生效{' '}
-                    </div>
-                  </div>
-                  <div className={styles.row}>
-                    <label className={styles['main-title']}>消息通知</label>
-                  </div>
-                  {switchRow(
-                    '接管未读提醒页面',
-                    config.notice.takeOverNoticePage,
-                    (v) => updateNotice({ takeOverNoticePage: v }),
-                    true,
-                  )}
-                  {switchRow('定时查询未读提醒', config.notice.loopCheckNotice, (v) =>
-                    updateNotice({ loopCheckNotice: v }),
-                  )}
-                  <div className={styles.desc}>
-                    {' '}
-                    开启此功能会带来以下影响： 1、你的IP可能会被封禁
-                    2、消耗更多流量，给服务器带来更大的负担 3、你的V站浏览进度条会变快{' '}
-                  </div>
-                  {config.notice.loopCheckNotice && (
-                    <div className={styles['sub-content']}>
-                      <div className={styles.row}>
-                        <label className={styles['item-title']}>查询间隔</label>
-                        <div className={styles.wrapper}>
-                          <BlurInput
-                            key={String(config.notice.loopCheckNoticeInterval)}
-                            type="number"
-                            value={config.notice.loopCheckNoticeInterval}
-                            onCommit={(v) => updateNotice({ loopCheckNoticeInterval: Number(v) })}
-                            style={{ marginRight: '1rem' }}
-                          />
-                          分钟{' '}
-                        </div>
-                      </div>
-                      <div className={styles.desc}>
-                        {' '}
-                        设置值太小，会导致频繁请求，你的IP可能会被封禁，建议设置为5，即每次5分钟查询一次{' '}
-                      </div>
-                      {switchRow(
-                        '当有新未读提醒时，网页标题闪烁',
-                        config.notice.whenNewNoticeGlimmer,
-                        (v) => updateNotice({ whenNewNoticeGlimmer: v }),
-                      )}
-                      <div className={styles.row}>
-                        <label className={styles['item-title']}>钉钉Webhook地址</label>
-                      </div>
-                      <div className={styles.desc}>
-                        <BlurInput
-                          key={config.notice.ddWebhook}
-                          type="text"
-                          value={config.notice.ddWebhook}
-                          onCommit={(v) => updateNotice({ ddWebhook: v })}
-                          style={{ width: '100%' }}
-                        />
-                      </div>
-                    </div>
-                  )}
-                  <div className={cx(styles.desc, styles.danger)}>
-                    {' '}
-                    提示：此项需要刷新页面才能生效{' '}
-                  </div>
                 </div>
               )}
-              {tabIndex === 3 && <ImageRules />}
-              {tabIndex === 4 && (
+              {tabIndex === 5 && (
+                <>
+                  <div className={styles.card}>
+                    {switchRow(
+                      '替换Imgur源',
+                      config.replaceImgur,
+                      (v) => update({ replaceImgur: v }),
+                      true,
+                    )}
+                  </div>
+                  <ImageRules />
+                </>
+              )}
+              {tabIndex === 6 && (
                 <div className={styles.card}>
                   <h1>V2EX Enhancement</h1>
                   <div className={styles['project-desc']}>

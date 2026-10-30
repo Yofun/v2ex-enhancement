@@ -107,18 +107,14 @@ export function getDefaultConfig(val: Partial<Config> = {}): Config {
       newTabOpenActive: false,
       // base功能
       base64: true,
-      sov2ex: false,
       postWidth: '',
       showTopReply: true,
       topReplyLoveMinCount: 3,
       topReplyCount: 5,
-      autoJumpLastReadFloor: false,
-      rememberLastReadFloor: false,
       autoSignin: true,
       customBgColor: '',
       version: DefaultVal.currentVersion,
       collectBrowserNotice: false,
-      fontSizeType: 'normal',
       homeTheme: true,
       notice: {
         uid: '',
