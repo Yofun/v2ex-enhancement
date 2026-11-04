@@ -63,7 +63,7 @@ function resolveAlbum(id: string): Promise<string[]> {
         return urls;
       })
       .catch((e) => {
-        // 最常见的原因是这台机器的浏览器访问不了 imgur.com（国内需要代理）
+        // 常见原因：脚本管理器没有提供 GM_xmlhttpRequest，或这个浏览器访问不了 imgur.com
         console.warn(`[v2ex-enhancement] Imgur 相册 ${id} 请求失败，保持原链接：`, e);
         return [];
       });

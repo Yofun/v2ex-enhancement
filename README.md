@@ -52,6 +52,8 @@ http://127.0.0.1:5173/__vite-plugin-monkey.install.user.js
 
 保持 Vite 进程运行，访问 V2EX 后修改源码即可热更新。开发脚本显示为 `dev: V2EX Enhancement`，调试时只保留开发脚本启用，避免多份脚本同时执行。
 
+开发脚本是靠一个由脚本头（含 `@version`）哈希出来的 key 去找脚本管理器提供的 `GM_*` 接口的。**脚本头一变，已安装的开发脚本就对不上了**，表现是 `GM_xmlhttpRequest` 等接口静默失效（跨域请求退回成会被 CORS 拦下的 fetch）。发版（版本号变化）或改了 `vite.config.ts` 里的 `userscript` 配置之后，需要按上面的地址重新安装一次开发脚本。
+
 ### 构建
 
 ```sh

@@ -40,6 +40,15 @@ export function gmPostJson(url: string, data: unknown): void {
 /** 跨域 GET 文本：有 GM_xmlhttpRequest 时走它（不受 CORS 限制），否则退回 fetch */
 export function gmGetText(url: string): Promise<string> {
   if (typeof GM_xmlhttpRequest !== 'function') {
+    // 没有 GM_xmlhttpRequest 时只剩 fetch，而它受 CORS 限制，跨域请求必然失败。
+    // 与其发一个注定失败的请求、只留下一条 "Failed to fetch"，不如直接说清原因。
+    if (new URL(url, location.href).origin !== location.origin) {
+      return Promise.reject(
+        new Error(
+          'GM_xmlhttpRequest 不可用，无法跨域请求。开发模式下多半是脚本管理器里的开发脚本版本过旧，需要重新安装',
+        ),
+      );
+    }
     return fetch(url).then((res) => {
       if (!res.ok) throw new Error(`请求失败 ${res.status}`);
       return res.text();
