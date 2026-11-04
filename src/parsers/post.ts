@@ -3,6 +3,9 @@ import type { Member, Post, Reply } from '@/core/types';
 import { fetchBody, getInnerText } from '@/utils/dom';
 import type { ReplyPage } from '@/utils/functions';
 import { functions } from '@/utils/functions';
+const log = createLogger('parser');
+
+import { createLogger } from '@/utils/logger';
 
 const MODERATORS = [
   'Livid',
@@ -31,7 +34,7 @@ export function findReplyBox(boxs: ArrayLike<Element>): Element | undefined {
       if (firstCell.querySelector('.fa-tag')) return box;
     }
   }
-  console.warn('[v2ex-enhancement] 无法智能检测回复区域，使用默认位置');
+  log.warn('无法智能检测回复区域，使用默认位置');
   return boxs[1];
 }
 

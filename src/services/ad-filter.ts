@@ -1,4 +1,7 @@
+import { createLogger } from '@/utils/logger';
+
 const HIDDEN_ATTR = 'data-v2n-ad';
+const log = createLogger('ad');
 
 function isAdvertisement(box: HTMLElement): boolean {
   if (box.id === 'pro-campaign-container') return true;
@@ -27,12 +30,14 @@ export function startAdFilter(): () => void {
       const prev = box.previousElementSibling;
       hide(prev?.classList.contains('sep20') ? prev : null);
       hide(box);
+      log.info('已隐藏右侧栏广告卡片');
     });
   };
   const schedule = () => {
     if (!raf) raf = requestAnimationFrame(scan);
   };
 
+  log.debug('开始监听右侧栏广告');
   const observer = new MutationObserver(schedule);
   observer.observe(document.body, { childList: true, subtree: true, characterData: true });
   schedule();

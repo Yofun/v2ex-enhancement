@@ -8,6 +8,9 @@ import { PageType } from '@/core/types';
 import { genDomFromHtmlString, getInnerText } from './dom';
 import { gmOpenInTab, gmRegisterMenuCommand } from './gm';
 import { createNestedList, createNestedRedundantList, findChildren } from './reply-tree';
+const log = createLogger('config');
+
+import { createLogger } from '@/utils/logger';
 
 export interface PageTypeResult {
   pageType: PageType | null;
@@ -50,7 +53,7 @@ export const functions = {
     }
     if (typeof once === 'number' && once) return once;
     const fetchOnce = (window as unknown as { fetchOnce?: () => Promise<number> }).fetchOnce;
-    if (typeof fetchOnce !== 'function') throw new Error('[v2ex-enhancement] 页面未提供 fetchOnce');
+    if (typeof fetchOnce !== 'function') throw new Error('[V2EX enhancement] 页面未提供 fetchOnce');
     return fetchOnce();
   },
 
@@ -173,8 +176,8 @@ export const functions = {
         functions.openNewTab(DefaultVal.git, true);
       });
       gmRegisterMenuCommand('反馈 & 建议', functions.feedback);
-    } catch {
-      console.error('无法使用Tampermonkey');
+    } catch (e) {
+      log.error('注册脚本管理器菜单失败', e);
     }
   },
 
@@ -265,12 +268,16 @@ export const functions = {
     if (configStr) {
       try {
         configMap = JSON.parse(configStr) as Record<string, unknown>;
-      } catch {
+      } catch (e) {
+        log.warn('本地配置解析失败，使用默认配置', e);
         configMap = {};
       }
       const configObj = configMap[userName];
       if (configObj) {
         session.config = functions.deepAssign(session.config, configObj);
+        log.debug('已读取本地配置');
+      } else {
+        log.debug('本地没有当前用户的配置，使用默认配置');
       }
       // 卡片视图已移除，旧配置回退到表格
       if ((session.config.viewType as string) === 'card') session.config.viewType = 'table';

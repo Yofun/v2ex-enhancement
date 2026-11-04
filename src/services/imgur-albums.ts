@@ -1,6 +1,9 @@
 import { session } from '@/core/session';
 import { getInnerText } from '@/utils/dom';
 import { gmGetText } from '@/utils/gm';
+import { createLogger } from '@/utils/logger';
+
+const log = createLogger('imgur');
 
 // 帖子正文 / 回复在 #app 里，列表预览在 .post-content 里，上下文弹框是 portal 出去的 dialog
 const SELECTOR = '#app a, .post-content a, [role="dialog"] a';
@@ -49,22 +52,19 @@ function resolveAlbum(id: string): Promise<string[]> {
   let p = cache.get(id);
   if (!p) {
     // 相册页本身只在 HTML 里带封面图，完整图片列表要走这个老接口
-    console.info(`[v2ex-enhancement] 发现 Imgur 相册 ${id}，开始解析`);
+    log.info(`发现相册 ${id}，开始解析`);
     p = gmGetText(`https://imgur.com/ajaxalbums/getimages/${id}/hit.json`)
       .then((text) => {
         const urls = parseAlbumImages(text);
         // 接口对“不是相册”返回空数组，对被拦截的页面返回 HTML；两种都解析不出图，在这里说清楚
         if (!urls.length) {
-          console.warn(
-            `[v2ex-enhancement] Imgur 相册 ${id} 没有解析出图片，接口返回开头：`,
-            text.slice(0, 120),
-          );
+          log.warn(`相册 ${id} 没有解析出图片，接口返回开头：`, text.slice(0, 120));
         }
         return urls;
       })
       .catch((e) => {
         // 常见原因：脚本管理器没有提供 GM_xmlhttpRequest，或这个浏览器访问不了 imgur.com
-        console.warn(`[v2ex-enhancement] Imgur 相册 ${id} 请求失败，保持原链接：`, e);
+        log.warn(`相册 ${id} 请求失败，保持原链接：`, e);
         return [];
       });
     cache.set(id, p);
@@ -86,6 +86,7 @@ async function expand(a: HTMLAnchorElement, id: string): Promise<void> {
     img.src = url;
     a.append(img);
   }
+  log.info(`相册 ${id} 已展开 ${Math.min(urls.length, MAX_IMAGES)}/${urls.length} 张图片`);
   if (urls.length > MAX_IMAGES) {
     const more = document.createElement('span');
     more.className = 'v2n-album-more';
@@ -106,7 +107,7 @@ export function processAlbumLinks(
     const id = parseAlbumId(a.href);
     if (!id || getInnerText(a).trim() !== a.href) return;
     seen.add(a);
-    jobs.push(expand(a, id).catch((e) => console.warn('[v2ex-enhancement] Imgur 相册解析失败', e)));
+    jobs.push(expand(a, id).catch((e) => log.error(`相册 ${id} 展开失败`, e)));
   });
   return Promise.all(jobs);
 }
@@ -123,6 +124,7 @@ export function startImgurAlbums(): () => void {
     });
   };
 
+  log.debug('开始监听 Imgur 相册链接，开关', session.config.parseImgur);
   const observer = new MutationObserver(schedule);
   observer.observe(document.body, { childList: true, subtree: true });
   schedule();

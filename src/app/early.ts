@@ -1,8 +1,10 @@
 import homeThemeCss from '@/styles/home-theme.scss?inline';
+import { createLogger } from '@/utils/logger';
 import { injectStyle } from '@/utils/style';
 
 export const HOME_THEME_KEY = 'v2n-home-theme';
 export const NIGHT_KEY = 'v2n-night';
+const log = createLogger('boot');
 
 // 广告卡片在页面一出现就隐藏，避免先闪一下再被 ad-filter 移除
 const AD_CSS = `
@@ -21,9 +23,11 @@ export function earlyBoot(): () => void {
   const isHome = location.pathname === '/';
   const homeOn = isHome && localStorage.getItem(HOME_THEME_KEY) !== '0';
   const nightCached = localStorage.getItem(NIGHT_KEY) === '1';
+  log.debug('提前注入样式', { homeOn, nightCached });
   if (homeOn) root.classList.add('v2n-home');
   if (nightCached) root.classList.add('dark');
   return () => {
+    log.debug('非 PC 页面，撤销提前注入的样式');
     style.remove();
     root.classList.remove('v2n-home');
     if (nightCached) root.classList.remove('dark');

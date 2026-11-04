@@ -1,6 +1,9 @@
 /// <reference types="vite-plugin-monkey/client" />
 // `$` 由 vite-plugin-monkey 提供：未授权/不存在时导出 undefined，被使用的 GM_* 会自动写入 @grant
 import { GM_addStyle, GM_openInTab, GM_registerMenuCommand, GM_xmlhttpRequest } from '$';
+const log = createLogger('gm');
+
+import { createLogger } from '@/utils/logger';
 
 export function gmAddStyle(css: string): HTMLStyleElement | undefined {
   if (typeof GM_addStyle !== 'function') return undefined;
@@ -28,12 +31,16 @@ export function gmRegisterMenuCommand(name: string, callback: () => void): boole
 
 /** 跨域 POST JSON（钉钉 webhook 等），失败静默 */
 export function gmPostJson(url: string, data: unknown): void {
-  if (typeof GM_xmlhttpRequest !== 'function') return;
+  if (typeof GM_xmlhttpRequest !== 'function') {
+    log.warn('GM_xmlhttpRequest 不可用，跳过 POST', url);
+    return;
+  }
   GM_xmlhttpRequest({
     method: 'POST',
     url,
     headers: { 'Content-Type': 'application/json' },
     data: JSON.stringify(data),
+    onerror: () => log.warn('POST 请求失败', url),
   });
 }
 
@@ -54,6 +61,7 @@ export function gmGetText(url: string): Promise<string> {
       return res.text();
     });
   }
+  log.debug('GET', url);
   return new Promise((resolve, reject) => {
     GM_xmlhttpRequest({
       method: 'GET',

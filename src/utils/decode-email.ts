@@ -1,3 +1,7 @@
+import { createLogger } from '@/utils/logger';
+
+const log = createLogger('email');
+
 const EMAIL_SELECTOR = '.__cf_email__';
 const EMAIL_ATTR = 'data-cfemail';
 
@@ -15,7 +19,7 @@ function decodeHref(encoded: string): string {
   try {
     result = decodeURIComponent(escape(result));
   } catch (e) {
-    console.error(e);
+    log.warn('邮箱地址解码失败，保留原样', e);
   }
   const holder = document.createElement('div');
   holder.innerHTML = '<a href="' + result.replace(/"/g, '&quot;') + '"></a>';
@@ -32,10 +36,10 @@ export function decodeEmail(body: ParentNode): void {
           el.parentNode?.replaceChild(document.createTextNode(decodeHref(encoded)), el);
         }
       } catch (e) {
-        console.error(e);
+        log.warn('单个邮箱节点解码失败', e);
       }
     });
   } catch (e) {
-    console.error(e);
+    log.error('邮箱解码失败', e);
   }
 }

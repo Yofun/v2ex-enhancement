@@ -3,6 +3,9 @@ import { session } from '@/core/session';
 import { parse } from '@/parsers';
 import { fetchBody } from '@/utils/dom';
 import { functions } from '@/utils/functions';
+const log = createLogger('note');
+
+import { createLogger } from '@/utils/logger';
 
 /** 读取记事本子条目里 prefix 之后的 JSON */
 async function getNoteItemContent<T>(
@@ -14,13 +17,15 @@ async function getNoteItemContent<T>(
     const text = body.querySelector('.note_editor')?.textContent ?? '';
     if (text === prefix) return {};
     return JSON.parse(text.substring(prefix.length)) as T;
-  } catch {
+  } catch (e) {
+    log.warn('读取记事本条目失败', id, e);
     return {};
   }
 }
 
 /** 从 V2EX 记事本读取 用户标签 / 配置 条目（不存在则创建），完成后通知 App */
 export async function initNoteData(): Promise<void> {
+  log.debug('读取记事本');
   const body = await fetchBody(`${location.origin}/notes`);
   const items = Array.from(
     body.querySelectorAll<HTMLAnchorElement>('#Main .box .note_item_title a'),
@@ -34,9 +39,11 @@ export async function initNoteData(): Promise<void> {
     if (tagItem) {
       user.tagsId = tagItem.href.slice(-5);
       user.tags = await getNoteItemContent<Record<string, string[]>>(user.tagsId, user.tagPrefix);
+      log.info('已读取用户标签', Object.keys(user.tags).length);
     } else {
       const id = await parse.createNoteItem(user.tagPrefix);
       if (id) user.tagsId = id;
+      log.info('记事本里没有标签条目，已创建', Boolean(id));
     }
   }
 
@@ -48,9 +55,11 @@ export async function initNoteData(): Promise<void> {
       user.configPrefix,
     );
     session.config = functions.deepAssign(session.config, remote);
+    log.info('已读取云端配置');
   } else {
     const id = await parse.createNoteItem(user.configPrefix);
     if (id) user.configNoteId = id;
+    log.info('记事本里没有配置条目，已创建', Boolean(id));
   }
 
   void sendHostMessage({ type: 'syncData' });

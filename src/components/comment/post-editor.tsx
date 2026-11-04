@@ -15,6 +15,9 @@ import { clickable } from '@/utils/a11y';
 
 import { EmoticonPicker } from './emoticon-picker';
 import styles from './post-editor.module.scss';
+const log = createLogger('reply');
+
+import { createLogger } from '@/utils/logger';
 
 interface PostEditorProps {
   replyUser?: string;
@@ -249,7 +252,7 @@ export function PostEditor({
       eventBus.emit(CMD.SHOW_MSG, { type: 'success', text: '回复成功' });
       eventBus.emit(CMD.ADD_REPLY, item);
     } catch (err) {
-      console.log('err', err);
+      log.error('回复失败', err);
       loadingRef.current = false;
       setLoading(false);
       eventBus.emit(CMD.SHOW_MSG, { type: 'error', text: '回复失败' });

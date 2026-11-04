@@ -1,4 +1,7 @@
 import { session } from '@/core/session';
+const log = createLogger('note');
+
+import { createLogger } from '@/utils/logger';
 
 /** 创建记事本子条目，返回条目 id（URL 末 5 位） */
 export async function createNoteItem(itemName: string): Promise<string | null> {
@@ -11,6 +14,7 @@ export async function createNoteItem(itemName: string): Promise<string | null> {
   if (apiRes.redirected && apiRes.status === 200) {
     return apiRes.url.slice(-5);
   }
+  log.warn('创建记事本条目失败', apiRes.status);
   return null;
 }
 
@@ -22,7 +26,9 @@ export async function editNoteItem(val: string, id: string): Promise<boolean | u
   data.append('content', val);
   data.append('syntax', '0');
   const apiRes = await fetch(`${location.origin}/notes/edit/${id}`, { method: 'post', body: data });
-  return apiRes.redirected && apiRes.status === 200;
+  const ok = apiRes.redirected && apiRes.status === 200;
+  if (!ok) log.warn('保存记事本条目失败', id, apiRes.status);
+  return ok;
 }
 
 /** 保存用户标签（会就地删除空标签数组） */

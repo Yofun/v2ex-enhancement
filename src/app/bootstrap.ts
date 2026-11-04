@@ -19,6 +19,10 @@ import { injectStyle } from '@/utils/style';
 
 import { App } from './app';
 import { NIGHT_KEY } from './early';
+const log = createLogger('boot');
+const pageLog = createLogger('page');
+
+import { createLogger } from '@/utils/logger';
 
 const send = (...args: Parameters<typeof functions.cbChecker>): void => {
   void functions.cbChecker(...args);
@@ -62,7 +66,7 @@ function handleNodePage($section: HTMLElement): void {
       });
     flattenBox(box[1]);
   } catch (e) {
-    console.log('PageType-Node解析报错了', e);
+    pageLog.error('节点页结构调整失败', e);
   }
   const list = box[1].querySelector('#TopicsNode')!.querySelectorAll('.cell');
   list[0].before($section);
@@ -93,7 +97,7 @@ function handleHomePage($section: HTMLElement): void {
     markLastAsPostItem(box);
     flattenBox(box);
   } catch (e) {
-    console.log('PageType-Home解析报错了', e);
+    pageLog.error('首页结构调整失败', e);
   }
   const list = box.querySelectorAll('.item');
   list[0].before($section);
@@ -105,6 +109,7 @@ async function handlePostPage($section: HTMLElement): Promise<boolean> {
   box.after($section);
   const tooMany = await functions.checkPostReplies(session.pageData.id!, false);
   if (tooMany) {
+    pageLog.warn('主题回复过多，停止解析楼中楼');
     session.stopMe = true;
     send({ type: 'syncData' });
     send({ type: 'warningNotice', value: '由于回复数量较多，脚本已停止解析楼中楼' });
@@ -135,11 +140,11 @@ async function handlePostPage($section: HTMLElement): Promise<boolean> {
       await functions.cbChecker({ type: 'postContent', value: res });
       await parse.parseOp(res);
     })
-    .catch((e) => console.error('[v2ex-enhancement] 解析主题内容失败', e));
+    .catch((e) => pageLog.error('解析主题内容失败', e));
   parse
     .getPostAllReplies(post, body, htmlText, session.pageData.pageNo ?? 1)
     .then((res) => functions.cbChecker({ type: 'postReplies', value: res }))
-    .catch((e) => console.error('[v2ex-enhancement] 解析主题回复失败', e));
+    .catch((e) => pageLog.error('解析主题回复失败', e));
   return true;
 }
 
@@ -165,7 +170,7 @@ function handleMemberPage($section: HTMLElement): void {
     markLastAsPostItem(box[1]);
     flattenBox(box[1]);
   } catch (e) {
-    console.log('PageType-Member解析报错了', e);
+    pageLog.error('用户页结构调整失败', e);
   }
   const list = box[1].querySelectorAll('.cell');
   box[0].after($section);
@@ -191,6 +196,7 @@ function onImageError(e: Event): void {
   if (!(dom instanceof Element)) return;
   const originImgUrl = dom.getAttribute('originUrl');
   if (originImgUrl) {
+    log.warn('图片加载失败，还原为链接', originImgUrl);
     const a = document.createElement('a');
     a.href = originImgUrl;
     a.setAttribute('notice', '此标签由v2ex超级增强脚本转换图片失败后恢复');
@@ -214,6 +220,7 @@ async function init($section: HTMLElement): Promise<void> {
   session.pageData = pageData;
   session.targetUserName = username;
   applyDynamicStyle(session.config);
+  log.info('页面类型', session.pageType, '登录', session.isLogin);
 
   switch (session.pageType) {
     case PageType.Node:
@@ -232,28 +239,30 @@ async function init($section: HTMLElement): Promise<void> {
     default:
       session.stopMe = true;
       send({ type: 'syncData' });
-      console.error('未知页面');
+      log.warn('未知页面类型，脚本不接管', location.pathname);
       break;
   }
 
   if (session.isLogin) {
-    initNoteData().catch((e) => console.error('[v2ex-enhancement] 读取记事本数据失败', e));
+    initNoteData().catch((e) => log.error('读取记事本数据失败', e));
     try {
       if (session.config.autoSignin) qianDao();
-    } catch {
-      console.log('签到失败');
+    } catch (e) {
+      log.error('自动签到异常', e);
     }
   }
   addSettingText();
   functions.initMonkeyMenu();
+  log.debug('初始化完成');
 }
 
 function runPage($section: HTMLElement): void {
   session.canParseV2exPage = !location.search.includes('script');
   if (session.canParseV2exPage) {
-    init($section).catch((e) => console.error('[v2ex-enhancement] 初始化失败', e));
+    init($section).catch((e) => log.error('初始化失败', e));
     return;
   }
+  log.info('URL 带 script 参数，只渲染面板，不解析页面');
   document.querySelector('#Wrapper #Main .box')?.after($section);
   session.stopMe = true;
   send({ type: 'syncData' });
@@ -270,9 +279,15 @@ function runPage($section: HTMLElement): void {
 
 /** 启动：仅 PC 端（存在 #Rightbar）运行。返回清理函数 */
 export function bootstrap(): (() => void) | undefined {
-  if (!document.querySelector('#Rightbar')) return undefined;
-  if (!functions.checkPageType().pageType) return undefined;
-  console.log('V2EX PC端');
+  if (!document.querySelector('#Rightbar')) {
+    log.debug('没有 #Rightbar，不是 PC 端页面，跳过');
+    return undefined;
+  }
+  if (!functions.checkPageType().pageType) {
+    log.debug('不是受支持的页面，跳过', location.pathname);
+    return undefined;
+  }
+  log.info('V2EX PC端，开始启动');
 
   const globalStyle = injectStyle(globalCss);
   initSession();
@@ -289,6 +304,7 @@ export function bootstrap(): (() => void) | undefined {
   const stopImgurAlbums = startImgurAlbums();
 
   return () => {
+    log.debug('页面卸载，清理脚本');
     stopAdFilter();
     stopImgurAlbums();
     window.removeEventListener('error', onImageError, true);

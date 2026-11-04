@@ -14,6 +14,9 @@ import type { Config, NoticeConfig, ViewType } from '@/core/types';
 import { functions } from '@/utils/functions';
 
 import styles from './setting.module.scss';
+const log = createLogger('setting');
+
+import { createLogger } from '@/utils/logger';
 
 export interface SettingProps {
   show: boolean;
@@ -220,16 +223,16 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
             apiRes.status === 404 ||
             apiRes.redirected
           ) {
-            console.log('无权限', v.url, v.title);
+            log.debug('导入收藏：无权限，跳过', v.url);
             continue;
           }
           if (htmlText.search('加入收藏') > -1) {
-            console.log('未收藏========>>', v.url, v.title);
+            log.debug('导入收藏：未收藏，补收藏', v.url);
             const once = await functions.refreshOnce();
             await fetch(`${location.origin}/favorite/topic/${id}?once=${once}`);
             await functions.sleep(1e4);
           } else {
-            console.log('已收藏', v.url, v.title);
+            log.debug('导入收藏：已收藏', v.url);
           }
           await functions.sleep(1e3);
         }

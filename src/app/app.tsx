@@ -30,6 +30,10 @@ import { gmPostJson } from '@/utils/gm';
 import styles from './app.module.scss';
 import { AppContext, type AppContextValue } from './app-context';
 import { Calendar, type CalendarState } from './calendar';
+const log = createLogger('app');
+
+import { createLogger } from '@/utils/logger';
+
 import { HOME_THEME_KEY } from './early';
 import { type HotItem, renderHotList } from './hot-list';
 import { deleteNotification, fetchNotificationPage, replaceNoticeEntry } from './notifications';
@@ -302,7 +306,7 @@ export function App() {
       const withOp = await parse.parseOp(functions.clone(res));
       setCurrent((prev) => ({ ...prev, member: withOp.member }));
     } catch (e) {
-      console.error('[v2ex-enhancement] 获取主题详情失败', e);
+      log.error('获取主题详情失败', e);
       stopLoading();
     }
   };
@@ -739,14 +743,17 @@ export function App() {
         localStorage.setItem('v2ex-config', JSON.stringify(configObj));
       }
     } catch (e) {
-      console.error('[v2ex-enhancement] 写入本地配置失败', e);
+      log.error('写入本地配置失败', e);
     }
     session.config = functions.clone(config);
     applyDynamicStyle(session.config);
-    void parse.editNoteItem(
-      session.user.configPrefix + JSON.stringify(session.config),
-      session.user.configNoteId,
-    );
+    log.debug('配置已变更，同步到本地和记事本');
+    parse
+      .editNoteItem(
+        session.user.configPrefix + JSON.stringify(session.config),
+        session.user.configNoteId,
+      )
+      .catch((e) => log.error('同步配置到记事本失败', e));
   }, [config]);
 
   useUpdateEffect(() => {
