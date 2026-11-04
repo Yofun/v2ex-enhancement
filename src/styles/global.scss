@@ -157,6 +157,13 @@ a {
 a:hover {
   text-decoration: underline;
 }
+/* Imgur 相册只展开了前几张时，图片下面的提示 */
+.v2n-album-more {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--color-font);
+}
 /* 由 utils/a11y.ts 的 clickable() 打上，只命中本脚本的伪按钮，不影响 V2EX 自身 DOM */
 [data-v2n-click]:focus-visible {
   outline: 2px solid var(--color-active);

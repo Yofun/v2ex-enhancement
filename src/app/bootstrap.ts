@@ -7,6 +7,7 @@ import { session } from '@/core/session';
 import { PageType } from '@/core/types';
 import { parse } from '@/parsers';
 import { startAdFilter } from '@/services/ad-filter';
+import { startImgurAlbums } from '@/services/imgur-albums';
 import { initNoteData } from '@/services/note-data';
 import { initSession } from '@/services/session-init';
 import { qianDao } from '@/services/signin';
@@ -285,9 +286,11 @@ export function bootstrap(): (() => void) | undefined {
   root.render(createElement(App));
   window.addEventListener('error', onImageError, true);
   const stopAdFilter = startAdFilter();
+  const stopImgurAlbums = startImgurAlbums();
 
   return () => {
     stopAdFilter();
+    stopImgurAlbums();
     window.removeEventListener('error', onImageError, true);
     root.unmount();
     $section.remove();

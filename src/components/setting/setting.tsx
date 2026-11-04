@@ -667,7 +667,9 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                   )}
                   <div className={styles.desc}>
                     {' '}
-                    把正文和回复里纯文本的 Imgur 图片链接直接显示成图片。关闭后保持原样的链接{' '}
+                    把正文和回复里纯文本的 Imgur
+                    图片链接和相册链接（imgur.com/a/…）直接显示成图片，相册最多展开前 12
+                    张。关闭后保持原样的链接{' '}
                   </div>
                   <div className={cx(styles.desc, styles.danger)}>
                     {' '}
