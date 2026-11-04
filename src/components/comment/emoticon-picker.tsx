@@ -3,8 +3,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { createPortal } from 'react-dom';
 
 import { Icon } from '@/components/base/icon';
-import { classicsEmoticons, DefaultVal, emojiEmoticons } from '@/core/constants';
-import { session } from '@/core/session';
+import { classicsEmoticons, emojiEmoticons } from '@/core/constants';
 
 import styles from './emoticon-picker.module.scss';
 
@@ -19,8 +18,6 @@ const GAP = 8;
 const MAX_HEIGHT = 360;
 const MIN_HEIGHT = 160;
 const TABS = ['经典', ...emojiEmoticons.map((g) => g.title)];
-
-const emojiSrc = (url: string) => (session.config.replaceImgur ? DefaultVal.imgurProxy + url : url);
 
 export function EmoticonPicker({ anchor, onPick, onClose }: EmoticonPickerProps) {
   const [tab, setTab] = useState(0);
@@ -135,7 +132,7 @@ export function EmoticonPicker({ anchor, onPick, onClose }: EmoticonPickerProps)
                 aria-label={item.name}
                 onClick={() => pick(item.name)}
               >
-                <img src={emojiSrc(item.high)} alt="" loading="lazy" referrerPolicy="no-referrer" />
+                <img src={item.high} alt="" loading="lazy" referrerPolicy="no-referrer" />
               </button>
             ))
           : emojiEmoticons[tab - 1].list.map((emoji, i) => (

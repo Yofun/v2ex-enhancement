@@ -7,7 +7,6 @@ import { session } from '@/core/session';
 import { PageType } from '@/core/types';
 import { parse } from '@/parsers';
 import { startAdFilter } from '@/services/ad-filter';
-import { startImageLinks } from '@/services/image-links';
 import { initNoteData } from '@/services/note-data';
 import { initSession } from '@/services/session-init';
 import { qianDao } from '@/services/signin';
@@ -285,11 +284,9 @@ export function bootstrap(): (() => void) | undefined {
   const root = createRoot($section);
   root.render(createElement(App));
   window.addEventListener('error', onImageError, true);
-  const stopImageLinks = startImageLinks();
   const stopAdFilter = startAdFilter();
 
   return () => {
-    stopImageLinks();
     stopAdFilter();
     window.removeEventListener('error', onImageError, true);
     root.unmount();

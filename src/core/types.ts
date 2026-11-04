@@ -128,7 +128,7 @@ export interface Config {
   collectBrowserNotice: boolean;
   homeTheme: boolean;
   notice: NoticeConfig;
-  replaceImgur: boolean;
+  parseImgur: boolean;
   maxReplyCountLimit: number;
 }
 

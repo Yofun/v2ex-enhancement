@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
+import { getDefaultConfig } from '@/core/constants';
+import { session } from '@/core/session';
 import { PageType } from '@/core/types';
+import { initSession } from '@/services/session-init';
 
 import { functions } from './functions';
 
@@ -77,5 +80,38 @@ describe('deepAssign / refreshOnce / getAllReply', () => {
       { i: 1, replyList: [r('a'), r('b')] },
     ]);
     expect(list.map((v) => v.id)).toEqual(['a', 'b', 'c']);
+  });
+});
+
+describe('checkPhotoLink2Img', () => {
+  const html = `
+    <a href="https://i.imgur.com/abc.png">https://i.imgur.com/abc.png</a>
+    <a href="https://example.com/pic.jpg">https://example.com/pic.jpg</a>
+    <a href="https://i.imgur.com/def.png">看这张图</a>`;
+
+  const run = (parseImgur: boolean) => {
+    initSession();
+    session.config = getDefaultConfig({ parseImgur });
+    const root = document.createElement('div');
+    root.innerHTML = html;
+    functions.checkPhotoLink2Img(root);
+    return [...root.querySelectorAll('a')].map((a) => a.querySelector('img')?.src ?? null);
+  };
+
+  it('开关打开：纯文本的 Imgur 链接被解析成图片', () => {
+    expect(run(true)[0]).toBe('https://i.imgur.com/abc.png');
+  });
+
+  it('开关关闭：Imgur 链接保持原样，不解析', () => {
+    expect(run(false)[0]).toBeNull();
+  });
+
+  it('开关只管 Imgur：其他站点的图片链接两种状态下都解析', () => {
+    expect(run(true)[1]).toBe('https://example.com/pic.jpg');
+    expect(run(false)[1]).toBe('https://example.com/pic.jpg');
+  });
+
+  it('链接文字不是地址时从不解析', () => {
+    expect(run(true)[2]).toBeNull();
   });
 });

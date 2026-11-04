@@ -13,7 +13,6 @@ import { CMD, eventBus } from '@/core/event-bus';
 import type { Config, NoticeConfig, ViewType } from '@/core/types';
 import { functions } from '@/utils/functions';
 
-import { ImageRules } from './image-rules';
 import styles from './setting.module.scss';
 
 export interface SettingProps {
@@ -662,17 +661,19 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                 </div>
               )}
               {tabIndex === 5 && (
-                <>
-                  <div className={styles.card}>
-                    {switchRow(
-                      '替换Imgur源',
-                      config.replaceImgur,
-                      (v) => update({ replaceImgur: v }),
-                      true,
-                    )}
+                <div className={styles.card}>
+                  {switchRow('自动解析 Imgur 图片', config.parseImgur, (v) =>
+                    update({ parseImgur: v }),
+                  )}
+                  <div className={styles.desc}>
+                    {' '}
+                    把正文和回复里纯文本的 Imgur 图片链接直接显示成图片。关闭后保持原样的链接{' '}
                   </div>
-                  <ImageRules />
-                </>
+                  <div className={cx(styles.desc, styles.danger)}>
+                    {' '}
+                    提示：此项需要刷新页面才能生效{' '}
+                  </div>
+                </div>
               )}
               {tabIndex === 6 && (
                 <div className={styles.card}>

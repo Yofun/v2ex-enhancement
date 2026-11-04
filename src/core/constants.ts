@@ -26,7 +26,6 @@ export const DefaultVal = {
   releases: 'https://github.com/Yofun/v2ex-enhancement/releases',
   upstream: 'https://github.com/zyronon/V2Next',
   hotUrl: 'https://v2hotlist.vercel.app/hot/',
-  imgurProxy: 'https://img.noobzone.ru/getimg.php?url=',
 };
 
 export const DefaultPost: Post = {
@@ -125,7 +124,8 @@ export function getDefaultConfig(val: Partial<Config> = {}): Config {
         loopCheckNotice: false,
         loopCheckNoticeInterval: 5,
       },
-      replaceImgur: false,
+      // 把正文里纯文本的 Imgur 图片链接解析成图片；默认开启，与此前行为一致
+      parseImgur: true,
       maxReplyCountLimit: 400,
     } satisfies Config,
     val,

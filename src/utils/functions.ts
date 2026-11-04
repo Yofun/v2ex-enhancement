@@ -7,7 +7,6 @@ import { PageType } from '@/core/types';
 
 import { genDomFromHtmlString, getInnerText } from './dom';
 import { gmOpenInTab, gmRegisterMenuCommand } from './gm';
-import { applyImageRules } from './image-rules';
 import { createNestedList, createNestedRedundantList, findChildren } from './reply-tree';
 
 export interface PageTypeResult {
@@ -41,13 +40,6 @@ const IMG_EXTS = ['.png', '.jpg', '.jpeg', '.gif', '.PNG', '.JPG', '.JPEG', '.GI
 const hasImgExt = (href: string): boolean => IMG_EXTS.some((ext) => href.includes(ext));
 
 const clone = <T>(val: T): T => JSON.parse(JSON.stringify(val)) as T;
-
-const appendNoReferrerMeta = (): void => {
-  const meta = document.createElement('meta');
-  meta.setAttribute('name', 'referrer');
-  meta.setAttribute('content', 'no-referrer');
-  document.getElementsByTagName('head')[0].appendChild(meta);
-};
 
 export const functions = {
   /** once 可以是数字、含 `var once = "123";` 的字符串；都不可用时向页面请求新的 once */
@@ -102,64 +94,31 @@ export const functions = {
     return { href, id, title: getInnerText(a) };
   },
 
-  /** 图片链接转 img 标签；imgur 图片按配置走代理 */
+  /** 图片链接转 img 标签；纯文本的 Imgur 链接只有在 parseImgur 打开时才解析 */
   checkPhotoLink2Img(dom: ParentNode): void {
-    const replaceImgur = session.config.replaceImgur;
-    let isAdd = false;
-    const prefixImg = replaceImgur ? DefaultVal.imgurProxy : '';
-    const markRewritten = (img: HTMLImageElement, originUrl: string, url: string) => {
+    const parseImgur = session.config.parseImgur;
+    const mark = (img: HTMLImageElement, originUrl: string) => {
       img.setAttribute('originUrl', originUrl);
-      img.setAttribute('notice', '此img标签由用户图片规则改写');
+      img.setAttribute('notice', '此img标签由V2Next脚本解析');
       img.setAttribute('referrerpolicy', 'no-referrer');
-      img.src = url;
     };
     dom.querySelectorAll('img').forEach((img) => {
       let href = img.src;
-      const rewritten = applyImageRules(href);
-      if (rewritten) {
-        markRewritten(img, href, rewritten);
-        return;
-      }
-      if (href.includes('imgur.com')) {
-        img.setAttribute('originUrl', img.src);
-        img.setAttribute('notice', '此img标签由V2Next脚本解析');
-        img.setAttribute('referrerpolicy', 'no-referrer');
-        if (!hasImgExt(href)) {
-          href = href + '.png';
-        }
-        if (!isAdd && replaceImgur) {
-          appendNoReferrerMeta();
-          isAdd = true;
-        }
-        img.src = prefixImg + href;
-      }
+      if (!href.includes('imgur.com')) return;
+      mark(img, href);
+      if (!hasImgExt(href)) href += '.png';
+      img.src = href;
     });
     dom.querySelectorAll('a').forEach((a) => {
       const href = a.href;
-      if (a.children.length == 0 && getInnerText(a) == href && hasImgExt(href)) {
-        const img = document.createElement('img');
-        const rewritten = applyImageRules(href);
-        if (rewritten) {
-          markRewritten(img, href, rewritten);
-          a.textContent = '';
-          a.append(img);
-          return;
-        }
-        img.setAttribute('originUrl', a.href);
-        img.setAttribute('notice', '此img标签由V2Next脚本解析');
-        img.setAttribute('referrerpolicy', 'no-referrer');
-        if (href.includes('imgur.com')) {
-          if (!isAdd && replaceImgur) {
-            appendNoReferrerMeta();
-            isAdd = true;
-          }
-          img.src = prefixImg + href;
-        } else {
-          img.src = href;
-        }
-        a.textContent = '';
-        a.append(img);
-      }
+      if (a.children.length != 0 || getInnerText(a) != href || !hasImgExt(href)) return;
+      // Imgur 的纯文本链接关掉开关时保持原样，仍是一个可点的链接
+      if (href.includes('imgur.com') && !parseImgur) return;
+      const img = document.createElement('img');
+      mark(img, href);
+      img.src = href;
+      a.textContent = '';
+      a.append(img);
     });
   },
 
