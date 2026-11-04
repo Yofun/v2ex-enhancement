@@ -41,20 +41,11 @@
       min-width: 0;
     }
 
+    // 右侧的楼层号 / 跳转是 flex 兄弟节点，正文宽度已经被它挤好了，
+    // 不需要再硬扣一个 5rem（那会让正文比实际可用宽度窄一截）
     .replyContent {
       margin-top: 1rem;
-      max-width: calc(100% - 5rem);
       overflow-wrap: anywhere;
-    }
-  }
-
-  .isRight {
-    align-items: flex-end;
-
-    .owner,
-    .mod,
-    .username {
-      margin: 0 0 0 1rem;
     }
   }
 

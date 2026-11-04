@@ -11,12 +11,10 @@ import styles from './context-modal.module.scss';
 interface ContextModalProps {
   /** 要展示的对话，按楼层升序 */
   replies: Reply[];
-  /** 被查看上下文的那个人，他的回复排在右侧 */
-  rightUser: string;
   onClose: () => void;
 }
 
-export function ContextModal({ replies, rightUser, onClose }: ContextModalProps) {
+export function ContextModal({ replies, onClose }: ContextModalProps) {
   const titleId = useId();
   const bodyRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +47,7 @@ export function ContextModal({ replies, rightUser, onClose }: ContextModalProps)
         </div>
         <div ref={bodyRef} className={styles.body} tabIndex={-1}>
           {replies.map((item) => (
-            <SingleComment key={item.floor} isRight={item.username === rightUser} comment={item} />
+            <SingleComment key={item.floor} comment={item} />
           ))}
         </div>
       </div>

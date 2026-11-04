@@ -632,11 +632,7 @@ export function PostDetail({
           </div>
 
           {showRelationReply ? (
-            <ContextModal
-              replies={relationReply}
-              rightUser={targetUser.right}
-              onClose={closeRelationReply}
-            />
+            <ContextModal replies={relationReply} onClose={closeRelationReply} />
           ) : null}
 
           {showCallList && filterCallList.length ? (

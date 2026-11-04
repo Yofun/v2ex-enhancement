@@ -12,12 +12,11 @@ import styles from './single-comment.module.scss';
 
 interface SingleCommentProps {
   comment: Reply;
-  isRight?: boolean;
 }
 
 const cls = (...names: (string | false | undefined)[]) => names.filter(Boolean).join(' ');
 
-export function SingleComment({ comment, isRight = false }: SingleCommentProps) {
+export function SingleComment({ comment }: SingleCommentProps) {
   const { config, isLogin, tags } = useApp();
   const myTags = tags[comment.username] ?? [];
 
@@ -41,8 +40,8 @@ export function SingleComment({ comment, isRight = false }: SingleCommentProps) 
     </div>
   ) : null;
 
-  const opBadge = comment.isOp && <div className={cls(common.owner, styles.owner)}>OP</div>;
-  const modBadge = comment.isMod && <div className={cls(common.mod, styles.mod)}>MOD</div>;
+  const opBadge = comment.isOp && <div className={common.owner}>OP</div>;
+  const modBadge = comment.isMod && <div className={common.mod}>MOD</div>;
   const avatar = (
     <a className={cls('avatar', styles.avatar)} href={`/member/${comment.username}`}>
       <img src={comment.avatar} alt={comment.username} />
@@ -51,29 +50,23 @@ export function SingleComment({ comment, isRight = false }: SingleCommentProps) 
 
   return (
     <div className={cls(styles.comment, config.viewType === 'simple' && styles.isSimple)}>
-      {!isRight && avatar}
-      <div className={cls(styles.commentBody, isRight && styles.isRight)}>
+      {avatar}
+      <div className={styles.commentBody}>
         <div className={styles.texts}>
-          {isRight && point}
-          {isLogin && config.openTag && isRight && tagList}
-          {isRight && <span className="ago">{comment.date}</span>}
-          {isRight && modBadge}
-          {isRight && opBadge}
-          <a href={`/member/${comment.username}`} className={cls(common.username, styles.username)}>
+          <a href={`/member/${comment.username}`} className={common.username}>
             {comment.username}
           </a>
-          {!isRight && opBadge}
-          {!isRight && modBadge}
-          {!isRight && <span className="ago">{comment.date}</span>}
-          {isLogin && config.openTag && !isRight && tagList}
-          {!isRight && point}
+          {opBadge}
+          {modBadge}
+          <span className="ago">{comment.date}</span>
+          {isLogin && config.openTag && tagList}
+          {point}
         </div>
         <BaseHtmlRender
           className={cls('reply_content', styles.replyContent)}
           html={comment.reply_content}
         />
       </div>
-      {isRight && avatar}
       <div className={styles.authorRight}>
         <div className={cls(common.floor, styles.floor)}>{comment.floor}</div>
         <div
