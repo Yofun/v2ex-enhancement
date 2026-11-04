@@ -12,7 +12,6 @@ import { Comment } from '@/components/comment/comment';
 import { Point } from '@/components/comment/point';
 import { PostDetailWidthContext } from '@/components/comment/post-detail-width-context';
 import { PostEditor } from '@/components/comment/post-editor';
-import { SingleComment } from '@/components/comment/single-comment';
 import { Toolbar } from '@/components/comment/toolbar';
 import { CMD, eventBus } from '@/core/event-bus';
 import { session } from '@/core/session';
@@ -20,6 +19,7 @@ import { CommentDisplayType, PageType, type Reply } from '@/core/types';
 import { functions } from '@/utils/functions';
 import { slideToggle } from '@/utils/slide';
 
+import { ContextModal } from './context-modal';
 import styles from './post-detail.module.scss';
 import { useImagePreview } from './use-image-preview';
 
@@ -106,6 +106,7 @@ export function PostDetail({
   const [postDetailWidth, setPostDetailWidth] = useState(0);
   const [showCallList, setShowCallList] = useState(false);
   const [showRelationReply, setShowRelationReply] = useState(false);
+  const closeRelationReply = useCallback(() => setShowRelationReply(false), []);
   const [replyText, setReplyText] = useState('');
   const [callStyle, setCallStyle] = useState<CSSProperties>({ top: 0, left: 0 });
   const [targetUser, setTargetUser] = useState<TargetUser>(EMPTY_TARGET_USER);
@@ -325,6 +326,7 @@ export function PostDetail({
         eventBus.emit(CMD.SHOW_MSG, { type: 'error', text: '没有找到对应回复！' });
         return;
       }
+      setShowRelationReply(false);
       comments[0].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
       comments.forEach((c) => c.classList.add('ding'));
       setCurrentFloor(floor + 1);
@@ -630,47 +632,11 @@ export function PostDetail({
           </div>
 
           {showRelationReply ? (
-            <div
-              className={styles.relationReply}
-              onClick={(e) => {
-                e.stopPropagation();
-                close('space');
-              }}
-            >
-              <div
-                className={`${styles.myCell} ${styles.flex}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  stop(e);
-                }}
-              >
-                <span className="gray">上下文</span>
-                <div className={styles.topReply}>
-                  <Icon
-                    icon="ph:x"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowRelationReply(false);
-                    }}
-                  />
-                </div>
-              </div>
-              <div
-                className={styles.comments}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  stop(e);
-                }}
-              >
-                {relationReply.map((item) => (
-                  <SingleComment
-                    key={item.floor}
-                    isRight={item.username === targetUser.right}
-                    comment={item}
-                  />
-                ))}
-              </div>
-            </div>
+            <ContextModal
+              replies={relationReply}
+              rightUser={targetUser.right}
+              onClose={closeRelationReply}
+            />
           ) : null}
 
           {showCallList && filterCallList.length ? (

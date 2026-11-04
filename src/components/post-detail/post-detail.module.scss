@@ -1,3 +1,5 @@
+@use './rich-content' as rich;
+
 // 对应原 PostDetail.vue 的 scoped 样式（data-v-d39217d8）+ 其未加 scope 的全局片段（.sticky / .preview-modal）。
 // 原样式里夹带的通用工具类（.flex/.my-box/.tool 等）在这里作为 PostDetail 内部的局部类保留，保证自包含。
 
@@ -253,30 +255,6 @@
         box-sizing: border-box;
       }
     }
-
-    .relationReply {
-      position: fixed;
-      width: 25vw;
-      top: 6.5rem;
-      bottom: 15rem;
-      z-index: 100;
-      transform: translate(calc(100% + 2rem));
-      font-size: 2rem;
-      overflow: hidden;
-
-      .myCell {
-        background: var(--color-second-bg);
-        border-radius: var(--v2n-radius) var(--v2n-radius) 0 0;
-      }
-
-      .comments {
-        max-height: calc(100% - 4.2rem);
-        overflow: auto;
-        background: var(--color-second-bg);
-        border-radius: 0 0 var(--v2n-radius) var(--v2n-radius);
-      }
-    }
-
     .callList {
       z-index: 9;
       position: absolute;
@@ -461,81 +439,10 @@
   }
 }
 
-// 正文与回复内容的排版，以及引用、代码、表格在深色下的配色（内容是 V2EX 渲染的 HTML）
+// 正文与回复内容的排版，见 _rich-content.scss
 .postDetail {
   :global(.topic_content),
   :global(.reply_content) {
-    color: var(--color-font-8);
-    font-size: 1.45rem;
-    line-height: 1.8;
-    word-break: break-word;
-
-    p {
-      margin: 0 0 0.8em;
-    }
-
-    a {
-      color: var(--v2n-link);
-    }
-
-    blockquote {
-      margin: 0.8em 0;
-      padding: 0.4em 1.2rem;
-      border-left: 3px solid var(--color-active);
-      border-radius: 0 0.6rem 0.6rem 0;
-      background: var(--color-active-soft);
-      color: var(--color-font);
-    }
-
-    pre {
-      margin: 0.8em 0;
-      padding: 1rem 1.2rem;
-      overflow: auto;
-      border: 1px solid var(--color-line);
-      border-radius: 0.8rem;
-      background: var(--color-editor-toolbar);
-      color: var(--color-font-pure);
-      line-height: 1.6;
-    }
-
-    code {
-      padding: 0.1em 0.4em;
-      border-radius: 0.4rem;
-      background: var(--color-third-bg);
-      color: var(--color-font-pure);
-      font-size: 0.92em;
-    }
-
-    pre code {
-      padding: 0;
-      background: transparent;
-    }
-
-    table {
-      border-collapse: collapse;
-      margin: 0.8em 0;
-      max-width: 100%;
-      display: block;
-      overflow: auto;
-    }
-
-    th,
-    td {
-      border: 1px solid var(--color-line);
-      padding: 0.5rem 1rem;
-    }
-
-    th {
-      background: var(--color-editor-toolbar);
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid var(--color-line);
-    }
-
-    img {
-      border-radius: 0.6rem;
-    }
+    @include rich.content;
   }
 }

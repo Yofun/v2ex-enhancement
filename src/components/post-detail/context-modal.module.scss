@@ -1,0 +1,119 @@
+@use './rich-content' as rich;
+
+// 回复上下文弹框。portal 到 body，所以不依赖任何祖先样式，也不会被详情弹框的
+// backdrop-filter / overflow 之类影响定位；配色与设置面板等浮层保持一致。
+.root {
+  position: fixed;
+  inset: 0;
+  // 高于主题详情（1002）与标签弹框（1003），低于图片预览（9999）
+  z-index: 1004;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  background-color: #1d1c1c59;
+  backdrop-filter: blur(3px);
+}
+
+.dialog {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: min(60rem, calc(100vw - 4rem));
+  max-height: min(74vh, 72rem);
+  border-radius: 1.6rem;
+  background: var(--color-second-bg);
+  box-shadow:
+    0 24px 64px #00000040,
+    0 0 0 1px var(--color-line);
+  overflow: hidden;
+  color: var(--color-font-pure);
+  font-size: 1.4rem;
+  text-align: left;
+  animation: dialog-in 0.18s ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.2rem) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  padding: 1.4rem 2rem 1.4rem 2.4rem;
+  border-bottom: 1px solid var(--color-line);
+
+  .title {
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+
+  .count {
+    font-size: 1.3rem;
+    color: var(--color-font);
+  }
+
+  .close {
+    appearance: none;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    padding: 0.4rem;
+    border-radius: 50%;
+    color: var(--color-font);
+    font-size: 2.2rem;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+
+    &:hover {
+      background: var(--color-third-bg);
+      color: var(--color-font-pure);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-active);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  outline: none;
+
+  // 内容是 V2EX 渲染的 HTML，排版与主题详情里保持一致
+  :global(.reply_content) {
+    @include rich.content;
+  }
+
+  // 最后一条不需要底部分隔线，否则和弹框底边叠成一条双线
+  > :last-child {
+    border-bottom: none;
+  }
+}
