@@ -49,9 +49,24 @@ function resolveAlbum(id: string): Promise<string[]> {
   let p = cache.get(id);
   if (!p) {
     // 相册页本身只在 HTML 里带封面图，完整图片列表要走这个老接口
+    console.info(`[v2ex-enhancement] 发现 Imgur 相册 ${id}，开始解析`);
     p = gmGetText(`https://imgur.com/ajaxalbums/getimages/${id}/hit.json`)
-      .then(parseAlbumImages)
-      .catch(() => []);
+      .then((text) => {
+        const urls = parseAlbumImages(text);
+        // 接口对“不是相册”返回空数组，对被拦截的页面返回 HTML；两种都解析不出图，在这里说清楚
+        if (!urls.length) {
+          console.warn(
+            `[v2ex-enhancement] Imgur 相册 ${id} 没有解析出图片，接口返回开头：`,
+            text.slice(0, 120),
+          );
+        }
+        return urls;
+      })
+      .catch((e) => {
+        // 最常见的原因是这台机器的浏览器访问不了 imgur.com（国内需要代理）
+        console.warn(`[v2ex-enhancement] Imgur 相册 ${id} 请求失败，保持原链接：`, e);
+        return [];
+      });
     cache.set(id, p);
   }
   return p;
