@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.4.0](https://github.com/Yofun/v2ex-enhancement/compare/v0.3.0...v0.4.0) (2026-11-13)
+
+### Features
+
+* add scoped [V2EX enhancement] logging across the script ([3521a1c](https://github.com/Yofun/v2ex-enhancement/commit/3521a1c215798ae5426e3cc1e8e98249b84f9ee8))
+* expand Imgur album links into their images ([63ba2b2](https://github.com/Yofun/v2ex-enhancement/commit/63ba2b270563b34becb340dd41157736a9833bf7))
+* expand links to other topics into preview cards ([1053d28](https://github.com/Yofun/v2ex-enhancement/commit/1053d2804c38db1b236b17571ef26d26351e5e80))
+* redesign the add-tag modal and use an icon button as its trigger ([9fb5ac0](https://github.com/Yofun/v2ex-enhancement/commit/9fb5ac04fe6cb36bbcb412028bf718d2ef7a7abc))
+* redesign the post detail modal and widen the standalone post page ([715210a](https://github.com/Yofun/v2ex-enhancement/commit/715210ad794771ecfaf3ace6782bd917f2a95307))
+
+### Bug Fixes
+
+* log why an Imgur album link stayed a link ([55123f2](https://github.com/Yofun/v2ex-enhancement/commit/55123f2cb4dcea2cdb1820dadba00da90235d535))
+* say why a cross-origin request failed when GM_xmlhttpRequest is missing ([29979dc](https://github.com/Yofun/v2ex-enhancement/commit/29979dc681db1b79e761bae8dc7d8ab97ce5505b))
+
+### Refactor
+
+* lay every reply in the context modal out the same way ([47ef160](https://github.com/Yofun/v2ex-enhancement/commit/47ef1600d23738241515f21ce9ea155968650783))
+* show reply context in a centered modal instead of a side drawer ([0d2f504](https://github.com/Yofun/v2ex-enhancement/commit/0d2f504969f0d67c03eca739c53fae2c85ecad90))
+* turn the Imgur setting into a parse switch and drop image rules ([8fcf9cb](https://github.com/Yofun/v2ex-enhancement/commit/8fcf9cb4a19b54131933a57c20e91311efba1c43))
+
 ## [0.3.0](https://github.com/Yofun/v2ex-enhancement/compare/v0.2.0...v0.3.0) (2026-11-02)
 
 ### Features
