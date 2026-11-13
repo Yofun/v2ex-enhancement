@@ -60,7 +60,7 @@ test('回复框：打开、输入、表情、提交（已登录）', async ({ br
   await runScenario(browser, { path: '/t/1252074', topic, loggedIn: true }, steps);
 });
 
-test('楼层操作：隐藏/展开/回复/感谢/上下文/跳转（已登录）', async ({ browser }) => {
+test('楼层操作：隐藏/展开/回复/感谢/跳转（已登录）', async ({ browser }) => {
   const steps: Step[] = [
     step('悬停 13 楼', (p) => floor(p, 13).hover()),
     step('13 楼 回复', (p) => floor(p, 13).getByText('回复', { exact: true }).first().click()),
@@ -74,7 +74,6 @@ test('楼层操作：隐藏/展开/回复/感谢/上下文/跳转（已登录）
     step('13 楼 关闭回复框', (p) =>
       floor(p, 13).getByText('关闭', { exact: true }).first().click(),
     ),
-    step('13 楼 上下文', (p) => floor(p, 13).getByText('上下文', { exact: true }).first().click()),
     step('第一个“跳转”', (p) => app(p).getByText('跳转', { exact: true }).first().click()),
     step('13 楼 隐藏', (p) => floor(p, 13).getByText('隐藏', { exact: true }).first().click()),
     step('13 楼 展开', (p) => floor(p, 13).locator('[class*="expand"]').first().click()),

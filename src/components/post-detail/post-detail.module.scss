@@ -3,38 +3,6 @@
 // 对应原 PostDetail.vue 的 scoped 样式（data-v-d39217d8）+ 其未加 scope 的全局片段（.sticky / .preview-modal）。
 // 原样式里夹带的通用工具类（.flex/.my-box/.tool 等）在这里作为 PostDetail 内部的局部类保留，保证自包含。
 
-@mixin side-btn {
-  cursor: pointer;
-  position: fixed;
-  border-radius: 0.6rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  bottom: 10rem;
-  z-index: 99;
-  padding: 0.8rem 0;
-  gap: 1rem;
-  width: 4.2rem;
-  transform: translate(6rem);
-  font-size: 2rem;
-  background: var(--color-sp-btn-bg);
-  color: var(--color-font-3);
-  box-shadow: 0 2px 8px #00000026;
-  transition:
-    color 0.2s,
-    transform 0.2s,
-    box-shadow 0.2s;
-
-  &:hover {
-    color: var(--color-font-pure);
-    box-shadow: 0 4px 14px #00000040;
-  }
-
-  svg {
-    font-size: 2.4rem;
-  }
-}
-
 .flex {
   display: flex;
   align-items: center;
@@ -110,11 +78,7 @@
 }
 
 .addTag {
-  font-size: 2.4rem;
-  transform: translateY(0.2rem);
-  line-height: 1rem;
   margin-left: 1rem;
-  cursor: pointer;
   position: absolute;
   display: none;
 }
@@ -144,6 +108,7 @@
   font-size: 1.4rem;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
 
   a {
@@ -203,23 +168,24 @@
       overflow: visible !important;
     }
 
-    .closeBtn,
-    .openNewTab {
-      display: none;
+    // 帖子页内嵌展示没有弹框外壳，工具条退回到视口右侧
+    .dialog {
+      display: contents;
     }
   }
 
   .main {
+    flex: 1;
+    min-height: 0;
     display: flex;
-    justify-content: flex-end;
-    padding: 3rem 8rem 4rem;
-    background: var(--color-main-bg);
+    justify-content: center;
+    padding: 2rem 2rem 0;
     position: relative;
     outline: none;
     box-sizing: border-box;
-    height: 100%;
     overflow-y: auto;
     overscroll-behavior: contain;
+    border-radius: 0 0 1.6rem 1.6rem;
 
     .mainWrapper {
       width: 77rem;
@@ -236,7 +202,7 @@
       }
 
       .postWrapper :global(.header):hover .addTag {
-        display: inline-block;
+        display: inline-flex;
       }
 
       .loadingWrapper {
@@ -297,45 +263,94 @@
     }
   }
 
-  .scrollTop {
-    @include side-btn;
-  }
-
-  .refresh {
-    @include side-btn;
-    bottom: 23.5rem;
-  }
-
-  .scrollTo {
-    @include side-btn;
-    bottom: 15rem;
+  // 居中弹框：顶部固定条 + 滚动区 + 右侧工具条
+  .dialog {
+    position: relative;
+    display: flex;
     flex-direction: column;
+    width: fit-content;
+    max-width: calc(100vw - 8rem);
+    height: calc(100% - 5.6rem);
+    border-radius: 1.6rem;
+    background: var(--color-main-bg);
+    box-shadow:
+      0 24px 60px rgba(15, 18, 30, 0.28),
+      0 2px 8px rgba(15, 18, 30, 0.1);
+  }
+
+  .topbar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.8rem 1rem 0.8rem 2rem;
+    border-bottom: 1px solid var(--color-line);
+    border-radius: 1.6rem 1.6rem 0 0;
+    background: var(--color-main-bg);
+  }
+
+  .where {
+    // 宽度由正文区决定，标题只填充剩余空间：width: 0 让它的 max-content 不参与 fit-content 的计算，
+    // 否则不换行的长标题会把弹框撑到 max-width
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--color-font-pure);
+    font-size: 1.4rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.2s;
+
+    &.shown {
+      opacity: 1;
+    }
+  }
+
+  .barBtn,
+  .toolBtn {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.4rem;
+    height: 3.4rem;
+    border-radius: 0.9rem;
+    cursor: pointer;
+    color: var(--color-gray);
+    font-size: 1.8rem;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+
+    &:hover {
+      background: var(--color-third-bg);
+      color: var(--color-font-pure);
+    }
+  }
+
+  .barDivider {
+    flex: none;
+    width: 1px;
+    height: 1.8rem;
+    margin: 0 0.4rem;
+    background: var(--color-line);
+  }
+
+  .jump {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
 
     input {
       height: 2.6rem;
       width: 3.6rem;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       text-align: center;
       color: var(--color-font);
     }
-  }
-
-  .closeBtn {
-    color: var(--color-font-3);
-    cursor: pointer;
-    position: fixed;
-    top: 3rem;
-    transform: translate(4rem);
-    font-size: 2.4rem;
-  }
-
-  .openNewTab {
-    color: var(--color-font-3);
-    cursor: pointer;
-    position: fixed;
-    top: 8rem;
-    transform: translate(4rem);
-    font-size: 2.4rem;
   }
 
   .topReply {

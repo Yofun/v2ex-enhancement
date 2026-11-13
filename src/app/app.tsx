@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { createPortal } from 'react-dom';
 
+import { AddTagButton } from '@/components/base/add-tag-button';
 import { BaseButton } from '@/components/base/base-button';
 import { BaseLoading } from '@/components/base/base-loading';
 import { Base64Tooltip } from '@/components/base/base64-tooltip';
@@ -23,7 +24,7 @@ import { useLatest } from '@/hooks/use-latest';
 import { parse } from '@/parsers';
 import { applyDynamicStyle } from '@/styles/dynamic-style';
 import { decodeEmail } from '@/utils/decode-email';
-import { genDomFromHtmlString } from '@/utils/dom';
+import { genDomFromHtmlString, setNativeBoxesDisplay } from '@/utils/dom';
 import { functions } from '@/utils/functions';
 import { gmPostJson } from '@/utils/gm';
 
@@ -57,14 +58,6 @@ interface PopConfirmState {
 type CommentThankEvent = { id: string; type: 'add' | 'recall' };
 
 const isDeadline = dayjs().isAfter(dayjs('2024-11-26'));
-
-function setFirstBoxesDisplay(display: '' | 'none'): void {
-  Array.from(document.querySelectorAll<HTMLElement>('#Wrapper #Main .box'))
-    .slice(0, 3)
-    .forEach((box) => {
-      box.style.display = display;
-    });
-}
 
 function createCalendarState(): CalendarState {
   return { show: false, year: '', month: '', dayCount: 0, firstDayWeek: 0, select: '' };
@@ -177,7 +170,7 @@ export function App() {
 
   const showPost = () => {
     setShow(true);
-    setFirstBoxesDisplay('none');
+    setNativeBoxesDisplay('none');
   };
 
   const resetTitle = () => {
@@ -546,7 +539,7 @@ export function App() {
       setShow(false);
       setLoading(false);
       eventBus.emit(CMD.SHOW_MSG, { type: 'warning', text: '脚本无法查看此页面！' });
-      setFirstBoxesDisplay('');
+      setNativeBoxesDisplay('');
     }
     if (type === 'postContent') {
       setCurrent((prev) => ({ ...prev, ...message.value, inList: true }));
@@ -864,13 +857,7 @@ export function App() {
                   />
                 </span>
               ))}
-              <span
-                className={`${styles.addTag} ago`}
-                title="添加标签"
-                onClick={() => eventBus.emit(CMD.ADD_TAG, session.targetUserName)}
-              >
-                +
-              </span>
+              <AddTagButton username={session.targetUserName} className={styles.addTag} />
             </div>
           ) : null}
           {isPost && !show ? (

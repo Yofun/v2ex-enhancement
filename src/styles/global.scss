@@ -157,6 +157,86 @@ a {
 a:hover {
   text-decoration: underline;
 }
+/* 单独打开主题页：由 bootstrap.ts 的 handlePostPage 打上 class。
+   隐藏右侧栏（不移除，脚本还要从里面读当前用户的头像），主栏撑满到导航右边缘 */
+html.v2n-post-page #Rightbar {
+  display: none !important;
+}
+html.v2n-post-wide #Main {
+  float: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-right: 0 !important;
+}
+/* 由 services/topic-cards.ts 把裸的主题链接展开成链接预览卡片 */
+a.v2n-topic-card {
+  display: block;
+  margin: 8px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: var(--color-second-bg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  color: var(--color-font);
+  text-decoration: none;
+  transition:
+    box-shadow 0.15s,
+    border-color 0.15s;
+}
+a.v2n-topic-card:hover {
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+.v2n-topic-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.v2n-topic-card-avatar {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 50%;
+}
+.v2n-topic-card-title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-font-pure);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.v2n-topic-card-body {
+  display: -webkit-box;
+  margin-top: 6px;
+  overflow: hidden;
+  font-size: 13px;
+  color: var(--color-gray);
+  line-height: 1.5;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.v2n-topic-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--color-gray);
+}
+.v2n-topic-card-node {
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--color-third-bg);
+}
+/* 脚本从链接解析出来的图片（单图和 Imgur 相册）都带 originUrl，加浅灰边框与正文区分 */
+img[originUrl] {
+  box-sizing: border-box;
+  border: 1px solid var(--color-line);
+}
 /* Imgur 相册只展开了前几张时，图片下面的提示 */
 .v2n-album-more {
   display: block;

@@ -1,6 +1,4 @@
 // 正文与回复内容的排版，以及引用、代码、表格在深色下的配色（内容是 V2EX 渲染的 HTML）。
-// 做成 mixin 是因为上下文弹框 portal 到了 body，不在 .postDetail 里，
-// 靠后代选择器是继承不到这些规则的。
 @mixin content {
   color: var(--color-font-8);
   font-size: 1.45rem;

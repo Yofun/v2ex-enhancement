@@ -11,6 +11,7 @@ import { startImgurAlbums } from '@/services/imgur-albums';
 import { initNoteData } from '@/services/note-data';
 import { initSession } from '@/services/session-init';
 import { qianDao } from '@/services/signin';
+import { startTopicCards } from '@/services/topic-cards';
 import { applyDynamicStyle, removeDynamicStyle } from '@/styles/dynamic-style';
 import globalCss from '@/styles/global.scss?inline';
 import { htmlToElement } from '@/utils/dom';
@@ -115,6 +116,11 @@ async function handlePostPage($section: HTMLElement): Promise<boolean> {
     send({ type: 'warningNotice', value: '由于回复数量较多，脚本已停止解析楼中楼' });
     return false;
   }
+  // 脚本接管主题页后，右侧栏（用户卡片、广告）用不上：隐藏它，让正文区撑到顶部导航的右边缘。
+  // 自定义了帖子宽度时宽度由下面的行内样式决定，不再强制全宽。
+  const root = document.documentElement;
+  root.classList.add('v2n-post-page');
+  if (!session.config.postWidth) root.classList.add('v2n-post-wide');
   if (session.config.postWidth) {
     const main = document.querySelector<HTMLElement>('#Main');
     if (main) {
@@ -302,16 +308,18 @@ export function bootstrap(): (() => void) | undefined {
   window.addEventListener('error', onImageError, true);
   const stopAdFilter = startAdFilter();
   const stopImgurAlbums = startImgurAlbums();
+  const stopTopicCards = startTopicCards();
 
   return () => {
     log.debug('页面卸载，清理脚本');
     stopAdFilter();
     stopImgurAlbums();
+    stopTopicCards();
     window.removeEventListener('error', onImageError, true);
     root.unmount();
     $section.remove();
     removeDynamicStyle();
     globalStyle.remove();
-    document.documentElement.classList.remove('v2n-home');
+    document.documentElement.classList.remove('v2n-home', 'v2n-post-page', 'v2n-post-wide');
   };
 }

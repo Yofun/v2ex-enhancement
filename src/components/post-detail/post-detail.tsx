@@ -3,6 +3,7 @@ import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState }
 import { createPortal } from 'react-dom';
 
 import { useApp } from '@/app/app-context';
+import { AddTagButton } from '@/components/base/add-tag-button';
 import { BaseLoading } from '@/components/base/base-loading';
 import { BaseSelect } from '@/components/base/base-select';
 import { Icon } from '@/components/base/icon';
@@ -16,10 +17,10 @@ import { Toolbar } from '@/components/comment/toolbar';
 import { CMD, eventBus } from '@/core/event-bus';
 import { session } from '@/core/session';
 import { CommentDisplayType, PageType, type Reply } from '@/core/types';
+import { clickable } from '@/utils/a11y';
 import { functions } from '@/utils/functions';
 import { slideToggle } from '@/utils/slide';
 
-import { ContextModal } from './context-modal';
 import styles from './post-detail.module.scss';
 import { useImagePreview } from './use-image-preview';
 
@@ -33,15 +34,7 @@ export interface PostDetailProps {
   onRefresh?: () => void;
 }
 
-interface TargetUser {
-  left: string[];
-  right: string;
-  rightFloor: number;
-}
-
 const NBSP3 = ' \u00a0 ';
-
-const EMPTY_TARGET_USER: TargetUser = { left: [], right: '', rightFloor: -1 };
 
 function isOlderThan(date: string, ms: number): boolean {
   return Date.now() - new Date(date).valueOf() > ms;
@@ -105,12 +98,11 @@ export function PostDetail({
   const [selectCallIndex, setSelectCallIndex] = useState(0);
   const [postDetailWidth, setPostDetailWidth] = useState(0);
   const [showCallList, setShowCallList] = useState(false);
-  const [showRelationReply, setShowRelationReply] = useState(false);
-  const closeRelationReply = useCallback(() => setShowRelationReply(false), []);
   const [replyText, setReplyText] = useState('');
   const [callStyle, setCallStyle] = useState<CSSProperties>({ top: 0, left: 0 });
-  const [targetUser, setTargetUser] = useState<TargetUser>(EMPTY_TARGET_USER);
   const [currentFloor, setCurrentFloor] = useState<string | number>('');
+  // 详情区自带标题，顶部条的标题只在它滚出视野后才出现，避免同屏重复
+  const [titleScrolled, setTitleScrolled] = useState(false);
 
   const detailRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -167,23 +159,6 @@ export function PostDetail({
     return [];
   }, [displayType, post.nestedReplies, post.replyList, post.nestedRedundReplies, opUsername]);
 
-  const relationReply = useMemo<Reply[]>(() => {
-    if (!targetUser.left.length || !targetUser.right) return [];
-    return post.replyList.filter((v) => {
-      if (!targetUser.left.concat(targetUser.right).includes(v.username)) return false;
-      if (v.floor > targetUser.rightFloor) {
-        if (v.replyUsers.includes(targetUser.right)) return true;
-        if (v.username === targetUser.right) {
-          for (const user of targetUser.left) {
-            if (v.replyUsers.includes(user)) return true;
-          }
-        }
-        return false;
-      }
-      return true;
-    });
-  }, [targetUser, post.replyList]);
-
   // watch post.id：清空回复框（由 PostEditor 的 key 完成）并把详情滚回顶部
   const prevPostId = useRef(post.id);
   useEffect(() => {
@@ -203,7 +178,6 @@ export function PostDetail({
         setCurrentFloor('');
       } else {
         setIsSticky(false);
-        setShowRelationReply(false);
       }
     }
   }
@@ -292,15 +266,6 @@ export function PostDetail({
     return () => eventBus.offOne(CMD.SHOW_CALL, onShowCall);
   }, [isPost, selectCallIndex, allReplyUsers]);
 
-  useEffect(() => {
-    const onRelationReply = (val: TargetUser) => {
-      setTargetUser(val);
-      setShowRelationReply(true);
-    };
-    eventBus.on(CMD.RELATION_REPLY, onRelationReply);
-    return () => eventBus.offOne(CMD.RELATION_REPLY, onRelationReply);
-  }, []);
-
   const jump = useCallback(
     (target: string | number) => {
       const lastItem = replyList[replyList.length - 1] ?? post.replyList[post.replyList.length - 1];
@@ -326,7 +291,6 @@ export function PostDetail({
         eventBus.emit(CMD.SHOW_MSG, { type: 'error', text: '没有找到对应回复！' });
         return;
       }
-      setShowRelationReply(false);
       comments[0].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
       comments.forEach((c) => c.classList.add('ding'));
       setCurrentFloor(floor + 1);
@@ -378,6 +342,38 @@ export function PostDetail({
     .filter(Boolean)
     .join(' ');
 
+  // 跳楼层 + 回到顶部，放在弹框顶部条里
+  const jumpControls = (
+    <>
+      <div className={styles.jump} title="跳到指定楼层">
+        <input
+          type="text"
+          value={currentFloor}
+          onChange={(e) => setCurrentFloor(e.target.value)}
+          onClick={stop}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') jump(currentFloor);
+          }}
+        />
+        <div
+          className={styles.toolBtn}
+          onClick={() => jump(currentFloor)}
+          {...clickable('跳到该楼层')}
+        >
+          <Icon icon="ph:arrow-down" />
+        </div>
+      </div>
+      <div
+        className={styles.toolBtn}
+        title="回到顶部"
+        onClick={scrollTop}
+        {...clickable('回到顶部')}
+      >
+        <Icon icon="ph:arrow-up" />
+      </div>
+    </>
+  );
+
   const headerHtml = post.headerTemplate || (post.jsonContent as string | undefined) || '';
   const showReplyHeader = post.replyList.length > 0 || loading;
   const showReplyList = replyList.length > 0 || loading;
@@ -393,318 +389,297 @@ export function PostDetail({
         }}
         onClick={() => close('space')}
       >
-        <div
-          ref={mainRef}
-          className={`${styles.main} ${isSpecificArea ? styles.specificArea : ''}`}
-          tabIndex={1}
-          onClick={stop}
-        >
-          <div className={styles.mainWrapper} ref={mainWrapperRef}>
-            <div className={`${styles.myBox} ${styles.postWrapper} post-wrapper`}>
-              <div className="header">
-                <div className="fr">
-                  <a
-                    href={`/member/${post.member.username}`}
-                    style={{ width: '73px', height: '73px', display: 'inline-block' }}
-                  >
-                    {post.member.avatar_large ? (
-                      <img
-                        src={post.member.avatar_large}
-                        className="avatar"
-                        style={{ width: '73px', height: '73px' }}
-                        alt={post.member.username}
-                      />
-                    ) : null}
-                  </a>
-                </div>
-                <a href="/">V2EX</a>
-                <span className="chevron">{'\u00a0\u00a0›\u00a0\u00a0'}</span>
-                <a href={post.node.url}>{post.node.title}</a>
-                <div className="sep10" />
-                <h1>{post.title}</h1>
-                <div id={`topic_${post.id}_votes`} className="votes">
-                  <VoteLink fn="upVoteTopic" postId={post.id} icon="ph:caret-up" />
-                  {NBSP3}
-                  <VoteLink fn="downVoteTopic" postId={post.id} icon="ph:caret-down" />
-                </div>
-                {NBSP3}
-                <small className="gray">
-                  <a href={`/member/${post.member.username}`}>{post.member.username}</a>
-                  {' · '}
-                  {post.member.createDate ? (
-                    <>
-                      <span className={post.member.isNew ? styles.danger : undefined}>
-                        {post.member.createDate}
-                      </span>
-                      {' · '}
-                    </>
-                  ) : null}
-                  {post.createDateAgo ? (
-                    <>
-                      <span title={post.createDate}>{post.createDateAgo}</span>
-                      {' · '}
-                    </>
-                  ) : null}
-                  {` ${post.clickCount} 次点击 `}
-                  {isMy ? (
-                    <>
-                      {'\u00a0\u00a0 '}
-                      <a href={`/t/${post.id}/info`}>
-                        <Icon icon="ph:info" />
-                      </a>
-                      {'\u00a0\u00a0 '}
-                      {canAppend ? (
-                        <a href={`/append/topic/${post.id}`} className="op">
-                          APPEND
-                        </a>
-                      ) : null}
-                      {canEditMove ? (
-                        <>
-                          <a href={`/move/topic/${post.id}`} className="op">
-                            MOVE
-                          </a>
-                          {'\u00a0 '}
-                          <a href={`/edit/topic/${post.id}`} className="op">
-                            EDIT
-                          </a>
-                        </>
-                      ) : null}
-                    </>
-                  ) : null}
-                </small>
-                {isLogin && config.openTag ? (
-                  <>
-                    {myTags.map((tag) => (
-                      <span className={styles.myTag} key={tag}>
-                        <Icon icon="ph:tag" />
-                        <span>{tag}</span>
-                        <Icon
-                          icon="ph:trash"
-                          className={styles.remove}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            eventBus.emit(CMD.REMOVE_TAG, { username: post.member.username, tag });
-                          }}
-                        />
-                      </span>
-                    ))}
-                    <span
-                      className={`${styles.addTag} ago`}
-                      title="添加标签"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        eventBus.emit(CMD.ADD_TAG, post.member.username);
-                      }}
-                    >
-                      +
-                    </span>
-                  </>
-                ) : null}
+        <div className={`${styles.dialog} ${isSpecificArea ? styles.specificArea : ''}`}>
+          {!isPost ? (
+            <div className={styles.topbar} onClick={(e) => e.stopPropagation()}>
+              <div className={`${styles.where} ${titleScrolled ? styles.shown : ''}`}>
+                {post.title}
               </div>
-              <BaseHtmlRender html={headerHtml} />
-              <Toolbar onReply={() => setIsSticky((v) => !v)}>
-                <Point
-                  onAddThank={() =>
-                    eventBus.emit(CMD.CHANGE_POST_THANK, { id: post.id, type: 'add' })
-                  }
-                  onRecallThank={() =>
-                    eventBus.emit(CMD.CHANGE_POST_THANK, { id: post.id, type: 'recall' })
-                  }
-                  item={{
-                    isThanked: post.isThanked,
-                    thankCount: post.thankCount,
-                    username: post.username,
-                  }}
-                  apiUrl={`topic/${post.id}`}
-                />
-              </Toolbar>
+              {jumpControls}
+              <span className={styles.barDivider} />
+              <div
+                className={styles.barBtn}
+                title="在新标签页打开"
+                onClick={() =>
+                  functions.openNewTab(`https://www.v2ex.com/t/${post.id}`, config.newTabOpenActive)
+                }
+                {...clickable('在新标签页打开')}
+              >
+                <Icon icon="ph:arrow-square-out" />
+              </div>
+              <div
+                className={styles.barBtn}
+                title="刷新"
+                onClick={() => onRefresh?.()}
+                {...clickable('刷新')}
+              >
+                {refreshLoading ? <BaseLoading /> : <Icon icon="ph:arrow-clockwise" />}
+              </div>
+              <div
+                className={styles.barBtn}
+                title="关闭 (Esc)"
+                onClick={() => close('btn')}
+                {...clickable('关闭')}
+              >
+                <Icon icon="ph:x" />
+              </div>
             </div>
-
-            {post.topReplyList.length > 0 && config.showTopReply ? (
-              <div className={styles.myBox}>
-                <div
-                  className={`${styles.myCell} ${styles.flex}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (topReplyRef.current) slideToggle(topReplyRef.current);
-                  }}
-                >
-                  <span>高赞回复</span>
-                  <div className={styles.topReply}>
-                    <Tooltip title="收起高赞回复">
-                      <div className={styles.tool}>
-                        <Icon icon="ph:arrows-in-line-vertical" />
-                      </div>
-                    </Tooltip>
-                  </div>
-                </div>
-                <div ref={topReplyRef}>
-                  {post.topReplyList.map((item) => (
-                    <Comment key={item.floor} type="top" modelValue={item} />
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            <div className={`${styles.myBox} comment-wrapper`}>
-              {showReplyHeader ? (
-                <div className={`${styles.myCell} ${styles.flex}`}>
-                  <div>
-                    {`${post.replyCount} 条回复 `}
-                    {post.lastReplyDate ? (
-                      <span>
-                        {' \u00a0'}
-                        <strong className="snow">•</strong>
-                        {` \u00a0${post.lastReplyDate}`}
-                      </span>
-                    ) : null}
-                  </div>
-                  {config.showToolbar ? (
-                    <BaseSelect
-                      displayType={displayType}
-                      onUpdateDisplayType={onUpdateDisplayType}
-                    />
-                  ) : (
-                    <div className="fr" dangerouslySetInnerHTML={{ __html: post.fr }} />
-                  )}
-                </div>
-              ) : null}
-              {showReplyList ? (
-                loading ? (
-                  <div className={styles.loadingWrapper}>
-                    <BaseLoading size="large" />
-                  </div>
-                ) : (
-                  <div className={styles.comments}>
-                    {modelValue
-                      ? replyList.map((item) => <Comment key={item.floor} modelValue={item} />)
-                      : null}
-                  </div>
-                )
-              ) : null}
-            </div>
-            {!showReplyList ? (
-              <div id="no-comments-yet" className={styles.noComments}>
-                目前尚无回复
-              </div>
-            ) : null}
-            {isLogin ? (
-              <div className={`${styles.myBox} ${isSticky ? styles.sticky : ''}`} ref={replyBoxRef}>
-                <div className={`${styles.myCell} ${styles.flex}`}>
-                  <span>添加一条新回复</span>
-                  <div className="notice-right gray">
-                    {isSticky ? (
-                      <a
-                        style={{ marginRight: '2rem' }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsSticky(false);
-                        }}
-                      >
-                        取消回复框停靠
-                      </a>
-                    ) : null}
+          ) : null}
+          <div
+            ref={mainRef}
+            className={styles.main}
+            tabIndex={1}
+            onClick={stop}
+            onScroll={(e) => setTitleScrolled(e.currentTarget.scrollTop > 140)}
+          >
+            <div className={styles.mainWrapper} ref={mainWrapperRef}>
+              <div className={`${styles.myBox} ${styles.postWrapper} post-wrapper`}>
+                <div className="header">
+                  <div className="fr">
                     <a
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        scrollTop();
-                      }}
+                      href={`/member/${post.member.username}`}
+                      style={{ width: '73px', height: '73px', display: 'inline-block' }}
                     >
-                      回到顶部
+                      {post.member.avatar_large ? (
+                        <img
+                          src={post.member.avatar_large}
+                          className="avatar"
+                          style={{ width: '73px', height: '73px' }}
+                          alt={post.member.username}
+                        />
+                      ) : null}
                     </a>
                   </div>
+                  <a href="/">V2EX</a>
+                  <span className="chevron">{'\u00a0\u00a0›\u00a0\u00a0'}</span>
+                  <a href={post.node.url}>{post.node.title}</a>
+                  <div className="sep10" />
+                  <h1>{post.title}</h1>
+                  <div id={`topic_${post.id}_votes`} className="votes">
+                    <VoteLink fn="upVoteTopic" postId={post.id} icon="ph:caret-up" />
+                    {NBSP3}
+                    <VoteLink fn="downVoteTopic" postId={post.id} icon="ph:caret-down" />
+                  </div>
+                  {NBSP3}
+                  <small className="gray">
+                    <a href={`/member/${post.member.username}`}>{post.member.username}</a>
+                    {' · '}
+                    {post.member.createDate ? (
+                      <>
+                        <span className={post.member.isNew ? styles.danger : undefined}>
+                          {post.member.createDate}
+                        </span>
+                        {' · '}
+                      </>
+                    ) : null}
+                    {post.createDateAgo ? (
+                      <>
+                        <span title={post.createDate}>{post.createDateAgo}</span>
+                        {' · '}
+                      </>
+                    ) : null}
+                    {` ${post.clickCount} 次点击 `}
+                    {isMy ? (
+                      <>
+                        {'\u00a0\u00a0 '}
+                        <a href={`/t/${post.id}/info`}>
+                          <Icon icon="ph:info" />
+                        </a>
+                        {'\u00a0\u00a0 '}
+                        {canAppend ? (
+                          <a href={`/append/topic/${post.id}`} className="op">
+                            APPEND
+                          </a>
+                        ) : null}
+                        {canEditMove ? (
+                          <>
+                            <a href={`/move/topic/${post.id}`} className="op">
+                              MOVE
+                            </a>
+                            {'\u00a0 '}
+                            <a href={`/edit/topic/${post.id}`} className="op">
+                              EDIT
+                            </a>
+                          </>
+                        ) : null}
+                      </>
+                    ) : null}
+                  </small>
+                  {isLogin && config.openTag ? (
+                    <>
+                      {myTags.map((tag) => (
+                        <span className={styles.myTag} key={tag}>
+                          <Icon icon="ph:tag" />
+                          <span>{tag}</span>
+                          <Icon
+                            icon="ph:trash"
+                            className={styles.remove}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              eventBus.emit(CMD.REMOVE_TAG, {
+                                username: post.member.username,
+                                tag,
+                              });
+                            }}
+                          />
+                        </span>
+                      ))}
+                      <AddTagButton username={post.member.username} className={styles.addTag} />
+                    </>
+                  ) : null}
                 </div>
-                <div className={styles.p1}>
-                  <PostEditor
-                    key={post.id}
-                    onClose={goBottom}
-                    useType="reply-post"
+                <BaseHtmlRender html={headerHtml} />
+                <Toolbar onReply={() => setIsSticky((v) => !v)}>
+                  <Point
+                    onAddThank={() =>
+                      eventBus.emit(CMD.CHANGE_POST_THANK, { id: post.id, type: 'add' })
+                    }
+                    onRecallThank={() =>
+                      eventBus.emit(CMD.CHANGE_POST_THANK, { id: post.id, type: 'recall' })
+                    }
+                    item={{
+                      isThanked: post.isThanked,
+                      thankCount: post.thankCount,
+                      username: post.username,
+                    }}
+                    apiUrl={`topic/${post.id}`}
+                  />
+                </Toolbar>
+              </div>
+
+              {post.topReplyList.length > 0 && config.showTopReply ? (
+                <div className={styles.myBox}>
+                  <div
+                    className={`${styles.myCell} ${styles.flex}`}
                     onClick={(e) => {
                       e.stopPropagation();
-                      // 聚焦时不再自动悬浮（会遮住评论），只把回复框滚到可见位置；需要停靠请点工具栏的“回复”
-                      replyBoxRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                      if (topReplyRef.current) slideToggle(topReplyRef.current);
                     }}
-                  />
+                  >
+                    <span>高赞回复</span>
+                    <div className={styles.topReply}>
+                      <Tooltip title="收起高赞回复">
+                        <div className={styles.tool}>
+                          <Icon icon="ph:arrows-in-line-vertical" />
+                        </div>
+                      </Tooltip>
+                    </div>
+                  </div>
+                  <div ref={topReplyRef}>
+                    {post.topReplyList.map((item) => (
+                      <Comment key={item.floor} type="top" modelValue={item} />
+                    ))}
+                  </div>
                 </div>
+              ) : null}
+
+              <div className={`${styles.myBox} comment-wrapper`}>
+                {showReplyHeader ? (
+                  <div className={`${styles.myCell} ${styles.flex}`}>
+                    <div>
+                      {`${post.replyCount} 条回复 `}
+                      {post.lastReplyDate ? (
+                        <span>
+                          {' \u00a0'}
+                          <strong className="snow">•</strong>
+                          {` \u00a0${post.lastReplyDate}`}
+                        </span>
+                      ) : null}
+                    </div>
+                    {config.showToolbar ? (
+                      <BaseSelect
+                        displayType={displayType}
+                        onUpdateDisplayType={onUpdateDisplayType}
+                      />
+                    ) : (
+                      <div className="fr" dangerouslySetInnerHTML={{ __html: post.fr }} />
+                    )}
+                  </div>
+                ) : null}
+                {showReplyList ? (
+                  loading ? (
+                    <div className={styles.loadingWrapper}>
+                      <BaseLoading size="large" />
+                    </div>
+                  ) : (
+                    <div className={styles.comments}>
+                      {modelValue
+                        ? replyList.map((item) => <Comment key={item.floor} modelValue={item} />)
+                        : null}
+                    </div>
+                  )
+                ) : null}
+              </div>
+              {!showReplyList ? (
+                <div id="no-comments-yet" className={styles.noComments}>
+                  目前尚无回复
+                </div>
+              ) : null}
+              {isLogin ? (
+                <div
+                  className={`${styles.myBox} ${isSticky ? styles.sticky : ''}`}
+                  ref={replyBoxRef}
+                >
+                  <div className={`${styles.myCell} ${styles.flex}`}>
+                    <span>添加一条新回复</span>
+                    <div className="notice-right gray">
+                      {isSticky ? (
+                        <a
+                          style={{ marginRight: '2rem' }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsSticky(false);
+                          }}
+                        >
+                          取消回复框停靠
+                        </a>
+                      ) : null}
+                      <a
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          scrollTop();
+                        }}
+                      >
+                        回到顶部
+                      </a>
+                    </div>
+                  </div>
+                  <div className={styles.p1}>
+                    <PostEditor
+                      key={post.id}
+                      onClose={goBottom}
+                      useType="reply-post"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // 聚焦时不再自动悬浮（会遮住评论），只把回复框滚到可见位置；需要停靠请点工具栏的“回复”
+                        replyBoxRef.current?.scrollIntoView({
+                          block: 'nearest',
+                          behavior: 'smooth',
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+              ) : null}
+              <div className={styles.bottomSpacer} />
+            </div>
+
+            {showCallList && filterCallList.length ? (
+              <div className={styles.callList} style={callStyle}>
+                {filterCallList.map((item, index) => (
+                  <div
+                    key={item}
+                    className={`${styles.callItem} ${index === selectCallIndex ? styles.select : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCall(item);
+                    }}
+                  >
+                    <a>{item}</a>
+                  </div>
+                ))}
               </div>
             ) : null}
-            <div className={styles.bottomSpacer} />
-          </div>
-
-          {showRelationReply ? (
-            <ContextModal replies={relationReply} onClose={closeRelationReply} />
-          ) : null}
-
-          {showCallList && filterCallList.length ? (
-            <div className={styles.callList} style={callStyle}>
-              {filterCallList.map((item, index) => (
-                <div
-                  key={item}
-                  className={`${styles.callItem} ${index === selectCallIndex ? styles.select : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setCall(item);
-                  }}
-                >
-                  <a>{item}</a>
-                </div>
-              ))}
-            </div>
-          ) : null}
-
-          <div
-            className={styles.closeBtn}
-            onClick={(e) => {
-              e.stopPropagation();
-              close('btn');
-            }}
-          >
-            <Icon icon="ph:x" />
-          </div>
-          <div
-            className={styles.openNewTab}
-            onClick={(e) => {
-              e.stopPropagation();
-              functions.openNewTab(`https://www.v2ex.com/t/${post.id}`, config.newTabOpenActive);
-            }}
-          >
-            <Icon icon="ph:arrow-square-out" />
-          </div>
-          <div
-            className={`${styles.refresh} gray`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onRefresh?.();
-            }}
-          >
-            {refreshLoading ? <BaseLoading /> : <Icon icon="ph:arrow-clockwise" />}
-          </div>
-          <div
-            className={`${styles.scrollTo} gray`}
-            onClick={(e) => {
-              e.stopPropagation();
-              jump(currentFloor);
-            }}
-          >
-            <Icon icon="ph:arrow-down" />
-            <input
-              type="text"
-              value={currentFloor}
-              onChange={(e) => setCurrentFloor(e.target.value)}
-              onClick={stop}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') jump(currentFloor);
-              }}
-            />
-          </div>
-          <div
-            className={`${styles.scrollTop} gray`}
-            onClick={(e) => {
-              e.stopPropagation();
-              scrollTop();
-            }}
-          >
-            <Icon icon="ph:arrow-up" />
           </div>
         </div>
         {createPortal(
