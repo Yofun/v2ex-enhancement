@@ -88,7 +88,15 @@
   }
 
   &:hover .addTag {
-    display: inline-block;
+    display: inline-flex;
+  }
+
+  // 作者行是 flex 居中的，行里的用户名字号比按钮自带的行高大，用行高补偿会差几个像素，
+  // 这里直接相对整行垂直居中（.author 是定位祖先）
+  .addTag {
+    top: 50%;
+    margin-top: 0;
+    transform: translateY(-50%);
   }
 
   // 工具栏由整行 hover 触发；focus-within 让键盘 Tab 进来时也能看见，

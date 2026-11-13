@@ -204,6 +204,7 @@ export function Toolbar({ children, onReply }: ToolbarProps) {
           <span>{post.collectCount + '人收藏'}</span>
         </div>
       )}
+      <span className={styles.spacer} />
       <div
         className={common.tool}
         onClick={(e) => {

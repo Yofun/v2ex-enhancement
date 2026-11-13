@@ -1,0 +1,24 @@
+// 评论区操作按钮（回复 / 隐藏 / 感谢 / 添加标签…）的统一外观。
+// 只含外观，不含 display / position：这两项由使用方决定（添加标签平时要隐藏、绝对定位），
+// 放进 mixin 会和使用方的同权重规则互相覆盖。
+@mixin look {
+  align-items: center;
+  border-radius: var(--tool-radius, 0.6rem);
+  cursor: pointer;
+  height: var(--tool-height, 2.8rem);
+  padding: 0 var(--tool-pad-x, 0.8rem);
+  gap: 0.4rem;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+
+  > svg {
+    width: 1.7rem !important;
+    height: 1.7rem !important;
+  }
+
+  &:hover {
+    background: var(--color-active-soft);
+    color: var(--color-active);
+  }
+}

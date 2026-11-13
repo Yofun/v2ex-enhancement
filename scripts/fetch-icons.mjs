@@ -11,6 +11,7 @@ const ICONS = [
   'x',
   'info',
   'tag',
+  'plus',
   'github-logo',
   'translate',
   'trash',

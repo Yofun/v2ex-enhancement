@@ -8,5 +8,14 @@
   align-items: center;
   color: var(--color-gray);
   font-size: 1.3rem;
-  gap: 0.4rem;
+  gap: 0.2rem;
+  // 评论区的 .tool 读这几个变量；这里把操作栏改成胶囊按钮，评论里的按钮保持原样
+  --tool-radius: 999px;
+  --tool-height: 3.4rem;
+  --tool-pad-x: 1.2rem;
+}
+
+// 把 Tweet / 忽略 / 报告 推到右侧，与感谢 / 回复 / 收藏 分开
+.spacer {
+  flex: 1;
 }

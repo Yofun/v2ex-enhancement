@@ -1,6 +1,7 @@
 import type { MouseEvent } from 'react';
 
 import { useApp } from '@/app/app-context';
+import { AddTagButton } from '@/components/base/add-tag-button';
 import { Icon } from '@/components/base/icon';
 import { PopConfirm } from '@/components/base/pop-confirm';
 import { CMD, eventBus } from '@/core/event-bus';
@@ -36,7 +37,6 @@ export function Author({
 }: AuthorProps) {
   const { isLogin, tags, config, isNight } = useApp();
   const myTags = tags[comment.username] ?? [];
-  const context = comment.replyUsers.length;
   const pointInfo = {
     isThanked: comment.isThanked,
     thankCount: comment.thankCount,
@@ -45,19 +45,6 @@ export function Author({
 
   const jump = () => eventBus.emit(CMD.JUMP, comment.floor);
 
-  const showRelationReply = () => {
-    if (!comment.replyUsers.length) {
-      eventBus.emit(CMD.SHOW_MSG, { type: 'warning', text: '该回复无上下文' });
-      return;
-    }
-    eventBus.emit(CMD.RELATION_REPLY, {
-      left: comment.replyUsers,
-      right: comment.username,
-      rightFloor: comment.floor,
-    });
-  };
-
-  const addTag = () => eventBus.emit(CMD.ADD_TAG, comment.username);
   const removeTag = (tag: string) =>
     eventBus.emit(CMD.REMOVE_TAG, { username: comment.username, tag });
 
@@ -122,14 +109,10 @@ export function Author({
                   />
                 </span>
               ))}
-              <span
-                className={`ago ${common.addTag} ${styles.addTag}`}
-                onClick={stop(addTag)}
-                title="添加标签"
-                {...clickable('添加标签')}
-              >
-                +
-              </span>
+              <AddTagButton
+                username={comment.username}
+                className={`${common.addTag} ${styles.addTag}`}
+              />
             </>
           )}
         </span>
@@ -143,12 +126,6 @@ export function Author({
                 <span>隐藏</span>
               </div>
             </PopConfirm>
-            {context > 0 && (
-              <div className={common.tool} onClick={stop(showRelationReply)} {...clickable()}>
-                <Icon icon="ph:file-magnifying-glass" />
-                <span>上下文</span>
-              </div>
-            )}
             {type === 'top' && (
               <div className={common.tool} onClick={stop(jump)} {...clickable()}>
                 <Icon icon="ph:arrow-line-down" />

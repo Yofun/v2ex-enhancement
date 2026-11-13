@@ -1,0 +1,15 @@
+@use '../comment/tool';
+
+// display 由调用方控制（平时隐藏，悬停才显示成 inline-flex），这里只管外观。
+// 外观与评论区右侧的回复 / 隐藏 / 感谢按钮共用同一个 mixin，颜色同样是灰色。
+.btn {
+  @include tool.look;
+
+  color: var(--color-gray);
+  white-space: nowrap;
+
+  // 绝对定位的元素顶边贴着文字行的起点，按钮比文字行高，不补偿就会整体偏下。
+  // 上移“行高与按钮高度之差的一半”，让它和同一行的文字垂直居中（不支持 lh 单位时退回固定值）
+  margin-top: -0.5rem;
+  margin-top: calc((1lh - var(--tool-height, 2.8rem)) / 2);
+}
