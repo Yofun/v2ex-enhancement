@@ -444,6 +444,15 @@ export function Setting({ show, onUpdateShow }: SettingProps) {
                       单独打开这种地址 https://v2ex.com/t/xxxx 时，是否默认显示楼中楼{' '}
                     </div>
                   </div>
+                  <div className={styles.border}>
+                    {switchRow('主题链接显示为卡片', config.topicCard, (v) =>
+                      update({ topicCard: v }),
+                    )}
+                    <div className={styles.desc}>
+                      {' '}
+                      把正文和回复里纯文本的主题链接（/t/xxxx）显示成带标题和摘要的卡片，点击在新标签页打开。每个链接会请求一次主题接口。需要刷新页面才能生效{' '}
+                    </div>
+                  </div>
                   {switchRow(
                     '点击左右两侧透明处关闭主题详情弹框',
                     config.closePostDetailBySpace,

@@ -129,6 +129,7 @@ export interface Config {
   homeTheme: boolean;
   notice: NoticeConfig;
   parseImgur: boolean;
+  topicCard: boolean;
   maxReplyCountLimit: number;
 }
 

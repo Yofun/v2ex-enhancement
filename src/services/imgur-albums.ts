@@ -2,11 +2,12 @@ import { session } from '@/core/session';
 import { getInnerText } from '@/utils/dom';
 import { gmGetText } from '@/utils/gm';
 import { createLogger } from '@/utils/logger';
+import { watchDom } from '@/utils/watch-dom';
 
 const log = createLogger('imgur');
 
-// 帖子正文 / 回复在 #app 里，列表预览在 .post-content 里，上下文弹框是 portal 出去的 dialog
-const SELECTOR = '#app a, .post-content a, [role="dialog"] a';
+// 帖子正文 / 回复在 #app 里，列表预览在 .post-content 里
+const SELECTOR = '#app a, .post-content a';
 
 // imgur.com/a/<id>、imgur.com/gallery/<id>，带标题的相册形如 /a/Some-Title-<id>
 const ALBUM_RE =
@@ -114,22 +115,6 @@ export function processAlbumLinks(
 
 /** 监听页面里新出现的链接，按 parseImgur 开关展开 Imgur 相册。返回清理函数 */
 export function startImgurAlbums(): () => void {
-  const seen = new WeakSet<Element>();
-  let raf = 0;
-  const schedule = () => {
-    if (raf) return;
-    raf = requestAnimationFrame(() => {
-      raf = 0;
-      void processAlbumLinks(document, seen);
-    });
-  };
-
   log.debug('开始监听 Imgur 相册链接，开关', session.config.parseImgur);
-  const observer = new MutationObserver(schedule);
-  observer.observe(document.body, { childList: true, subtree: true });
-  schedule();
-  return () => {
-    observer.disconnect();
-    if (raf) cancelAnimationFrame(raf);
-  };
+  return watchDom((seen) => void processAlbumLinks(document, seen));
 }

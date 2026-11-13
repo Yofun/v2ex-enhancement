@@ -126,6 +126,8 @@ export function getDefaultConfig(val: Partial<Config> = {}): Config {
       },
       // 把正文里纯文本的 Imgur 图片链接解析成图片；默认开启，与此前行为一致
       parseImgur: true,
+      // 把正文里纯文本的主题链接（/t/123）展开成带标题和摘要的卡片
+      topicCard: true,
       maxReplyCountLimit: 400,
     } satisfies Config,
     val,
